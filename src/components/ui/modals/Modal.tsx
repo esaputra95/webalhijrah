@@ -28,15 +28,15 @@ const Modal: React.FC<ModalProps> = ({
   }, [isOpen]);
 
   // Click outside
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (overlayRef.current && event.target === overlayRef.current) {
-  //       onClose();
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, [onClose]);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (overlayRef.current && event.target === overlayRef.current) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onClose]);
 
   if (!isOpen && !show) return null;
 

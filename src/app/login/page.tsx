@@ -2,11 +2,10 @@
 import { redirect } from "next/navigation";
 import LoginClient from "./LoginClient";
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
+export default async function Page(props: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const searchParams = await props.searchParams;
   const raw =
     typeof searchParams.callbackUrl === "string"
       ? searchParams.callbackUrl

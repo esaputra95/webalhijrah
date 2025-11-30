@@ -11,7 +11,6 @@ import {
   RequestChangeStatus,
   RequestChangeStatusType,
 } from "@/types/requestSchema";
-import { ServiceType } from "@/types/serviceSchema";
 import { handleErrorResponse } from "@/utils/handleErrorResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { FC, useEffect } from "react";

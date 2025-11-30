@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/services
-export const POST = wrap(async (req: Request) => {
+export const POST = wrap(async (req: NextRequest) => {
   const body = await req.json();
   const parsed = CreateSchema.parse(body); // ZodError otomatis ditangkap wrap()
 

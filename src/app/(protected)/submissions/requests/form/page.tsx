@@ -8,6 +8,7 @@ import FormStep4 from "@/features/requests/FormStep4";
 import {
   useCreateRequest,
   useUpdateRequest,
+  useGetDetailRequests,
 } from "@/hooks/submissions/useRequests";
 import {
   RequestFormStep1Type,
@@ -15,11 +16,14 @@ import {
   RequestFormStep3Type,
 } from "@/types/requestSchema";
 import { handleErrorResponse } from "@/utils/handleErrorResponse";
-import { useRouter } from "next/navigation";
-import React, { FC, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { FC, useRef, useState, useEffect } from "react";
 import { FaEdit, FaUser, FaFileArchive } from "react-icons/fa";
 import { FiCheckSquare } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { RequestTableType } from "@/features/requests/RequestTable";
+import { toDatetimeLocal } from "@/utils/dateTime";
+import Spinner from "@/components/ui/loading/Spinner";
 
 export type RequestPost = RequestFormStep1Type &
   RequestFormStep2Type &
@@ -29,22 +33,41 @@ export type RequestPost = RequestFormStep1Type &
 const toDate = (v?: unknown) =>
   v instanceof Date ? v : v ? new Date(String(v)) : undefined;
 
-type Props = {
-  data?: Partial<RequestPost>;
-};
-
-const RequestForm: FC<Props> = ({ data }) => {
+const RequestForm: FC = () => {
   const [dataPost, setDataPost] = useState<Partial<RequestPost>>();
   const wizRef = useRef<WizardHandle>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const { data: fetchedData, isFetching } = useGetDetailRequests(
+    id ?? undefined
+  );
   const create = useCreateRequest();
   const update = useUpdateRequest();
 
   useEffect(() => {
-    if (data) {
-      setDataPost(data);
+    if (fetchedData?.data && id) {
+      const data = fetchedData.data as RequestTableType;
+      const services = data?.services.map((e) => ({
+        id: e.id as string,
+        serviceId: e.serviceId,
+        quantity: e.requestedQty,
+      }));
+      setDataPost({
+        id: data?.id,
+        title: data?.title,
+        startAt: toDatetimeLocal(data.startAt),
+        endAt: toDatetimeLocal(data.endAt),
+        roomId: data?.roomId,
+        borrowerName: data?.borrowerName ?? "",
+        borrowerEmail: data?.borrowerEmail ?? "",
+        borrowerOrganization: data?.borrowerOrganization ?? "",
+        borrowerPhone: data?.borrowerPhone ?? "",
+        services: services,
+        url: data?.purpose ?? "",
+      });
     }
-  }, [data]);
+  }, [fetchedData, id]);
 
   const handleNext = (
     e:
@@ -111,11 +134,32 @@ const RequestForm: FC<Props> = ({ data }) => {
       );
       return;
     }
-    update.mutate({
-      ...dataFinal,
-      id: dataSend.id as string,
-    });
+    update.mutate(
+      {
+        ...dataFinal,
+        id: dataSend.id as string,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Pengajuan ruangan berhasil diupdate");
+          router.push("/submissions/requests");
+        },
+        onError: (error) => {
+          const err = handleErrorResponse(error);
+          toast.error(err);
+        },
+      }
+    );
   };
+
+  if (isFetching && id) {
+    return (
+      <div className="w-full h-48 flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       <div className="py-4">

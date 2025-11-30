@@ -95,17 +95,31 @@ export function toErrorResponse(err: unknown) {
   return fail("Internal Server Error", { code: "INTERNAL", status: 500 });
 }
 
-export function wrap<
-  TCtx extends Record<string, unknown> = Record<string, unknown>
->(
+// Overload for handlers without context
+export function wrap(
+  handler: (
+    req: NextRequest
+  ) => Response | NextResponse | Promise<Response | NextResponse>
+): (req: NextRequest) => Promise<Response | NextResponse>;
+
+// Overload for handlers with context
+export function wrap<TCtx>(
   handler: (
     req: NextRequest,
     ctx: TCtx
   ) => Response | NextResponse | Promise<Response | NextResponse>
+): (req: NextRequest, ctx: TCtx) => Promise<Response | NextResponse>;
+
+// Implementation
+export function wrap<TCtx = unknown>(
+  handler: (
+    req: NextRequest,
+    ctx?: TCtx
+  ) => Response | NextResponse | Promise<Response | NextResponse>
 ) {
-  return async (req: NextRequest, ctx: TCtx) => {
+  return async (req: NextRequest, ctx?: TCtx) => {
     try {
-      return await handler(req, ctx);
+      return await handler(req, ctx as TCtx);
     } catch (err) {
       console.error(err);
       return toErrorResponse(err);
