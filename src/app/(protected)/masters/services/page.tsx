@@ -63,7 +63,6 @@ const Services = () => {
           });
         } catch (err) {
           Swal.showValidationMessage(handleErrorResponse(err));
-          throw err; // penting: tetap throw agar modal tidak close
         }
       },
     }).then((res) => {

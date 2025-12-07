@@ -25,9 +25,10 @@ export async function GET(req: NextRequest) {
       val?.users?.name ?? "",
       dayjs(val?.startAt).format("DD/MM/YYYY hh:mm"),
       dayjs(val?.endAt).format("DD/MM/YYYY hh:mm"),
+      val?.description ?? "",
     ]);
 
-    response = [["Nama", "Mulai", "Akhir"], ...response];
+    response = [["Nama", "Mulai", "Akhir", "Kegiatan"], ...response];
 
     return NextResponse.json(
       {

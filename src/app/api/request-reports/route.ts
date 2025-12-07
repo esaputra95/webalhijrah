@@ -31,19 +31,51 @@ export async function GET(req: NextRequest) {
         rejectedBy: true,
       },
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const newData: any[] = [];
+    for (const val of data) {
+      newData.push([
+        val?.borrowerName?.toString() ?? "",
+        val?.borrowerOrganization ?? "",
+        val?.borrowerPhone ?? "",
+        val?.rooms?.name ?? "",
+        val?.status,
+        dayjs(val?.startAt).format("DD/MM/YYYY hh:mm"),
+        dayjs(val?.endAt).format("DD/MM/YYYY hh:mm"),
+      ]);
+      newData.push([
+        "",
+        "",
+        "",
+        "",
+        "Service",
+        "Jumlah Pengajuan",
+        "Jumlah Disetujui",
+      ]);
+      val.services.forEach((e) => {
+        newData.push([
+          "",
+          "",
+          "",
+          "",
+          e?.service?.name,
+          e?.requestedQty,
+          e?.approvedQty,
+        ]);
+      });
+    }
 
-    let response = data?.map((val) => [
-      val?.borrowerName?.toString() ?? "",
-      val?.borrowerOrganization ?? "",
-      val?.borrowerPhone ?? "",
-      val?.status,
-      dayjs(val?.startAt).format("DD/MM/YYYY hh:mm"),
-      dayjs(val?.endAt).format("DD/MM/YYYY hh:mm"),
-    ]);
-
-    response = [
-      ["Nama PIC", "Organisasi", "Phone", "Status", "Mulai", "Akhir"],
-      ...response,
+    const response = [
+      [
+        "Nama PIC",
+        "Organisasi",
+        "Phone",
+        "Ruangan",
+        "Status",
+        "Mulai",
+        "Akhir",
+      ],
+      ...newData,
     ];
 
     return NextResponse.json(
