@@ -1,8 +1,7 @@
 // src/lib/auth-session.ts
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth";
+import { auth } from "@/auth";
 
 export async function getCurrentUser() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   return session?.user ?? null; // sudah ada id & role dari callback
 }

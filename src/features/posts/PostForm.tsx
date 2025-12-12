@@ -207,10 +207,8 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
           required
           disabled={mode === "view"}
           option={[
-            { value: "post", label: "Post" },
-            { value: "page", label: "Page" },
-            { value: "attachment", label: "Attachment" },
-            { value: "gallery", label: "Gallery" },
+            { value: "post", label: "Artikel" },
+            { value: "donation", label: "Donasi" },
           ]}
         />
         <SelectInput

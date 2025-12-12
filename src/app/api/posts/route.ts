@@ -75,6 +75,7 @@ function parsePagination(req: NextRequest) {
       post_status ? { post_status: { equals: post_status } } : {},
       post_type ? { post_type: { equals: post_type } } : {},
     ],
+    post_type: "post",
   };
 
   return { page, take, skip, orderBy, where, sortby, sortdir };
