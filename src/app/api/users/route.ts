@@ -12,8 +12,8 @@ const ALLOWED_SORT: Record<string, true> = {
   name: true,
   email: true,
   role: true,
-  createdAt: true,
-  updatedAt: true,
+  created_at: true,
+  updated_at: true,
 };
 
 function parsePagination(req: NextRequest) {
@@ -30,7 +30,7 @@ function parsePagination(req: NextRequest) {
     (sp.get("sort") || "desc").toLowerCase() === "asc" ? "asc" : "desc";
   const orderBy = ALLOWED_SORT[sortby]
     ? { [sortby]: sortdir }
-    : { createdAt: "desc" as const };
+    : { created_at: "desc" as const };
 
   // filters
   const q = (sp.get("q") || "").trim();
@@ -43,14 +43,14 @@ function parsePagination(req: NextRequest) {
       q
         ? {
             OR: [
-              { name: { contains: q, mode: "insensitive" } },
-              { email: { contains: q, mode: "insensitive" } },
-              { role: { contains: q, mode: "insensitive" } },
+              { name: { contains: q } },
+              { email: { contains: q } },
+              { role: { contains: q } },
             ],
           }
         : {},
-      name ? { name: { contains: name, mode: "insensitive" } } : {},
-      email ? { email: { contains: email, mode: "insensitive" } } : {},
+      name ? { name: { contains: name } } : {},
+      email ? { email: { contains: email } } : {},
       role ? { role: { equals: role } } : {},
     ],
   };
@@ -76,8 +76,8 @@ export async function GET(req: NextRequest) {
           name: true,
           email: true,
           role: true,
-          createdAt: true,
-          updatedAt: true,
+          created_at: true,
+          updated_at: true,
         },
       }),
     ]);
@@ -137,8 +137,8 @@ export const POST = wrap(async (req: Request) => {
       name: true,
       email: true,
       role: true,
-      createdAt: true,
-      updatedAt: true,
+      created_at: true,
+      updated_at: true,
     },
   });
 

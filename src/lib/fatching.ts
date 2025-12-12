@@ -56,7 +56,7 @@ const deleteData = async <Response = unknown>(
 
 const getDataById = async <Response = unknown>(
   url: string,
-  id: number
+  id: number | string
 ): Promise<Response> => {
   try {
     const response = await api.get<Response>(`${url}/${id}`);

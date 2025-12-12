@@ -1,351 +1,584 @@
 "use client";
 
-import { useState, useEffect, ReactNode } from "react";
-import { SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules"; // Module wajib diimport
-import Carousel from "@/components/ui/swiper/Carousel";
-import {
-  FaHome,
-  FaClock,
-  FaMapMarkerAlt,
-  FaUserTie,
-  FaBuilding,
-  FaSitemap,
-} from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { useDashboard } from "@/hooks/dashboard/useDashboard";
+import Image from "next/image";
+import Link from "next/link";
+import PublicDonationForm from "@/features/donations/PublicDonationForm";
+import PublicNavbar from "@/components/layouts/PublicNavbar";
+import { motion, Variants } from "framer-motion";
+import { useHeroSliders } from "@/hooks/masters/useSliders";
 
-// --- TYPES / INTERFACES ---
+// Animation Variants
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
 
-interface InfoRowProps {
-  label: string;
-  value?: string | null;
-  icon?: ReactNode;
-  highlight?: boolean;
-}
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
 
-interface RoomItem {
-  id: number | string;
-  title?: string;
-  name?: string;
-  organization?: string;
-  room?: string;
-  startAt?: string;
-  endAt?: string;
-}
+const scaleUp: Variants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.5 } },
+};
 
-interface ScheduleItem {
-  id: number | string;
-  title?: string;
-  user?: string;
-  role?: string;
-  startAt?: string;
-  endAt?: string;
-}
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 
-// --- COMPONENTS ---
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/pagination";
 
-const DigitalClock = () => {
-  const [time, setTime] = useState<Date | null>(null);
-  useEffect(() => setTime(new Date()), []);
+const LandingPage = () => {
+  // Fetch hero sliders from API
+  const { data: slidersData } = useHeroSliders("hero-slider");
 
-  useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!time) return null;
+  // Use API data if available, otherwise use fallback images
+  const heroImages =
+    slidersData?.data && slidersData.data.length > 0
+      ? slidersData.data.map((slider) => slider.image || "").filter(Boolean)
+      : [];
 
   return (
-    <div className="flex flex-col items-end text-slate-800 min-w-[200px]">
-      <span className="text-4xl font-bold font-mono tracking-wider leading-none">
-        {time.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </span>
-      <span className="text-xs md:text-sm text-slate-500 mt-1 font-medium">
-        {time.toLocaleDateString("id-ID", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })}
-      </span>
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
+      {/* Navbar */}
+      <PublicNavbar />
+
+      {/* Hero Section */}
+      <section
+        id="hero"
+        className="relative h-screen flex items-center justify-center overflow-hidden"
+      >
+        {/* Swiper Background Slider */}
+        <div className="absolute inset-0 z-0 select-none">
+          <Swiper
+            modules={[Autoplay, EffectFade, Pagination]}
+            effect="fade"
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            pagination={{ clickable: true }}
+            className="h-full w-full"
+          >
+            {heroImages.map((src, index) => (
+              <SwiperSlide key={index} className="relative w-full h-full">
+                <Image
+                  src={src}
+                  alt={`Slide ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  quality={90}
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70" />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="container mx-auto px-4 relative z-10 text-center text-white space-y-6 pointer-events-none"
+        >
+          <motion.div variants={fadeInUp} className="inline-block">
+            <div className="px-4 py-1.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-sm font-medium tracking-wide pointer-events-auto">
+              Pusat Halaqoh Ilmiah Islam
+            </div>
+          </motion.div>
+
+          <motion.h1
+            variants={fadeInUp}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl mx-auto drop-shadow-2xl"
+          >
+            Investasi Akhirat <br />
+            <span className="text-brand-gold">Jangan Pernah Abaikan</span>
+          </motion.h1>
+          <motion.p
+            variants={fadeInUp}
+            className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed"
+          >
+            Siapkan Donasi Terbaik Markaz Al Hijrah Nusantara. Dari Kaum
+            Muslimin, Untuk Kaum Muslimin, dan Milik Kaum Muslimin.
+          </motion.p>
+          <motion.div
+            variants={fadeInUp}
+            className="flex flex-col sm:flex-row gap-4 justify-center pt-8 pointer-events-auto"
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/donasi"
+                className="px-8 py-4 bg-brand-gold hover:bg-[#d4b035] text-brand-blue font-bold text-lg rounded-full transition-all shadow-xl hover:shadow-yellow-500/30 flex items-center justify-center gap-2"
+              >
+                <span>💝</span> Donasi Sekarang
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="#about"
+                className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-bold text-lg rounded-full transition-all flex items-center justify-center"
+              >
+                Pelajari Lebih Lanjut
+              </Link>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/70 z-20"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </motion.div>
+      </section>
+
+      {/* Stats Section (Quick Numbers) */}
+      <div className="bg-brand-blue py-12 relative z-20 -mt-2">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white"
+          >
+            {[
+              { label: "Jamaah", value: "5000+" },
+              { label: "Santri", value: "120+" },
+              { label: "Kegiatan/Bulan", value: "45+" },
+              { label: "Program", value: "10+" },
+            ].map((stat, i) => (
+              <motion.div key={i} variants={scaleUp} className="space-y-2">
+                <div className="text-3xl md:text-4xl font-bold text-brand-gold">
+                  {stat.value}
+                </div>
+                <div className="text-gray-300 text-sm md:text-base font-medium uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* About Section */}
+      <section
+        id="about"
+        className="py-20 md:py-28 bg-white relative overflow-hidden"
+      >
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-emerald-50 rounded-full opacity-50 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-50 rounded-full opacity-50 blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="lg:w-1/2 relative"
+            >
+              <div className="absolute -top-4 -left-4 w-20 h-20 border-t-4 border-l-4 border-brand-gold rounded-tl-3xl z-10" />
+              <div className="absolute -bottom-4 -right-4 w-20 h-20 border-b-4 border-r-4 border-brand-gold rounded-br-3xl z-10" />
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-0 transition-transform hover:rotate-1 duration-500">
+                <Image
+                  src="/images/kegiatan-masjid-markaz-alhijrah-1.webp"
+                  alt="About Markaz Al Hijrah"
+                  width={800}
+                  height={800}
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-6 left-6 text-white text-left">
+                  <p className="font-bold text-xl">Masjid Markaz Al Hijrah</p>
+                  <p className="text-sm opacity-90">Pusat Peradaban & Ilmu</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="lg:w-1/2 space-y-6 text-center lg:text-left"
+            >
+              <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-blue rounded-full text-sm font-semibold mb-2">
+                Tentang Kami
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-blue leading-tight">
+                Membangun Peradaban Melalui{" "}
+                <span className="text-brand-gold">Masjid & Ilmu</span>
+              </h2>
+              <div className="w-20 h-1.5 bg-brand-gold rounded-full mx-auto lg:mx-0" />
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Markaz Al Hijrah Nusantara adalah Pusat Halaqoh Ilmiah Islam
+                Terbesar di Nusantara. Kami berdedikasi untuk menjadi wadah bagi
+                kaum muslimin dalam menuntut ilmu, beribadah, dan mempererat
+                ukhuwah islamiyah.
+              </p>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                <span className="font-semibold text-gray-800">
+                  &quot;Dari Kaum Muslimin, Untuk Kaum Muslimin, dan Milik Kaum
+                  Musikin&quot;
+                </span>
+                . Slogan ini menjadi ruh perjuangan kami untuk terus memberikan
+                manfaat seluas-luasnya bagi umat.
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-left">
+                {[
+                  "Kajian Rutin Harian",
+                  "Pendidikan Tahfidz",
+                  "Program Sosial Kemasyarakatan",
+                  "Fasilitas Ibadah Nyaman",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3">
+                    <span className="w-6 h-6 rounded-full bg-yellow-100 text-brand-blue flex items-center justify-center text-xs">
+                      ✓
+                    </span>
+                    <span className="text-gray-700 font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="pt-6">
+                <Link
+                  href="/about"
+                  className="text-brand-blue font-semibold hover:text-brand-gold flex items-center justify-center lg:justify-start gap-2 group"
+                >
+                  Baca Selengkapnya
+                  <motion.span
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 5 }}
+                    className="inline-block"
+                  >
+                    →
+                  </motion.span>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Programs Section */}
+      <section id="programs" className="py-20 md:py-28 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto mb-16 space-y-4"
+          >
+            <div className="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-semibold">
+              Program Unggulan
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-brand-blue">
+              Salurkan <span className="text-brand-gold">Kebaikan Anda</span>
+            </h2>
+            <p className="text-lg text-gray-600">
+              Pilih program kebaikan yang ingin Anda dukung. Bersama kita
+              wujudkan manfaat yang lebih luas.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {[
+              {
+                title: "Pembangunan Masjid",
+                desc: "Wakaf pembangunan dan perluasan area masjid untuk kenyamanan ibadah jamaah.",
+                icon: "🕌",
+                color: "emerald",
+              },
+              {
+                title: "Pendidikan & Dakwah",
+                desc: "Dukung operasional halaqoh ilmiah, kajian rutin, dan pendidikan santri.",
+                icon: "📚",
+                color: "blue",
+              },
+              {
+                title: "Infaq & Sedekah",
+                desc: "Bantuan operasional harian masjid dan program sosial untuk dhuafa.",
+                icon: "🤝",
+                color: "orange",
+              },
+            ].map((program, i) => (
+              <motion.div
+                key={i}
+                variants={fadeInUp}
+                whileHover={{ y: -10 }}
+                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
+              >
+                <div
+                  className={`w-16 h-16 rounded-2xl bg-${program.color}-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  {program.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors">
+                  {program.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  {program.desc}
+                </p>
+                <Link
+                  href="/donasi"
+                  className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-brand-gold uppercase tracking-wider transition-colors"
+                >
+                  Donasi Sekarang <span className="ml-2">→</span>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Direct Donation Section */}
+      <section className="py-20 md:py-28 bg-white relative">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row items-start gap-16">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:w-5/12 space-y-8 sticky top-28"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-blue leading-tight">
+                Mulai <span className="text-brand-gold">Investasi Akhirat</span>{" "}
+                Anda Hari Ini
+              </h2>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Tidak perlu menunggu kaya untuk bersedekah. Mulailah dari yang
+                sedikit namun istiqomah. Allah Maha Melihat setiap butir
+                kebaikan yang kita tanam.
+              </p>
+
+              <div className="bg-yellow-50 rounded-2xl p-6 border border-yellow-100">
+                <h4 className="font-bold text-brand-blue mb-2 flex items-center gap-2">
+                  <span className="text-xl">💡</span> Tahukah Anda?
+                </h4>
+                <p className="text-brand-blue text-sm italic">
+                  &quot;Barangsiapa membangun masjid karena mengharap ridha
+                  Allah, maka Allah akan membangunkan untuknya (rumah) seperti
+                  itu di surga.&quot; (HR. Bukhari)
+                </p>
+              </div>
+
+              {/* <div className="space-y-4 pt-4">
+                <p className="font-semibold text-gray-900">Transfer Manual:</p>
+                <div className="flex gap-4">
+                  <div className="bg-white border rounded-lg p-3 flex-1 text-center shadow-sm">
+                    <div className="text-xs text-gray-500 uppercase">
+                      Bank Syariah Indonesia
+                    </div>
+                    <div className="font-mono font-bold text-lg text-gray-800">
+                      300 0500 045
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      a.n Markaz Al Hijrah
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:w-7/12 w-full"
+            >
+              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 transform hover:scale-[1.01] transition-transform duration-500">
+                <div className="bg-gradient-to-r from-brand-blue to-gray-800 p-6 text-white text-center">
+                  <h3 className="text-2xl font-bold">Form Donasi Online</h3>
+                  <p className="text-gray-300 opacity-90">
+                    Aman, Cepat & Terpercaya via Midtrans
+                  </p>
+                </div>
+                <div className="p-6 md:p-8">
+                  <PublicDonationForm />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-brand-blue to-gray-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/pattern-islamic.png')] opacity-5"></div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="container mx-auto px-4 text-center relative z-10"
+        >
+          <h2 className="text-3xl md:text-5xl font-bold mb-8 max-w-4xl mx-auto">
+            &quot;Harta tidak akan berkurang karena sedekah. Dan tidaklah Allah
+            menambah bagi hamba yang pemaaf kecuali kemuliaan.&quot;
+          </h2>
+          <p className="text-xl text-brand-gold mb-10 italic font-medium">
+            (HR. Muslim)
+          </p>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/donasi"
+              className="inline-block px-10 py-5 bg-brand-gold text-brand-blue font-bold text-xl rounded-full hover:bg-[#d4b035] transition-all shadow-2xl hover:shadow-white/20 transform hover:-translate-y-1"
+            >
+              Ayo Berdonasi
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-12">
+            <div className="col-span-1 md:col-span-2 space-y-6">
+              <Link href="/" className="flex items-center gap-2 text-white">
+                <div className="w-8 h-8 bg-brand-gold text-brand-blue rounded-full flex items-center justify-center font-bold">
+                  M
+                </div>
+                <span className="font-bold text-2xl">Markaz Al-Hijrah</span>
+              </Link>
+              <p className="text-gray-400 leading-relaxed max-w-sm">
+                Pusat Halaqoh Ilmiah Islam Terbesar di Nusantara. Berkhidmah
+                untuk umat melalui dakwah, pendidikan, dan sosial.
+              </p>
+              <div className="flex gap-4 pt-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <motion.div
+                    key={i}
+                    whileHover={{
+                      scale: 1.1,
+                      backgroundColor: "#EFC940",
+                      color: "#4A4C70",
+                    }}
+                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <span className="text-sm">Sos</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-bold text-lg">Tautan Cepat</h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link
+                    href="/"
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    Beranda
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#about"
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    Tentang
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/programs"
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    Program
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/articles"
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    Artikel
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/donasi"
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    Donasi
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-bold text-lg">Kontak Kami</h4>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="text-brand-gold mt-1">📍</span>
+                  <span>
+                    Jl. Kayu Putih, RT 01 RW 06 Kel. Binawidya Kec. Binawidya
+                    Kota Pekanbaru, Riau
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-brand-gold">📞</span>
+                  <span>+62 851 7436 8006</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-brand-gold">📞</span>
+                  <span>+62 8117 550 202</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-brand-gold">✉️</span>
+                  <span>info@markaz-alhijrah.id</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-16 pt-8 text-center text-sm">
+            <p>
+              &copy; {new Date().getFullYear()} Markaz Al-Hijrah Nusantara. All
+              rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
 
-const InfoRow = ({ label, value, icon, highlight = false }: InfoRowProps) => (
-  <div className="flex flex-row justify-between items-start border-b border-dashed border-slate-200 pb-1.5 last:border-0 last:pb-0">
-    <div className="flex items-center gap-2 mt-0.5">
-      {icon ? (
-        <span className="text-[10px] opacity-60 text-slate-500">{icon}</span>
-      ) : (
-        <span className="w-3" />
-      )}
-      <span className="text-slate-500 text-[10px] uppercase font-bold tracking-wide">
-        {label}
-      </span>
-    </div>
-    <span
-      className={`text-xs md:text-sm font-semibold text-right leading-tight max-w-[65%] truncate ${
-        highlight ? "text-emerald-700" : "text-slate-700"
-      }`}
-    >
-      {value || "-"}
-    </span>
-  </div>
-);
-
-// --- MAIN PAGE (LIGHT THEME) ---
-
-export default function Home() {
-  const router = useRouter();
-  const { data: dashboardData } = useDashboard();
-
-  const roomData: RoomItem[] = dashboardData?.data?.room || [];
-  const scheduleData: ScheduleItem[] = dashboardData?.data?.schedule || [];
-
-  return (
-    <div className="w-full h-screen bg-slate-100 flex flex-col overflow-hidden font-sans select-none text-slate-800">
-      {/* 1. HEADER */}
-      <header className="flex-none h-[12%] flex items-center justify-between px-6 border-b border-slate-200 bg-white relative z-10 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-yellow-500 rounded-full flex items-center justify-center shadow-md shadow-yellow-500/30">
-            <span className="text-2xl font-black text-white">R</span>
-          </div>
-          <div className="flex flex-col justify-center">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight">
-              PUSAT INFORMASI KEGIATAN
-            </h1>
-            <h2 className="text-sm md:text-base text-slate-500 font-semibold tracking-widest uppercase">
-              Kantor Gubernur Provinsi Riau
-            </h2>
-          </div>
-        </div>
-        <DigitalClock />
-      </header>
-
-      {/* 2. MAIN CONTENT */}
-      <main className="flex-1 flex flex-col min-h-0 p-4 gap-4">
-        {/* SECTION TOP: ROOM */}
-        <section className="flex-1 min-h-0 min-w-0 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm p-3 relative">
-          <div className="flex items-center gap-2 mb-2 px-1 shrink-0 h-8 border-b border-slate-100 pb-2">
-            <div className="p-1.5 bg-emerald-100 rounded-md">
-              <FaBuilding className="text-emerald-600 text-xs" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-700 tracking-tight">
-              Jadwal Ruangan
-            </h3>
-          </div>
-
-          <div className="flex-1 min-h-0 w-full relative pt-1">
-            <Carousel
-              swiperProps={{
-                // PENTING: Daftarkan module Autoplay disini agar jalan otomatis
-                modules: [Autoplay],
-                slidesPerView: 1,
-                spaceBetween: 14,
-                breakpoints: {
-                  640: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
-                  1400: { slidesPerView: 4 },
-                },
-                autoplay: {
-                  delay: 4000,
-                  disableOnInteraction: false, // Tetap jalan walau disentuh
-                  pauseOnMouseEnter: false, // Tetap jalan walau mouse diatasnya
-                },
-                className: "h-full w-full !pb-4",
-              }}
-            >
-              {roomData.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-300 bg-slate-50 rounded-xl">
-                  <span className="text-slate-500 text-sm font-medium">
-                    Tidak ada data ruangan
-                  </span>
-                </div>
-              )}
-              {roomData.map((it) => (
-                <SwiperSlide key={it.id} className="!h-auto">
-                  <article className="h-full bg-white rounded-lg overflow-hidden shadow-sm border border-slate-200 border-l-[5px] border-l-emerald-500 flex flex-col hover:shadow-md transition-shadow">
-                    <div className="bg-slate-50 px-3 py-2 border-b border-slate-100 h-[3.2rem] flex items-center">
-                      <h4 className="text-sm text-slate-800 font-bold leading-tight line-clamp-2">
-                        {it.title}
-                      </h4>
-                    </div>
-                    <div className="p-3 flex flex-col gap-2 flex-1">
-                      <InfoRow
-                        label="PIC"
-                        value={it?.name}
-                        icon={<FaUserTie />}
-                      />
-                      <InfoRow
-                        label="Divisi"
-                        value={it?.organization}
-                        icon={<FaSitemap />}
-                      />
-                      <InfoRow
-                        label="Lokasi"
-                        value={it?.room}
-                        icon={<FaMapMarkerAlt className="text-red-500" />}
-                        highlight
-                      />
-
-                      <div className="mt-auto pt-2 border-t border-slate-100 flex justify-between items-center bg-white -mx-3 px-3 pb-0.5">
-                        <div className="flex flex-col">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold">
-                            Mulai
-                          </span>
-                          <span className="text-emerald-700 font-mono font-bold text-base">
-                            {it?.startAt?.split(" ")[1] || "-"}
-                          </span>
-                        </div>
-                        <div className="text-slate-300 text-xs">-</div>
-                        <div className="flex flex-col items-end">
-                          <span className="text-[9px] text-slate-400 uppercase font-bold">
-                            Selesai
-                          </span>
-                          <span className="text-emerald-700 font-mono font-bold text-base">
-                            {it?.endAt?.split(" ")[1] || "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </SwiperSlide>
-              ))}
-            </Carousel>
-          </div>
-        </section>
-
-        {/* SECTION BOTTOM: SCHEDULE */}
-        <section className="flex-1 min-h-0 min-w-0 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm p-3 relative">
-          <div className="flex justify-between items-center mb-2 px-1 shrink-0 h-8 border-b border-slate-100 pb-2">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-orange-100 rounded-md">
-                <FaUserTie className="text-orange-600 text-xs" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-700 tracking-tight">
-                Agenda Pimpinan
-              </h3>
-            </div>
-            <button
-              onClick={() => router.push("/masters")}
-              className="p-1.5 rounded-full bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors"
-            >
-              <FaHome size={12} />
-            </button>
-          </div>
-
-          <div className="flex-1 min-h-0 w-full relative pt-1">
-            <Carousel
-              swiperProps={{
-                slidesPerView: 1,
-                spaceBetween: 14,
-                breakpoints: {
-                  640: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
-                  1400: { slidesPerView: 4 },
-                },
-                autoplay: {
-                  delay: 1000,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: false,
-                },
-                className: "h-full w-full !pb-4",
-              }}
-            >
-              {scheduleData.length === 0 ? (
-                <SwiperSlide className="!h-auto">
-                  <div className="h-full flex flex-col items-center justify-center border-2 border-dashed border-slate-300 bg-slate-50 rounded-xl">
-                    <span className="text-slate-500 text-sm font-medium">
-                      Tidak ada agenda pimpinan
-                    </span>
-                  </div>
-                </SwiperSlide>
-              ) : (
-                scheduleData.map((it) => (
-                  <SwiperSlide key={it.id} className="!h-auto">
-                    <article className="h-full bg-white rounded-lg overflow-hidden shadow-sm border border-slate-200 flex flex-col relative hover:shadow-md transition-shadow">
-                      <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-2 h-[2.8rem] flex items-center shrink-0">
-                        <h4 className="text-white text-sm font-bold line-clamp-1 w-full drop-shadow-sm">
-                          {it.title || "Agenda Kegiatan"}
-                        </h4>
-                      </div>
-                      <div className="p-3 flex flex-col gap-1 text-slate-700 flex-1 min-h-0">
-                        <div className="flex flex-col border-b border-slate-100 pb-2">
-                          <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-                            Pejabat
-                          </span>
-                          <span className="font-bold text-sm text-slate-800 line-clamp-1">
-                            {it?.user}
-                          </span>
-                          <span className="text-[10px] text-orange-600 font-semibold line-clamp-1">
-                            {it?.role ?? "-"}
-                          </span>
-                        </div>
-
-                        <div className="mt-auto bg-slate-50 rounded-lg p-2 flex items-center gap-2 border border-slate-100">
-                          <FaClock className="text-orange-500 text-sm" />
-                          <div className="flex flex-col leading-none">
-                            <span className="text-slate-400 text-[8px] uppercase mb-0.5 font-bold">
-                              Waktu Pelaksanaan
-                            </span>
-                            <span className="font-mono font-bold text-slate-700 text-sm">
-                              {it?.startAt?.split(" ")[1] || "00:00"} -{" "}
-                              {it?.endAt?.split(" ")[1] || "00:00"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  </SwiperSlide>
-                ))
-              )}
-            </Carousel>
-          </div>
-        </section>
-      </main>
-
-      {/* 3. FOOTER MARQUEE */}
-      <footer className="flex-none h-[5%] bg-yellow-400 flex items-center relative overflow-hidden z-20 shadow-[0_-4px_15px_rgba(0,0,0,0.05)] border-t border-yellow-500">
-        <div className="bg-red-600 h-full flex items-center px-6 absolute left-0 z-20 shadow-lg skew-x-12 -ml-6 min-w-[220px]">
-          <span className="text-white font-bold text-xs md:text-sm -skew-x-12 uppercase tracking-wider ml-4">
-            Informasi Terkini
-          </span>
-        </div>
-
-        {/* <div className="w-full h-full flex items-center pl-[230px]">
-          <Swiper
-            modules={[Autoplay]}
-            slidesPerView="auto"
-            spaceBetween={50}
-            loop={true}
-            speed={8000} // Kecepatan gerakan text
-            autoplay={{
-              delay: 0,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: false,
-            }}
-            allowTouchMove={false}
-            className="w-full h-full flex items-center"
-          >
-            {[1, 2, 3, 4].map((i) => (
-              <SwiperSlide key={i} className="!w-auto flex items-center h-full">
-                <span className="text-slate-900 text-base md:text-lg font-bold whitespace-nowrap uppercase flex items-center gap-4">
-                  <span className="w-1.5 h-1.5 bg-red-600 rounded-full inline-block"></span>
-                  SELAMAT DATANG DI PUSAT INFORMASI KEGIATAN KANTOR GUBERNUR
-                  RIAU
-                  <span className="w-1.5 h-1.5 bg-red-600 rounded-full inline-block"></span>
-                  JAGA KEBERSIHAN DAN KETERTIBAN LINGKUNGAN KANTOR
-                </span>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div> */}
-      </footer>
-    </div>
-  );
-}
+export default LandingPage;

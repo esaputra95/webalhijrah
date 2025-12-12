@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "../styles/tiptap.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-gold: #efc940;
+  --brand-blue: #4a4c70;
+  --brand-dark: #333333;
 }
 
 @theme inline {
@@ -10,6 +15,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-dark: var(--brand-dark);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,4 +51,60 @@ body {
 /* Atau global hide (opsional, hati-hati jika ada bagian lain yang butuh scroll) */
 body::-webkit-scrollbar {
   display: none;
+}
+
+/* Custom animations for donation pages */
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0; /* Start hidden */
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
 }

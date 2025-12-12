@@ -1,10 +1,4 @@
-import {
-  FiLayers,
-  FiUsers,
-  FiFileText,
-  FiFilePlus,
-  FiFile,
-} from "react-icons/fi";
+import { FiLayers, FiFileText, FiFile } from "react-icons/fi";
 
 export type NavItem = {
   icon: React.ComponentType<{ className?: string }>;
@@ -26,7 +20,7 @@ export const navGroups: NavGroup[] = [
       {
         icon: FiLayers,
         label: "Dashboard",
-        path: "/",
+        path: "/admins/",
         role: ["SUPER_ADMIN", "APPROVER", "ADMIN", "STAFF"],
       },
     ],
@@ -35,49 +29,60 @@ export const navGroups: NavGroup[] = [
     label: "Data Master",
     items: [
       {
-        icon: FiLayers,
-        label: "Layanan",
-        path: "/masters/services",
+        icon: FiFileText,
+        label: "Kategori Artikel",
+        path: "/admins/masters/post-categories",
         role: ["SUPER_ADMIN"],
       },
       {
-        icon: FiUsers,
-        label: "Pengguna",
-        path: "/masters/users",
+        icon: FiFile,
+        label: "Sliders",
+        path: "/admins/masters/sliders",
         role: ["SUPER_ADMIN"],
       },
     ],
   },
   {
-    label: "System Pengajuan",
+    label: "Artikel",
     items: [
       {
-        icon: FiFilePlus,
-        label: "Pengajuan Kegiatan",
-        path: "/submissions/requests",
-        role: ["SUPER_ADMIN", "APPROVER", "ADMIN", "STAFF"],
-      },
-      {
-        icon: FiFile,
-        label: "Jadwal Kegiatan",
-        path: "/submissions/schedules",
-        role: ["SUPER_ADMIN", "APPROVER", "ADMIN"],
+        icon: FiFileText,
+        label: "Artikel",
+        path: "/admins/articles",
+        role: ["SUPER_ADMIN"],
       },
     ],
   },
+  {
+    label: "Program",
+    items: [
+      {
+        icon: FiFileText,
+        label: "Daftar Program",
+        path: "/admins/programs",
+        role: ["SUPER_ADMIN"],
+      },
+    ],
+  },
+  {
+    label: "Donasi",
+    items: [
+      {
+        icon: FiFileText,
+        label: "Daftar Donasi",
+        path: "/admins/donations",
+        role: ["SUPER_ADMIN"],
+      },
+    ],
+  },
+
   {
     label: "Laporan",
     items: [
       {
         icon: FiFileText,
-        label: "Laporan Pengajuan",
-        path: "/reports/request-reports",
-        role: ["SUPER_ADMIN", "APPROVER", "ADMIN"],
-      },
-      {
-        icon: FiFileText,
-        label: "Laporan Jadwal Kegiatan",
-        path: "/reports/schedule-reports",
+        label: "Laporan Donasi",
+        path: "/admins/reports/request-reports",
         role: ["SUPER_ADMIN", "APPROVER", "ADMIN"],
       },
     ],

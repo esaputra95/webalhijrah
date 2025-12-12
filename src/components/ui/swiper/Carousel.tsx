@@ -30,7 +30,7 @@ export default function Carousel({ swiperProps, children }: CarouselProps) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       <Swiper
         // simpan instance supaya bisa dipaksa autoplay.start()
         onSwiper={(swiper) => {
@@ -45,7 +45,7 @@ export default function Carousel({ swiperProps, children }: CarouselProps) {
           }
         }}
         modules={[Navigation, Pagination, Autoplay, A11y]}
-        className="!px-2"
+        className="w-full h-full"
         spaceBetween={spaceBetween ?? 16}
         slidesPerView={slidesPerView ?? 1}
         breakpoints={breakpoints ?? defaultBreakpoints}

@@ -11,5 +11,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/masters/:path*", "/submissions/:path*", "/reports/:path*"], // tetap
+  matcher: ["/admins/:path*"],
 };

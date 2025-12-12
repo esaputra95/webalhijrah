@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,17 +15,25 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-
     // ✅ penting untuk alias "@/..."
     "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"] },
-
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     // ✅ penting agar augmentasi NextAuth terbaca & no 'any'
-    "types": ["next-auth", "node"],
-
-    "plugins": [{ "name": "next" }]
+    "types": [
+      "next-auth",
+      "node"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -29,6 +41,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/types/**/*.d.ts" // ✅ pastikan folder augmentasi ikut
+    ,
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

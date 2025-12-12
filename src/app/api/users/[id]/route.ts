@@ -20,14 +20,14 @@ export const GET = wrap(
     const { id } = await ctx.params;
 
     const user = await prisma.users.findUnique({
-      where: { id },
+      where: { id: Number(id) },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        createdAt: true,
-        updatedAt: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
@@ -60,7 +60,9 @@ export const PUT = wrap(
       data.password = parsed.password;
     }
 
-    const exists = await prisma.users.findUnique({ where: { id } });
+    const exists = await prisma.users.findUnique({
+      where: { id: Number(id) },
+    });
     if (!exists) {
       throw new AppError("User tidak ditemukan", {
         code: "NOT_FOUND",
@@ -69,15 +71,15 @@ export const PUT = wrap(
     }
 
     const updated = await prisma.users.update({
-      where: { id },
+      where: { id: Number(id) },
       data,
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        createdAt: true,
-        updatedAt: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
@@ -90,7 +92,9 @@ export const DELETE = wrap(
   async (_req: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
     const { id } = await ctx.params;
 
-    const exists = await prisma.users.findUnique({ where: { id } });
+    const exists = await prisma.users.findUnique({
+      where: { id: Number(id) },
+    });
     if (!exists) {
       throw new AppError("User tidak ditemukan", {
         code: "NOT_FOUND",
@@ -99,7 +103,7 @@ export const DELETE = wrap(
     }
 
     const deleted = await prisma.users.delete({
-      where: { id },
+      where: { id: Number(id) },
       select: { id: true, name: true, email: true },
     });
 

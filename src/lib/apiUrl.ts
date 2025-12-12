@@ -7,6 +7,12 @@ const apiUrl = {
   requestReports: "/api/request-reports",
   scheduleReport: "/api/schedule-reports",
   dashboard: "/api/dashboard",
+  posts: "/api/posts",
+  terms: "/api/terms",
+  donations: "/api/donations",
+  postCategories: "/api/post-categories",
+  programs: "/api/programs",
+  sliders: "/api/sliders",
 };
 
 export default apiUrl;

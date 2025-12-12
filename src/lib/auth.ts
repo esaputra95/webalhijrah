@@ -23,7 +23,6 @@ export const authOptions: NextAuthOptions = {
             name: true,
             email: true,
             password: true,
-            role: true,
           },
         });
         if (!dbUser) return null;
@@ -32,10 +31,10 @@ export const authOptions: NextAuthOptions = {
         if (!ok) return null;
 
         const user: User = {
-          id: dbUser.id,
+          id: Number(dbUser.id),
           name: dbUser.name,
           email: dbUser.email,
-          role: dbUser.role as "ADMIN" | "USER" | "Gubernur" | string,
+          role: "USER", // Default role karena kolom role tidak ada di database
         };
         return user;
       },
@@ -46,7 +45,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       // 'token' & 'user' sudah diaugment, jadi aman tanpa any
       if (user) {
-        token.id = user.id;
+        token.id = Number(user.id);
         token.role = user.role;
       }
       return token;

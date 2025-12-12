@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
   const currentPath = useCurrentPath();
   const session = useSession();
-  console.log({ session });
 
   return (
     <>
@@ -22,9 +21,6 @@ export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
             <p className="truncate text-xs text-slate-500">
               {session.data?.user?.email}
             </p>
-            <p className="truncate text-xs text-slate-500">
-              {session.data?.user?.role}
-            </p>
           </div>
         )}
       </div>
@@ -33,12 +29,10 @@ export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
       <nav className="space-y-6">
         {navGroups.map((g, gi) => {
           // Filter items by role first
-          const visibleItems = g.items.filter((it) =>
-            it.role?.includes(session.data?.user?.role as string)
-          );
+          const visibleItems = g.items;
 
           // Don't render group if no visible items
-          if (visibleItems.length === 0) return null;
+          // if (visibleItems.length === 0) return null;
 
           return (
             <div key={gi}>

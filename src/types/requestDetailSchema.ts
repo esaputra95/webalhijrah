@@ -1,19 +1,12 @@
 import { z } from "zod";
-// Jika kamu punya enum Prisma:
-import { ServiceApprovalStatus } from "@prisma/client"; // <-- hapus baris ini jika tidak pakai Prisma enum
 import { ServiceType } from "./serviceSchema";
 
-// Batas panjang field (mengikuti @db.VarChar)
 const MAX = {
   id: 36,
   approvalNote: 255,
 };
 
-// Enum status approval
-// Jika pakai Prisma enum:
-const ZServiceApprovalStatus = z.nativeEnum(ServiceApprovalStatus);
-// Jika TIDAK pakai Prisma enum, gunakan fallback di bawah:
-// const ZServiceApprovalStatus = z.enum(["PENDING", "APPROVED", "REJECTED"]);
+const ZServiceApprovalStatus = z.enum(["PENDING", "APPROVED", "REJECTED"]);
 
 export const RequestDetailCreateSchema = z
   .object({

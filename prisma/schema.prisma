@@ -1,237 +1,211 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-// ===== ENUMS =====
-enum AttachmentType {
-  IMAGE     // jpg/png/heic/webp
-  DOCUMENT  // pdf/doc/xls/zip dst
-}
-
-enum AttachmentCategory {
-  REQUEST_FORM        // dokumen pendukung saat ajukan
-  APPROVAL_DOCUMENT   // surat persetujuan
-  EVENT_PROOF         // FOTO BUKTI SETELAH KEGIATAN
-  OTHER
-}
-
-enum ServiceType {
-  service
-  room
-}
-
-enum RequestStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  PARTIALLY_APPROVED
-  CANCELLED
-  FINISH
-}
-
-enum ServiceApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  PARTIALLY_APPROVED
-}
-
-// ---------- USERS ----------
 model users {
-  id         String   @id @default(uuid()) @db.VarChar(36)
-  name       String   @db.VarChar(150)
-  email      String   @unique @db.VarChar(150)
-  role       String?  @db.VarChar(50)
-  password   String   @db.VarChar(255)
-
-  // relations (back-relation)
-  requests            room_requests[]          @relation("Requester")
-  approvedRequests    room_requests[]          @relation("OverallApprover")
-  approvedServices    room_request_services[]  @relation("ServiceApprover")
-  request_attachments request_attachments[]
-
-  createdAt  DateTime @default(now()) @db.Timestamp(3)
-  updatedAt  DateTime @updatedAt      @db.Timestamp(3)
-
-  room_requests room_requests[] @relation("OverallRejector")
-  schedules schedules[]
+  id                Int      @id @default(autoincrement()) @db.UnsignedInt
+  name              String      @db.VarChar(255)
+  email             String      @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at DateTime?   @db.Timestamp(0)
+  password          String      @db.VarChar(255)
+  remember_token    String?     @db.VarChar(100)
+  created_at        DateTime?   @db.Timestamp(0)
+  updated_at        DateTime?   @db.Timestamp(0)
+  role String? @db.VarChar(100)
+  neo_posts         neo_posts[]
+  post_categories   neo_post_categories[]
 }
 
-// ---------- SERVICES ----------
-model services {
-  id            String   @id @default(uuid()) @db.VarChar(36)
-  name          String   @unique @db.VarChar(100)
-  description   String?  @db.VarChar(255)
-  unit          String?  @db.VarChar(30)
-  active        Boolean  @default(true)
-  maxPerRequest Int?
-  type          ServiceType @default(service)
-
-  requestDetails room_request_services[]
-
-  createdAt    DateTime @default(now()) @db.Timestamp(3)
-  updatedAt    DateTime @updatedAt      @db.Timestamp(3)
-
-  room_requests room_requests[] @relation("rooms")
+model cache {
+  key        String @id @db.VarChar(255)
+  value      String @db.MediumText
+  expiration Int
 }
 
-// ---------- ROOM REQUESTS ----------
-model room_requests {
-  id            String   @id @default(uuid()) @db.VarChar(36)
-
-  roomId        String @db.VarChar(36)
-  rooms services @relation("rooms", fields: [roomId], references: [id])
-
-  /// Pengaju internal (user sistem)
-  requesterId   String   @db.VarChar(36)
-  requester     users    @relation("Requester", fields: [requesterId], references: [id])
-
-  /// Identitas & ringkasan kegiatan
-  requestNumber String   @unique @db.VarChar(30)  // contoh: RR-2025-000123
-  title         String   @db.VarChar(150)         // judul/nama kegiatan
-  purpose       String?  @db.VarChar(255)
-  note          String?  @db.VarChar(255)
-
-  /// Jadwal
-  startAt       DateTime
-  endAt         DateTime
-
-  /// Peminjam/penanggung jawab (bisa eksternal)
-  borrowerName          String? @db.VarChar(100)  // siapa yang mau pinjam
-  borrowerOrganization  String? @db.VarChar(150)  // instansi/komunitas
-  borrowerPhone         String? @db.VarChar(30)
-  borrowerEmail         String? @db.VarChar(150)
-
-  /// Lokasi (jika offsite / butuh alamat lengkap)
-  isOffsite     Boolean  @default(false)
-  addressLine   String?  @db.VarChar(255)
-  district      String?  @db.VarChar(100)
-  city          String?  @db.VarChar(100)
-  province      String?  @db.VarChar(100)
-  postalCode    String?  @db.VarChar(20)
-
-  /// Logistik kegiatan
-  attendeesCount        Int?                      // perkiraan peserta
-  requireCatering       Boolean @default(false)
-  requireItSupport      Boolean @default(false)
-  equipment             Json?                     // daftar alat (projector, mic, dll)
-  additionalRequirements String? @db.Text         // kebutuhan lain
-
-  /// ACC keseluruhan
-  status        RequestStatus @default(PENDING)
-  approvedById  String?  @db.VarChar(36)
-  approvedBy    users?   @relation("OverallApprover", fields: [approvedById], references: [id])
-  approvedAt    DateTime?
-
-  /// Penolakan (opsional, jika workflow-mu pakai REJECTED)
-  rejectedById     String? @db.VarChar(36)
-  rejectedBy       users?  @relation("OverallRejector", fields: [rejectedById], references: [id])
-  rejectedAt       DateTime?
-  rejectionReason  String? @db.VarChar(255)
-
-  /// Relasi detail
-  services     room_request_services[]
-  attachments  request_attachments[]
-
-  /// Audit
-  createdAt    DateTime @default(now()) @db.Timestamp(3)
-  updatedAt    DateTime @updatedAt      @db.Timestamp(3)
-
-  @@index([requesterId, startAt])
-  @@index([status, startAt])
-  @@map("room_requests")
+model cache_locks {
+  key        String @id @db.VarChar(255)
+  owner      String @db.VarChar(255)
+  expiration Int
 }
 
-// ---------- DETAIL SERVICES PER REQUEST ----------
-model room_request_services {
-  id            String   @id @default(uuid()) @db.VarChar(36)
-
-  roomRequestId String   @db.VarChar(36)
-  roomRequest   room_requests @relation(fields: [roomRequestId], references: [id], onDelete: Cascade)
-
-  serviceId     String   @db.VarChar(36)
-  service       services @relation(fields: [serviceId], references: [id])
-
-  requestedQty  Int
-  approvedQty   Int?
-
-  status        ServiceApprovalStatus @default(PENDING)
-  approverId    String? @db.VarChar(36)
-  approver      users?  @relation("ServiceApprover", fields: [approverId], references: [id])
-  approvalNote  String? @db.VarChar(255)
-
-  attachments   request_attachments[]
-
-  createdAt     DateTime @default(now()) @db.Timestamp(3)
-  updatedAt     DateTime @updatedAt      @db.Timestamp(3)
-
-  @@unique([roomRequestId, serviceId])
-  @@map("room_request_services")
+model failed_jobs {
+  id         Int   @id @default(autoincrement()) @db.UnsignedInt
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   @db.LongText
+  exception  String   @db.LongText
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
 }
 
-// ---------- ATTACHMENTS ----------
-model request_attachments {
-  id             String   @id @default(uuid()) @db.VarChar(36)
-
-  roomRequestId  String   @db.VarChar(36)
-  roomRequest    room_requests @relation(fields: [roomRequestId], references: [id], onDelete: Cascade)
-
-  roomRequestServiceId String? @db.VarChar(36)
-  roomRequestService   room_request_services? @relation(fields: [roomRequestServiceId], references: [id], onDelete: SetNull)
-
-  type           AttachmentType
-  category       AttachmentCategory @default(OTHER)
-
-  fileName       String?   @db.VarChar(200)
-  originalName   String?   @db.VarChar(200)
-  mimeType       String?   @db.VarChar(100)
-  sizeBytes      Int?
-  url            String   @db.VarChar(500)
-  storageBucket  String?  @db.VarChar(100)
-  checksum       String?  @db.VarChar(128)
-  width          Int?
-  height         Int?
-  exif           Json?
-
-  uploadedById   String?  @db.VarChar(36)
-  uploadedBy     users?   @relation(fields: [uploadedById], references: [id])
-
-  note           String?  @db.VarChar(255)
-
-  createdAt      DateTime? @default(now()) @db.Timestamp(3)
-  updatedAt      DateTime? @updatedAt      @db.Timestamp(3)
-  deletedAt      DateTime?                @db.Timestamp(3)
-
-  @@index([roomRequestId, category])
-  @@index([roomRequestServiceId])
-  @@index([type])
-  @@map("request_attachments")
+model job_batches {
+  id             String  @id @db.VarChar(255)
+  name           String  @db.VarChar(255)
+  total_jobs     Int
+  pending_jobs   Int
+  failed_jobs    Int
+  failed_job_ids String  @db.LongText
+  options        String? @db.MediumText
+  cancelled_at   Int?
+  created_at     Int
+  finished_at    Int?
 }
 
-model schedules {
-  id              String   @id @default(uuid()) @db.VarChar(36)
-  userId          String @db.VarChar(36)
-  startAt         DateTime
-  endAt           DateTime
-  description     String @db.Text()
+model jobs {
+  id           Int @id @default(autoincrement()) @db.UnsignedInt
+  queue        String @db.VarChar(255)
+  payload      String @db.LongText
+  attempts     Int    @db.UnsignedTinyInt
+  reserved_at  Int?   @db.UnsignedInt
+  available_at Int    @db.UnsignedInt
+  created_at   Int    @db.UnsignedInt
 
-  users users?   @relation(fields: [userId], references: [id])
+  @@index([queue], map: "jobs_queue_index")
+}
 
-  userCreate      String? @db.VarChar(36)
-  createdAt       DateTime? @default(now()) @db.Timestamp(3)
-  updatedAt       DateTime? @updatedAt      @db.Timestamp(3)
-  deletedAt       DateTime?                @db.Timestamp(3)
+model migrations {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model neo_donation_public {
+  id             Int                     @id @default(autoincrement()) @db.UnsignedInt
+  invoice_number String                     @db.VarChar(255)
+  name           String                     @db.VarChar(255)
+  phone_number   String?                    @db.VarChar(255)
+  note           String?                    @db.VarChar(255)
+  amount         Decimal                    @db.Decimal(12, 2)
+  payment_link   String?                    @db.VarChar(255)
+  status         neo_donation_public_status @default(pending)
+  created_at     DateTime?                  @db.Timestamp(0)
+  updated_at     DateTime?                  @db.Timestamp(0)
+  deleted_at     DateTime?                  @db.Timestamp(0)
+}
+
+model neo_postmeta {
+  id         Int    @id @default(autoincrement()) @db.UnsignedInt
+  post_id    Int    @db.UnsignedInt
+  meta_key   String    @db.VarChar(255)
+  meta_value String    @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  neo_posts  neo_posts @relation(fields: [post_id], references: [id], onDelete: Cascade, map: "fk_neo_postmeta_to_neo_posts")
+
+  @@index([post_id], map: "fk_neo_postmeta_to_neo_posts")
+}
+
+model neo_posts {
+  id             Int         @id @default(autoincrement()) @db.UnsignedInt
+  post_title     String         @db.Text
+  post_excerpt   String?        @db.Text
+  post_name      String         @db.Text
+  post_content   String?        @db.LongText
+  post_status    String         @db.VarChar(30)
+  post_type      String         @db.VarChar(30)
+  post_mime_type String?        @db.VarChar(30)
+  user_id        Int         @db.UnsignedInt
+  post_category_id Int?      @db.UnsignedInt
+  post_image String?         @db.Text
+  date DateTime? 
+  post_categories neo_post_categories? @relation(fields: [post_category_id], references: [id], onDelete: SetNull, map: "fk_neo_posts_to_neo_post_categories")
+  created_at     DateTime?      @db.Timestamp(0)
+  updated_at     DateTime?      @db.Timestamp(0)
+  neo_postmeta   neo_postmeta[]
+  users          users          @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_neo_posts_to_users")
+
+  @@index([user_id], map: "fk_neo_posts_to_users")
+}
+
+model neo_post_categories {
+  id         Int    @id @default(autoincrement()) @db.UnsignedInt
+  title      String    @db.VarChar(255)
+  description String?    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  user_id    Int  
+  type String? @db.VarChar(15)
+  users      users @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "fk_neo_post_categories_to_users")
+  neo_posts  neo_posts[]
+  neo_programs neo_programs[]
+}
+
+model neo_termmeta {
+  id         Int    @id @default(autoincrement()) @db.UnsignedInt
+  term_id    Int    @db.UnsignedInt
+  meta_key   String    @db.VarChar(255)
+  meta_value String    @db.LongText
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  neo_terms  neo_terms @relation(fields: [term_id], references: [id], onDelete: Cascade, map: "fk_neo_termmeta_to_neo_terms")
+
+  @@index([term_id], map: "fk_neo_termmeta_to_neo_terms")
+}
+
+model neo_terms {
+  id           Int         @id @default(autoincrement()) @db.UnsignedInt
+  name         String         @db.VarChar(255)
+  slug         String         @db.VarChar(255)
+  created_at   DateTime?      @db.Timestamp(0)
+  updated_at   DateTime?      @db.Timestamp(0)
+  neo_termmeta neo_termmeta[]
+}
+
+model password_reset_tokens {
+  email      String    @id @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+}
+
+model sessions {
+  id            String  @id @db.VarChar(255)
+  user_id       Int? @db.UnsignedInt
+  ip_address    String? @db.VarChar(45)
+  user_agent    String? @db.Text
+  payload       String  @db.LongText
+  last_activity Int
+
+  @@index([last_activity], map: "sessions_last_activity_index")
+  @@index([user_id], map: "sessions_user_id_index")
+}
+
+model neo_programs {
+  id                  Int       @id @default(autoincrement())
+  title               String?   @db.VarChar(255)
+  slug                String?   @db.VarChar(255)
+  content             String?
+  user_id             Int?
+  image               String?
+  created_at          DateTime? @db.DateTime
+  updated_at          DateTime? @db.DateTime
+  program_category_id Int 
+  date                DateTime? @db.DateTime
+  description         String?
+  programCategories neo_post_categories @relation(fields: [program_category_id], references: [id], map: "fk_programs_to_postCategories")
+  @@map("neo_programs")
+}
+
+model sliders {
+  id          Int       @id @default(autoincrement())
+  image       String?   @db.Text
+  type        String?   @db.VarChar(20)
+  description String?   @db.VarChar(255)
+  user_id     Int
+  created_at  DateTime? @db.DateTime
+  updated_at  DateTime? @db.DateTime
+
+  @@index([user_id])
+}
+
+enum neo_donation_public_status {
+  pending
+  settled
+  expired
+  failed
 }

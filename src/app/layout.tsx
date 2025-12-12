@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SIMUDA",
-  description: "Sistem Informasi Mutu Layanan Rumah Tangga Pimpinan Daerah",
+  title: "Masjid Markaz Al Hijrah Nusantara",
+  description: "Sistem Informasi Panel Masjid Markaz Al Hijrah Nusantara",
 };
 
 export default function RootLayout({
