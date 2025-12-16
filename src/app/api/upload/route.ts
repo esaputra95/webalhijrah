@@ -19,9 +19,12 @@ const ALLOWED = new Set([
   "image/gif",
   "image/webp",
   "image/svg+xml",
+
+  // Text (for testing)
+  "text/plain",
 ]);
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || "/app/uploads";
 
 export async function POST(req: Request) {
   try {
@@ -64,7 +67,7 @@ export async function POST(req: Request) {
       saved.push({
         originalName: f.name,
         storedName,
-        url: `/uploads/${storedName}`,
+        url: `/api/files/${storedName}`,
         size: bytes.length,
         type: f.type,
       });

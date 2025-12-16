@@ -77,3 +77,6 @@ acme.json
 # ======================
 .cache/
 .tmp/
+# Upload Files
+/app/uploads
+uploads/
