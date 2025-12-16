@@ -41,3 +41,39 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+
+# ======================
+# DOCKER
+# ======================
+docker-compose.override.yml
+*.env
+.env
+.env.*
+
+# ======================
+# DATABASE
+# ======================
+prisma/dev.db
+prisma/*.db
+prisma/migrations/
+*.sql
+
+# ======================
+# MARIADB DATA
+# ======================
+mariadb/data/
+data/
+mysql-data/
+
+# ======================
+# TRAEFIK / SSL
+# ======================
+letsencrypt/
+acme.json
+
+# ======================
+# CACHE / TEMP
+# ======================
+.cache/
+.tmp/

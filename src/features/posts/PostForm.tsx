@@ -110,7 +110,7 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
       create.mutate(payload, {
         onSuccess: () => {
           toast.success("Post berhasil ditambahkan");
-          router.push("/masters/articles");
+          router.push("/admins/articles");
         },
         onError: (error) => {
           const err = handleErrorResponse(error);
@@ -125,7 +125,7 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
       {
         onSuccess: () => {
           toast.success("Post berhasil diupdate");
-          router.push("/masters/articles");
+          router.push("/admins/articles");
         },
         onError: (e) => toast.error(handleErrorResponse(e)),
       }
@@ -134,7 +134,7 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <TextInput
           label="Judul"
           {...register("post_title")}
@@ -148,6 +148,12 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
           disabled={mode === "view"}
           errors={errors.post_name?.message}
           required
+        />
+        <TextInput
+          label="Code"
+          {...register("code")}
+          disabled={mode === "view"}
+          errors={errors.code?.message}
         />
       </div>
 

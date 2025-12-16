@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiCreditCard, FiCopy } from "react-icons/fi";
 import { FaMoneyBillWave, FaQrcode } from "react-icons/fa";
 import Image from "next/image";
+import { FPixel } from "@/lib/pixel";
 
 // Schema validasi
 const PublicDonationFormSchema = z.object({
@@ -256,6 +257,9 @@ export default function PublicDonationForm() {
                 </div>
 
                 <motion.button
+                  onClick={() => {
+                    FPixel.track("Donate");
+                  }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={isPending}

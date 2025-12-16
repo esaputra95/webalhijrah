@@ -8,7 +8,7 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
     const res = await fetch(
       `${process.env.NEXTAUTH_URL}${apiUrl.posts}/slug/${slug}`,
       {
-        cache: "no-store",
+        cache: "no-store", // SSR: always fetch fresh data
       }
     );
 
@@ -28,6 +28,8 @@ import Link from "next/link";
 import PublicNavbar from "@/components/layouts/PublicNavbar";
 import { FiArrowLeft, FiCalendar, FiTag } from "react-icons/fi";
 import { notFound } from "next/navigation";
+import PublicDonationForm from "@/features/donations/PublicDonationForm";
+import ShareButtons from "../../articles/[slug]/ShareButtons"; // Reuse ShareButtons if possible, or relative path
 
 // Generate Metadata for SEO
 export async function generateMetadata({
@@ -40,7 +42,7 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Artikel Tidak Ditemukan",
+      title: "Program Donasi Tidak Ditemukan",
     };
   }
 
@@ -48,12 +50,12 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(baseUrl),
-    title: `${post.post_title} - Markaz Al-Hijrah`,
+    title: `${post.post_title} - Donasi Markaz Al-Hijrah`,
     description: post.post_excerpt || post.post_title,
     openGraph: {
       title: post.post_title,
       description: post.post_excerpt || post.post_title,
-      url: `/articles/${slug}`,
+      url: `/donasi/${slug}`,
       siteName: "Markaz Al-Hijrah",
       locale: "id_ID",
       images: post.post_image ? [post.post_image] : [],
@@ -68,7 +70,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ArticleDetailPage({
+export default async function DonationDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -84,22 +86,22 @@ export default async function ArticleDetailPage({
     <div className="min-h-screen bg-gray-50">
       <PublicNavbar />
 
-      {/* Article Content */}
+      {/* Program Content */}
       <article className="pt-32 pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Back Button */}
             <div className="mb-8 animate-fade-in-up">
               <Link
-                href="/articles"
+                href="/donasi"
                 className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-blue font-medium transition-colors"
               >
-                <FiArrowLeft /> Kembali ke Artikel
+                <FiArrowLeft /> Kembali ke Daftar Donasi
               </Link>
             </div>
 
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up delay-100">
-              {/* Article Header & Body */}
+              {/* Program Header & Body */}
               <div className="p-8 md:p-12">
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
@@ -157,21 +159,34 @@ export default async function ArticleDetailPage({
                   dangerouslySetInnerHTML={{ __html: post.post_content }}
                 />
               </div>
+
+              {/* Donation Form Section */}
+              <div className="border-t border-gray-100 p-8 md:p-12 bg-blue-50/50">
+                <div className="mb-8 text-center">
+                  <h3 className="text-2xl font-bold text-brand-blue mb-2">
+                    Salurkan Donasi Anda
+                  </h3>
+                  <p className="text-gray-600">
+                    Bantu wujudkan program kebaikan ini dengan menyisihkan
+                    sebagian harta Anda.
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                  <div className="bg-gradient-to-r from-brand-blue to-gray-800 p-4 text-white text-center">
+                    <p className="font-semibold text-sm">
+                      Form Donasi Online (Aman & Terpercaya)
+                    </p>
+                  </div>
+                  <PublicDonationForm />
+                </div>
+              </div>
             </div>
 
-            {/* Share & Actions - Static Version to remove framer-motion client dependency */}
+            {/* Share & Actions */}
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-white rounded-2xl shadow-md animate-fade-in-up delay-200">
-              <p className="text-gray-600 font-medium">Bagikan artikel ini:</p>
+              <p className="text-gray-600 font-medium">Bagikan program ini:</p>
               <div className="flex gap-3">
-                {/* Share buttons will need to be client components if they use window.location,
-                    but simple links work for SSR if we construct URL server side or use a client wrapper.
-                    For now keeping simple links but note window is not available in SSR.
-                    We'll use a client component wrapper for sharing if needed, or simple links.
-                 */}
-                {/* Note: window.location is not available in SSR. We should use a Client Component for Share Buttons. */}
-                {/* For simplicity in this step, I'll remove the share buttons logic that depends on window and add it back via a Client Component later if requested,
-                     or just use '#' for now to prevent build errors. OR better, create a client component for ShareButtons.
-                 */}
                 <ShareButtons title={post.post_title} />
               </div>
             </div>
@@ -190,6 +205,3 @@ export default async function ArticleDetailPage({
     </div>
   );
 }
-
-// Client Component for Share Buttons
-import ShareButtons from "./ShareButtons";

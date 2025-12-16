@@ -7,12 +7,6 @@ export const metadata: Metadata = {
   description: "Sistem Informasi Panel Markaz Alhijrah",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <body className="min-h-screen bg-slate-50 text-slate-800">
-        <MainLayout>{children}</MainLayout>
-      </body>
-    </html>
-  );
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return <MainLayout>{children}</MainLayout>;
 }

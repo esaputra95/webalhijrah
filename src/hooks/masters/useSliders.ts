@@ -13,7 +13,7 @@ type SliderResponse = {
 
 // Hook untuk fetch hero sliders (untuk landing page)
 export function useHeroSliders(
-  type: "hero-slider" | "banner" | "promo" | "donation"
+  type: "hero-slider" | "banner" | "promo" | "donation" | "about_us"
 ) {
   return useQuery<SliderResponse>({
     queryKey: ["HeroSliders", type],

@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Suspense } from "react";
+import FacebookPixel from "@/components/FacebookPixel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <FacebookPixel />
         <Suspense fallback={<div>Loading...</div>}>
           <Providers>
             {children}

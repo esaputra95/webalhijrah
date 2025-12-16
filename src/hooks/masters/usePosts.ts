@@ -21,6 +21,17 @@ export function usePosts() {
   });
 }
 
+// ====== Fetch Public Posts (Custom Params) ======
+export function usePublicPosts(
+  params?: Record<string, string | number | boolean>
+) {
+  return useQuery<BaseApiResponse<PostType[]>>({
+    queryKey: ["PublicPosts", params],
+    queryFn: async () =>
+      getData<typeof params, BaseApiResponse<PostType[]>>(apiUrl.posts, params),
+  });
+}
+
 // ====== Create Post ======
 export function useCreatePost() {
   const qc = useQueryClient();

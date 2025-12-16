@@ -12,7 +12,7 @@ import {
 } from "@/types/masters/silderSchema";
 import Button from "@/components/ui/buttons/Button";
 import { handleErrorResponse } from "@/utils/handleErrorResponse";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 type Props = {
@@ -29,6 +29,7 @@ const SliderForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
     handleSubmit,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<FormType>({
     resolver: zodResolver(FormSchema),
@@ -52,6 +53,7 @@ const SliderForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
 
   const create = useCreateSlider();
   const update = useUpdateSlider();
+  const [inputMode, setInputMode] = useState<"upload" | "url">("upload");
 
   const onSubmit = async (values: FormType) => {
     if (mode === "create") {
@@ -85,20 +87,6 @@ const SliderForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
 
   return (
     <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name="image"
-        control={control}
-        render={({ field }) => (
-          <ImageUpload
-            label="Gambar Slider"
-            value={field.value || ""}
-            onChange={field.onChange}
-            disabled={mode === "view"}
-            errors={errors.image?.message}
-            required
-          />
-        )}
-      />
       <SelectInput
         {...register("type")}
         label="Type"
@@ -109,8 +97,69 @@ const SliderForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
           { value: "banner", label: "Banner" },
           { value: "donation", label: "Donasi" },
           { value: "promo", label: "Promo" },
+          { value: "about_us", label: "About Us" },
         ]}
       />
+      <div className="mb-4">
+        {watch("type") === "about_us" && (
+          <div className="flex gap-4 mb-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="radio"
+                id="upload_mode"
+                name="input_mode"
+                checked={inputMode === "upload"}
+                onChange={() => setInputMode("upload")}
+                className="cursor-pointer"
+              />
+              <label htmlFor="upload_mode" className="cursor-pointer">
+                Upload Gambar
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="radio"
+                id="url_mode"
+                name="input_mode"
+                checked={inputMode === "url"}
+                onChange={() => setInputMode("url")}
+                className="cursor-pointer"
+              />
+              <label htmlFor="url_mode" className="cursor-pointer">
+                URL Gambar
+              </label>
+            </div>
+          </div>
+        )}
+
+        {inputMode === "url" && watch("type") === "about_us" ? (
+          <TextInput
+            label="URL Gambar"
+            {...register("image")}
+            disabled={mode === "view"}
+            errors={errors.image?.message}
+            placeholder="https://example.com/image.jpg"
+          />
+        ) : (
+          <Controller
+            name="image"
+            control={control}
+            render={({ field }) => (
+              <ImageUpload
+                label="Gambar Slider"
+                value={field.value || ""}
+                onChange={field.onChange}
+                disabled={mode === "view"}
+                errors={errors.image?.message}
+                required={
+                  watch("type") !== "about_us" || inputMode === "upload"
+                }
+              />
+            )}
+          />
+        )}
+      </div>
+
       <TextInput
         label="Deskripsi"
         {...register("description")}

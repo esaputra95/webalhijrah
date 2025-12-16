@@ -28,19 +28,44 @@ const SliderTable: FC<Props> = ({
         accessor: "image",
         sortable: false,
         filterable: false,
-        render: (row: SliderType) =>
-          row.image ? (
+        render: (row: SliderType) => {
+          const getYouTubeId = (url: string) => {
+            const regExp =
+              /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return match && match[2].length === 11 ? match[2] : null;
+          };
+
+          const youtubeId = row.image ? getYouTubeId(row.image) : null;
+
+          if (youtubeId) {
+            return (
+              <div className="relative h-12 w-20">
+                <Image
+                  src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
+                  alt={row.description || "Video Thumbnail"}
+                  fill
+                  className="object-cover rounded"
+                  unoptimized
+                />
+              </div>
+            );
+          }
+
+          return row.image ? (
             <div className="relative h-12 w-20">
               <Image
                 src={row.image}
                 alt={row.description || "Slider"}
                 fill
                 className="object-cover rounded"
+                unoptimized={row.image.startsWith("http")}
               />
             </div>
           ) : (
             <span className="text-gray-400">No Image</span>
-          ),
+          );
+        },
       },
       {
         header: "Type",

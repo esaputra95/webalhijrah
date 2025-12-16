@@ -53,7 +53,7 @@ export default function ProgramsPage() {
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Program <span className="text-brand-gold">Unggulan</span>
+              Program <span className="text-brand-gold">Kegiatan</span>
             </h1>
             <p className="text-lg text-gray-200">
               Berbagai program kegiatan dakwah, sosial, dan pendidikan untuk

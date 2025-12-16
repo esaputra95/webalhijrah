@@ -56,9 +56,7 @@ const PostTable: FC<Props> = ({
         filterType: "select",
         filterOptions: [
           { value: "post", label: "Post" },
-          { value: "page", label: "Page" },
-          { value: "attachment", label: "Attachment" },
-          { value: "gallery", label: "Gallery" },
+          { value: "donation", label: "Donasi" },
         ],
       },
       {

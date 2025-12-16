@@ -31,6 +31,7 @@ const SELECT_FIELDS = {
   updated_at: true,
   post_image: true,
   date: true,
+  code: true,
   users: {
     select: { id: true, name: true, email: true },
   },
@@ -75,7 +76,6 @@ function parsePagination(req: NextRequest) {
       post_status ? { post_status: { equals: post_status } } : {},
       post_type ? { post_type: { equals: post_type } } : {},
     ],
-    post_type: "post",
   };
 
   return { page, take, skip, orderBy, where, sortby, sortdir };
@@ -132,6 +132,18 @@ export const POST = wrap(async (req: Request) => {
   const body = await req.json();
   const parsed = PostCreateSchema.parse(body);
 
+  // cek apakah ada post dengan slug yang sama
+  const existingPost = await prisma.neo_posts.findFirst({
+    where: { post_name: parsed.post_name as string },
+  });
+
+  if (existingPost) {
+    return NextResponse.json(
+      { status: false, message: "Post dengan slug ini sudah ada" },
+      { status: 400 }
+    );
+  }
+
   const created = await prisma.neo_posts.create({
     data: {
       post_title: parsed.post_title,
@@ -144,6 +156,7 @@ export const POST = wrap(async (req: Request) => {
       user_id: parsed.user_id,
       post_category_id: parsed.post_category_id,
       post_image: parsed.post_image,
+      code: parsed.code,
       date: parsed.date ? new Date(parsed.date) : null,
     },
     select: SELECT_FIELDS,

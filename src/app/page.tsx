@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import PublicDonationForm from "@/features/donations/PublicDonationForm";
 import PublicNavbar from "@/components/layouts/PublicNavbar";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useInView } from "framer-motion";
+import { useRef } from "react";
 import { useHeroSliders } from "@/hooks/masters/useSliders";
+import { usePublicPosts } from "@/hooks/masters/usePosts";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -36,9 +38,31 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 
+function getYouTubeId(url: string | undefined | null) {
+  if (!url) return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+}
+
 const LandingPage = () => {
   // Fetch hero sliders from API
   const { data: slidersData } = useHeroSliders("hero-slider");
+  const { data: aboutData } = useHeroSliders("about_us");
+  const { data: donationPosts } = usePublicPosts({
+    post_type: "donation",
+    post_status: "publish",
+  });
+
+  const aboutItem = aboutData?.data?.[0];
+  const youtubeId = getYouTubeId(aboutItem?.image);
+
+  // Ref for about video autoplay
+  const aboutVideoRef = useRef(null);
+  const isAboutVideoInView = useInView(aboutVideoRef, {
+    amount: 0.5,
+    once: true,
+  });
 
   // Use API data if available, otherwise use fallback images
   const heroImages =
@@ -207,19 +231,45 @@ const LandingPage = () => {
             >
               <div className="absolute -top-4 -left-4 w-20 h-20 border-t-4 border-l-4 border-brand-gold rounded-tl-3xl z-10" />
               <div className="absolute -bottom-4 -right-4 w-20 h-20 border-b-4 border-r-4 border-brand-gold rounded-br-3xl z-10" />
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-0 transition-transform hover:rotate-1 duration-500">
-                <Image
-                  src="/images/kegiatan-masjid-markaz-alhijrah-1.webp"
-                  alt="About Markaz Al Hijrah"
-                  width={800}
-                  height={800}
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white text-left">
-                  <p className="font-bold text-xl">Masjid Markaz Al Hijrah</p>
-                  <p className="text-sm opacity-90">Pusat Peradaban & Ilmu</p>
-                </div>
+              <div
+                ref={aboutVideoRef}
+                className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-0 transition-transform hover:rotate-1 duration-500"
+              >
+                {youtubeId ? (
+                  <div className="w-full h-full aspect-video">
+                    <iframe
+                      className="w-full h-full"
+                      src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${
+                        isAboutVideoInView ? 1 : 0
+                      }&mute=1&loop=1&playlist=${youtubeId}`}
+                      title="About Markaz Al Hijrah"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <Image
+                      src={
+                        aboutItem?.image ||
+                        "/images/kegiatan-masjid-markaz-alhijrah-1.webp"
+                      }
+                      alt={aboutItem?.description || "About Markaz Al Hijrah"}
+                      width={800}
+                      height={800}
+                      className="w-full h-auto object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-6 left-6 text-white text-left">
+                      <p className="font-bold text-xl">
+                        Masjid Markaz Al Hijrah
+                      </p>
+                      <p className="text-sm opacity-90">
+                        Pusat Peradaban & Ilmu
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             </motion.div>
 
@@ -298,7 +348,7 @@ const LandingPage = () => {
             className="text-center max-w-3xl mx-auto mb-16 space-y-4"
           >
             <div className="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-semibold">
-              Program Unggulan
+              Program Donasi
             </div>
             <h2 className="text-3xl md:text-5xl font-bold text-brand-blue">
               Salurkan <span className="text-brand-gold">Kebaikan Anda</span>
@@ -314,48 +364,28 @@ const LandingPage = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid md:grid-cols-3 gap-8"
+            className="grid md:grid-cols-3 lg:grid-cols-4 gap-8"
           >
-            {[
-              {
-                title: "Pembangunan Masjid",
-                desc: "Wakaf pembangunan dan perluasan area masjid untuk kenyamanan ibadah jamaah.",
-                icon: "🕌",
-                color: "emerald",
-              },
-              {
-                title: "Pendidikan & Dakwah",
-                desc: "Dukung operasional halaqoh ilmiah, kajian rutin, dan pendidikan santri.",
-                icon: "📚",
-                color: "blue",
-              },
-              {
-                title: "Infaq & Sedekah",
-                desc: "Bantuan operasional harian masjid dan program sosial untuk dhuafa.",
-                icon: "🤝",
-                color: "orange",
-              },
-            ].map((program, i) => (
+            {donationPosts?.data?.slice(0, 4)?.map((program, i) => (
               <motion.div
                 key={i}
                 variants={fadeInUp}
                 whileHover={{ y: -10 }}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group"
+                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group flex flex-col items-start"
               >
-                <div
-                  className={`w-16 h-16 rounded-2xl bg-${program.color}-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300`}
-                >
-                  {program.icon}
+                <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                  {/* Default Icon or Dynamic if available */}
+                  🎁
                 </div>
-                <h3 className="text-2xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors">
-                  {program.title}
+                <h3 className="text-xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors line-clamp-2">
+                  {program.post_title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed mb-6">
-                  {program.desc}
+                <p className="text-gray-600 leading-relaxed mb-6 line-clamp-3 text-sm flex-grow">
+                  {program.post_excerpt || "Mari berdonasi untuk program ini."}
                 </p>
                 <Link
-                  href="/donasi"
-                  className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-brand-gold uppercase tracking-wider transition-colors"
+                  href={`/donasi/${program.post_name}`}
+                  className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-brand-gold uppercase tracking-wider transition-colors mt-auto"
                 >
                   Donasi Sekarang <span className="ml-2">→</span>
                 </Link>
