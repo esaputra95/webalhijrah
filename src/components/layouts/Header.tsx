@@ -47,8 +47,8 @@ export default function Header({
             LP
           </div>
           <div className="leading-tight">
-            <p className="font-semibold">Layanan Pengajuan</p>
-            <p className="text-xs text-slate-500">Insight</p>
+            <p className="font-semibold">Markaz Al Hijrah</p>
+            <p className="text-xs text-slate-500">Nusantara</p>
           </div>
         </div>
 

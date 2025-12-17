@@ -156,12 +156,12 @@ export default async function DonationDetailPage({
 
                 {/* Featured Image */}
                 {post.post_image && (
-                  <div className="relative w-full h-[500px] mb-8 bg-gray-100 rounded-xl overflow-hidden">
+                  <div className="relative w-full aspect-video mb-8 bg-gray-100 rounded-xl overflow-hidden">
                     <Image
                       src={post.post_image}
                       alt={post.post_title}
                       fill
-                      className="object-contain"
+                      className="object-cover"
                       priority
                     />
                   </div>
