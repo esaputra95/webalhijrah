@@ -426,7 +426,7 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="lg:w-5/12 space-y-8 sticky top-28"
+              className="lg:w-5/12 space-y-8 lg:sticky top-28"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-brand-brown leading-tight">
                 Mulai <span className="text-brand-gold">Investasi Akhirat</span>{" "}

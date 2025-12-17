@@ -81,6 +81,7 @@ export const PUT = wrap(
       data.post_category_id = parsed.post_category_id;
     if (parsed.date !== undefined)
       data.date = parsed.date ? new Date(parsed.date) : null;
+    if (parsed.post_image !== undefined) data.post_image = parsed.post_image;
 
     const updated = await prisma.neo_posts.update({
       where: { id: Number(id) },
