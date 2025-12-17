@@ -105,7 +105,8 @@ const LandingPage = () => {
                   quality={90}
                   priority={index === 0}
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70" />
+                {/* Stronger overlay for better text readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -125,14 +126,29 @@ const LandingPage = () => {
 
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl mx-auto drop-shadow-2xl"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl mx-auto"
+            style={{
+              textShadow:
+                "0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5)",
+            }}
           >
             Investasi Akhirat <br />
-            <span className="text-brand-gold">Jangan Pernah Abaikan</span>
+            <span
+              className="text-brand-gold"
+              style={{
+                textShadow:
+                  "0 4px 20px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,1), 0 0 40px rgba(0,0,0,0.6)",
+              }}
+            >
+              Jangan Pernah Abaikan
+            </span>
           </motion.h1>
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed"
+            style={{
+              textShadow: "0 2px 12px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,1)",
+            }}
           >
             Siapkan Donasi Terbaik Markaz Al Hijrah Nusantara. Dari Kaum
             Muslimin, Untuk Kaum Muslimin, dan Milik Kaum Muslimin.
@@ -144,7 +160,7 @@ const LandingPage = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/donasi"
-                className="px-8 py-4 bg-brand-gold hover:bg-[#d4b035] text-brand-blue font-bold text-lg rounded-full transition-all shadow-xl hover:shadow-yellow-500/30 flex items-center justify-center gap-2"
+                className="px-8 py-4 bg-brand-gold hover:bg-[#D3A428] text-brand-brown font-bold text-lg rounded-full transition-all shadow-xl hover:shadow-yellow-500/30 flex items-center justify-center gap-2"
               >
                 <span>💝</span> Donasi Sekarang
               </Link>
@@ -183,7 +199,7 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Section (Quick Numbers) */}
-      <div className="bg-brand-blue py-12 relative z-20 -mt-2">
+      <div className="bg-brand-brown py-12 relative z-20 -mt-2">
         <div className="container mx-auto px-4">
           <motion.div
             initial="hidden"
@@ -280,10 +296,10 @@ const LandingPage = () => {
               transition={{ duration: 0.8 }}
               className="lg:w-1/2 space-y-6 text-center lg:text-left"
             >
-              <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-blue rounded-full text-sm font-semibold mb-2">
+              <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-brown rounded-full text-sm font-semibold mb-2">
                 Tentang Kami
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-brand-blue leading-tight">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-brown leading-tight">
                 Membangun Peradaban Melalui{" "}
                 <span className="text-brand-gold">Masjid & Ilmu</span>
               </h2>
@@ -310,7 +326,7 @@ const LandingPage = () => {
                   "Fasilitas Ibadah Nyaman",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-yellow-100 text-brand-blue flex items-center justify-center text-xs">
+                    <span className="w-6 h-6 rounded-full bg-yellow-100 text-brand-brown flex items-center justify-center text-xs">
                       ✓
                     </span>
                     <span className="text-gray-700 font-medium">{item}</span>
@@ -320,7 +336,7 @@ const LandingPage = () => {
               <div className="pt-6">
                 <Link
                   href="/about"
-                  className="text-brand-blue font-semibold hover:text-brand-gold flex items-center justify-center lg:justify-start gap-2 group"
+                  className="text-brand-brown font-semibold hover:text-brand-gold flex items-center justify-center lg:justify-start gap-2 group"
                 >
                   Baca Selengkapnya
                   <motion.span
@@ -350,7 +366,7 @@ const LandingPage = () => {
             <div className="inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-semibold">
               Program Donasi
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-brand-blue">
+            <h2 className="text-3xl md:text-5xl font-bold text-brand-brown">
               Salurkan <span className="text-brand-gold">Kebaikan Anda</span>
             </h2>
             <p className="text-lg text-gray-600">
@@ -375,9 +391,15 @@ const LandingPage = () => {
               >
                 <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
                   {/* Default Icon or Dynamic if available */}
-                  🎁
+                  <Image
+                    src={program.post_image}
+                    alt={program.post_title}
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors line-clamp-2">
+                <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors line-clamp-2">
                   {program.post_title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed mb-6 line-clamp-3 text-sm flex-grow">
@@ -406,7 +428,7 @@ const LandingPage = () => {
               transition={{ duration: 0.6 }}
               className="lg:w-5/12 space-y-8 sticky top-28"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-brand-blue leading-tight">
+              <h2 className="text-3xl md:text-4xl font-bold text-brand-brown leading-tight">
                 Mulai <span className="text-brand-gold">Investasi Akhirat</span>{" "}
                 Anda Hari Ini
               </h2>
@@ -417,10 +439,10 @@ const LandingPage = () => {
               </p>
 
               <div className="bg-yellow-50 rounded-2xl p-6 border border-yellow-100">
-                <h4 className="font-bold text-brand-blue mb-2 flex items-center gap-2">
+                <h4 className="font-bold text-brand-brown mb-2 flex items-center gap-2">
                   <span className="text-xl">💡</span> Tahukah Anda?
                 </h4>
-                <p className="text-brand-blue text-sm italic">
+                <p className="text-brand-brown text-sm italic">
                   &quot;Barangsiapa membangun masjid karena mengharap ridha
                   Allah, maka Allah akan membangunkan untuknya (rumah) seperti
                   itu di surga.&quot; (HR. Bukhari)
@@ -453,7 +475,7 @@ const LandingPage = () => {
               className="lg:w-7/12 w-full"
             >
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 transform hover:scale-[1.01] transition-transform duration-500">
-                <div className="bg-gradient-to-r from-brand-blue to-gray-800 p-6 text-white text-center">
+                <div className="bg-gradient-to-r from-brand-brown to-gray-600 p-6 text-white text-center">
                   <h3 className="text-2xl font-bold">Form Donasi Online</h3>
                   <p className="text-gray-300 opacity-90">
                     Aman, Cepat & Terpercaya via Midtrans
@@ -469,7 +491,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-brand-blue to-gray-900 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-brand-brown to-gray-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/pattern-islamic.png')] opacity-5"></div>
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -488,7 +510,7 @@ const LandingPage = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/donasi"
-              className="inline-block px-10 py-5 bg-brand-gold text-brand-blue font-bold text-xl rounded-full hover:bg-[#d4b035] transition-all shadow-2xl hover:shadow-white/20 transform hover:-translate-y-1"
+              className="inline-block px-10 py-5 bg-brand-gold text-brand-brown font-bold text-xl rounded-full hover:bg-[#D3A428] transition-all shadow-2xl hover:shadow-white/20 transform hover:-translate-y-1"
             >
               Ayo Berdonasi
             </Link>
@@ -497,17 +519,17 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
+      <footer className="bg-brand-brown text-gray-400 py-16 border-t border-gray-800">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-12">
             <div className="col-span-1 md:col-span-2 space-y-6">
               <Link href="/" className="flex items-center gap-2 text-white">
-                <div className="w-8 h-8 bg-brand-gold text-brand-blue rounded-full flex items-center justify-center font-bold">
+                <div className="w-8 h-8 bg-brand-gold text-brand-brown rounded-full flex items-center justify-center font-bold">
                   M
                 </div>
                 <span className="font-bold text-2xl">Markaz Al-Hijrah</span>
               </Link>
-              <p className="text-gray-400 leading-relaxed max-w-sm">
+              <p className="text-gray-200 leading-relaxed max-w-sm">
                 Pusat Halaqoh Ilmiah Islam Terbesar di Nusantara. Berkhidmah
                 untuk umat melalui dakwah, pendidikan, dan sosial.
               </p>
@@ -534,7 +556,7 @@ const LandingPage = () => {
                 <li>
                   <Link
                     href="/"
-                    className="hover:text-brand-gold transition-colors"
+                    className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Beranda
                   </Link>
@@ -542,7 +564,7 @@ const LandingPage = () => {
                 <li>
                   <Link
                     href="/#about"
-                    className="hover:text-brand-gold transition-colors"
+                    className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Tentang
                   </Link>
@@ -550,7 +572,7 @@ const LandingPage = () => {
                 <li>
                   <Link
                     href="/programs"
-                    className="hover:text-brand-gold transition-colors"
+                    className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Program
                   </Link>
@@ -558,7 +580,7 @@ const LandingPage = () => {
                 <li>
                   <Link
                     href="/articles"
-                    className="hover:text-brand-gold transition-colors"
+                    className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Artikel
                   </Link>
@@ -566,7 +588,7 @@ const LandingPage = () => {
                 <li>
                   <Link
                     href="/donasi"
-                    className="hover:text-brand-gold transition-colors"
+                    className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Donasi
                   </Link>
@@ -579,22 +601,22 @@ const LandingPage = () => {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <span className="text-brand-gold mt-1">📍</span>
-                  <span>
+                  <span className="text-gray-300">
                     Jl. Kayu Putih, RT 01 RW 06 Kel. Binawidya Kec. Binawidya
                     Kota Pekanbaru, Riau
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-brand-gold">📞</span>
-                  <span>+62 851 7436 8006</span>
+                  <span className="text-gray-300">+62 851 7436 8006</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-brand-gold">📞</span>
-                  <span>+62 8117 550 202</span>
+                  <span className="text-gray-300">+62 8117 550 202</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-brand-gold">✉️</span>
-                  <span>info@markaz-alhijrah.id</span>
+                  <span className="text-gray-300">info@markaz-alhijrah.id</span>
                 </li>
               </ul>
             </div>

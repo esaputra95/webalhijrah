@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiCreditCard, FiCopy } from "react-icons/fi";
 import { FaMoneyBillWave, FaQrcode } from "react-icons/fa";
 import Image from "next/image";
-import { FPixel } from "@/lib/pixel";
+import { track } from "@/lib/pixel";
 
 // Schema validasi
 const PublicDonationFormSchema = z.object({
@@ -64,6 +64,13 @@ export default function PublicDonationForm() {
   const selectedAmount = watch("amount");
 
   const onSubmit = (data: PublicDonationFormValues) => {
+    // Track Purchase event
+    track("Purchase", {
+      currency: "IDR",
+      value: data.amount,
+      content_name: "Donation",
+    });
+
     createDonation(data, {
       onSuccess: (response) => {
         if (response?.data?.redirect_url) {
@@ -89,8 +96,8 @@ export default function PublicDonationForm() {
           onClick={() => setActiveTab("manual")}
           className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
             activeTab === "manual"
-              ? "text-brand-blue"
-              : "text-gray-500 hover:text-brand-blue hover:bg-gray-50"
+              ? "text-brand-brown"
+              : "text-gray-500 hover:text-brand-brown hover:bg-gray-50"
           }`}
         >
           <FaMoneyBillWave className="text-lg" />
@@ -106,8 +113,8 @@ export default function PublicDonationForm() {
           onClick={() => setActiveTab("automatic")}
           className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
             activeTab === "automatic"
-              ? "text-brand-blue"
-              : "text-gray-500 hover:text-brand-blue hover:bg-gray-50"
+              ? "text-brand-brown"
+              : "text-gray-500 hover:text-brand-brown hover:bg-gray-50"
           }`}
         >
           <FiCreditCard className="text-lg" />
@@ -123,8 +130,8 @@ export default function PublicDonationForm() {
           onClick={() => setActiveTab("qris")}
           className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
             activeTab === "qris"
-              ? "text-brand-blue"
-              : "text-gray-500 hover:text-brand-blue hover:bg-gray-50"
+              ? "text-brand-brown"
+              : "text-gray-500 hover:text-brand-brown hover:bg-gray-50"
           }`}
         >
           <FaQrcode className="text-lg" />
@@ -165,8 +172,8 @@ export default function PublicDonationForm() {
                         onClick={() => handleAmountSelect(amt)}
                         className={`py-3 px-4 rounded-xl border text-sm font-medium transition-all duration-200 ${
                           selectedAmount === amt
-                            ? "border-brand-gold bg-brand-gold text-brand-blue shadow-md transform scale-[1.02]"
-                            : "border-gray-200 text-gray-600 hover:border-brand-gold hover:text-brand-blue bg-white"
+                            ? "border-brand-gold bg-brand-gold text-brand-brown shadow-md transform scale-[1.02]"
+                            : "border-gray-200 text-gray-600 hover:border-brand-gold hover:text-brand-brown bg-white"
                         }`}
                       >
                         Rp {amt.toLocaleString("id-ID")}
@@ -257,14 +264,11 @@ export default function PublicDonationForm() {
                 </div>
 
                 <motion.button
-                  onClick={() => {
-                    FPixel.track("Donate");
-                  }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={isPending}
                   type="submit"
-                  className="w-full py-4 bg-brand-gold text-brand-blue text-lg font-bold rounded-xl shadow-lg hover:bg-[#e6c035] hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+                  className="w-full py-4 bg-brand-gold text-brand-brown text-lg font-bold rounded-xl shadow-lg hover:bg-[#e6c035] hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
                 >
                   {isPending ? (
                     <>
@@ -303,7 +307,7 @@ export default function PublicDonationForm() {
                 {/* Bank Item 1 */}
                 <div className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-brand-blue shadow-sm">
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-brand-brown shadow-sm">
                       BSI
                     </div>
                     <div className="text-left">
@@ -323,7 +327,7 @@ export default function PublicDonationForm() {
                       navigator.clipboard.writeText("3000500045");
                       toast.success("No. Rekening BSI Disalin!");
                     }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-blue hover:border-brand-blue hover:bg-brand-blue/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
                   >
                     <FiCopy /> Salin
                   </button>
@@ -352,7 +356,7 @@ export default function PublicDonationForm() {
                       navigator.clipboard.writeText("1080003434124");
                       toast.success("No. Rekening Mandiri Disalin!");
                     }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-blue hover:border-brand-blue hover:bg-brand-blue/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
                   >
                     <FiCopy /> Salin
                   </button>
@@ -379,7 +383,7 @@ export default function PublicDonationForm() {
                       navigator.clipboard.writeText("069601032635509");
                       toast.success("No. Rekening Mandiri Disalin!");
                     }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-blue hover:border-brand-blue hover:bg-brand-blue/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
                   >
                     <FiCopy /> Salin
                   </button>
@@ -399,7 +403,7 @@ export default function PublicDonationForm() {
                     href="https://wa.me/6285174368006"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block mt-2 text-brand-blue font-bold hover:underline"
+                    className="inline-block mt-2 text-brand-brown font-bold hover:underline"
                   >
                     Konfirmasi via WhatsApp &rarr;
                   </a>

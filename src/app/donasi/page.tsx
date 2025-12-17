@@ -22,7 +22,7 @@ export default function DonasiPage() {
         <meta name="description" content="Donasi untuk masjid Alhijrah" />
       </head>
       {/* Hero Section with Carousel */}
-      <div className="relative overflow-hidden bg-brand-blue text-white min-h-[500px] flex items-center">
+      <div className="relative overflow-hidden bg-brand-brown text-white min-h-[500px] flex items-center">
         <div className="absolute inset-0 z-0">
           <Carousel
             swiperProps={{
@@ -194,7 +194,7 @@ export default function DonasiPage() {
               or re-include it if I'm replacing the whole block.
           */}
           <div className="text-center mb-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-brand-blue mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-brown mb-4">
               Manfaat <span className="text-brand-gold">Donasi Anda</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -204,10 +204,10 @@ export default function DonasiPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-8 border border-gray-100 group">
-              <div className="w-16 h-16 bg-yellow-100 text-brand-blue rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 bg-yellow-100 text-brand-brown rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl">🕌</span>
               </div>
-              <h3 className="text-xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors">
+              <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors">
                 Rumah di Surga
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -220,7 +220,7 @@ export default function DonasiPage() {
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl">📚</span>
               </div>
-              <h3 className="text-xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors">
+              <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors">
                 Pusat Ilmu Sunnah
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -233,7 +233,7 @@ export default function DonasiPage() {
               <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl">🤝</span>
               </div>
-              <h3 className="text-xl font-bold text-brand-blue mb-3 group-hover:text-brand-gold transition-colors">
+              <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors">
                 Amal Jariyah
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -247,7 +247,7 @@ export default function DonasiPage() {
         {/* Location & Contact Section */}
         <div className="max-w-4xl mx-auto mb-20">
           <div className="bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-            <div className="md:w-1/2 bg-brand-blue text-white p-10 flex flex-col justify-center">
+            <div className="md:w-1/2 bg-brand-brown text-white p-10 flex flex-col justify-center">
               <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <span>📍</span> Lokasi Pembangunan
               </h3>
@@ -288,7 +288,7 @@ export default function DonasiPage() {
                     href="https://maps.google.com/?q=Markaz+Al-Hijrah+Nusantara"
                     target="_blank"
                     rel="noreferrer"
-                    className="bg-white/90 backdrop-blur text-brand-blue px-6 py-3 rounded-full font-bold shadow-lg hover:bg-white transition-all transform hover:scale-105 flex items-center gap-2"
+                    className="bg-white/90 backdrop-blur text-brand-brown px-6 py-3 rounded-full font-bold shadow-lg hover:bg-white transition-all transform hover:scale-105 flex items-center gap-2"
                   >
                     <span>🗺️</span> Lihat di Google Maps
                   </a>
@@ -301,7 +301,7 @@ export default function DonasiPage() {
         {/* FAQ Section */}
         <div className="max-w-3xl mx-auto px-4 mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-brand-blue mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-brand-brown mb-4">
               Pertanyaan <span className="text-brand-gold">Umum</span>
             </h2>
           </div>
@@ -309,10 +309,10 @@ export default function DonasiPage() {
           <div className="space-y-4">
             <details className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group">
               <summary className="px-6 py-5 cursor-pointer hover:bg-gray-50 transition-colors duration-200 flex justify-between items-center list-none">
-                <span className="font-bold text-brand-blue text-lg">
+                <span className="font-bold text-brand-brown text-lg">
                   Apakah donasi saya aman?
                 </span>
-                <span className="text-brand-gold bg-brand-blue/10 w-8 h-8 rounded-full flex items-center justify-center group-open:rotate-180 transition-transform duration-300">
+                <span className="text-brand-gold bg-brand-brown/10 w-8 h-8 rounded-full flex items-center justify-center group-open:rotate-180 transition-transform duration-300">
                   ▼
                 </span>
               </summary>

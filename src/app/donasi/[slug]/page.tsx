@@ -24,12 +24,10 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
 
 import { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import PublicNavbar from "@/components/layouts/PublicNavbar";
-import { FiArrowLeft, FiCalendar, FiTag } from "react-icons/fi";
+import { FiCalendar, FiTag } from "react-icons/fi";
 import { notFound } from "next/navigation";
 import PublicDonationForm from "@/features/donations/PublicDonationForm";
-import ShareButtons from "../../articles/[slug]/ShareButtons"; // Reuse ShareButtons if possible, or relative path
+import ShareButtons from "../../articles/[slug]/ShareButtons";
 
 // Generate Metadata for SEO
 export async function generateMetadata({
@@ -48,6 +46,21 @@ export async function generateMetadata({
 
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
+  // Convert relative image path to absolute URL for Open Graph
+  const getAbsoluteImageUrl = (imagePath: string | undefined) => {
+    if (!imagePath) return undefined;
+
+    // If already absolute URL, return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+
+    // Convert relative path to absolute URL
+    return `${baseUrl}${imagePath.startsWith("/") ? "" : "/"}${imagePath}`;
+  };
+
+  const absoluteImageUrl = getAbsoluteImageUrl(post.post_image);
+
   return {
     metadataBase: new URL(baseUrl),
     title: `${post.post_title} - Donasi Markaz Al-Hijrah`,
@@ -55,17 +68,26 @@ export async function generateMetadata({
     openGraph: {
       title: post.post_title,
       description: post.post_excerpt || post.post_title,
-      url: `/donasi/${slug}`,
+      url: `${baseUrl}/donasi/${slug}`,
       siteName: "Markaz Al-Hijrah",
       locale: "id_ID",
-      images: post.post_image ? [post.post_image] : [],
+      images: absoluteImageUrl
+        ? [
+            {
+              url: absoluteImageUrl,
+              width: 1200,
+              height: 630,
+              alt: post.post_title,
+            },
+          ]
+        : [],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: post.post_title,
       description: post.post_excerpt || post.post_title,
-      images: post.post_image ? [post.post_image] : [],
+      images: absoluteImageUrl ? [absoluteImageUrl] : [],
     },
   };
 }
@@ -84,21 +106,21 @@ export default async function DonationDetailPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <PublicNavbar />
+      {/* <PublicNavbar /> */}
 
       {/* Program Content */}
-      <article className="pt-32 pb-16">
+      <article className="pt-16 pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Back Button */}
-            <div className="mb-8 animate-fade-in-up">
+            {/* <div className="mb-8 animate-fade-in-up">
               <Link
                 href="/donasi"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-blue font-medium transition-colors"
+                className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-brown font-medium transition-colors"
               >
                 <FiArrowLeft /> Kembali ke Daftar Donasi
               </Link>
-            </div>
+            </div> */}
 
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up delay-100">
               {/* Program Header & Body */}
@@ -106,18 +128,24 @@ export default async function DonationDetailPage({
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
                   {post.category && (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-brand-blue rounded-full font-semibold">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-brand-brown rounded-full font-semibold">
                       <FiTag size={14} />
                       {post.category.name}
                     </div>
                   )}
                   <div className="flex items-center gap-2">
                     <FiCalendar size={14} />
-                    {new Date(post.date).toLocaleDateString("id-ID", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
+                    {post.date
+                      ? new Date(post.date).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : new Date().toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
                   </div>
                 </div>
 
@@ -151,7 +179,7 @@ export default async function DonationDetailPage({
                   className="prose prose-lg max-w-none prose-gray
                     prose-headings:text-gray-900 prose-headings:font-bold
                     prose-p:text-gray-900 prose-p:leading-relaxed
-                    prose-a:text-brand-blue prose-a:no-underline hover:prose-a:text-brand-gold hover:prose-a:underline
+                    prose-a:text-brand-brown prose-a:no-underline hover:prose-a:text-brand-gold hover:prose-a:underline
                     prose-strong:text-gray-900 prose-strong:font-bold
                     prose-li:text-gray-900
                     prose-img:rounded-xl prose-img:shadow-lg
@@ -163,7 +191,7 @@ export default async function DonationDetailPage({
               {/* Donation Form Section */}
               <div className="border-t border-gray-100 p-8 md:p-12 bg-blue-50/50">
                 <div className="mb-8 text-center">
-                  <h3 className="text-2xl font-bold text-brand-blue mb-2">
+                  <h3 className="text-2xl font-bold text-brand-brown mb-2">
                     Salurkan Donasi Anda
                   </h3>
                   <p className="text-gray-600">

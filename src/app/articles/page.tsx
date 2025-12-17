@@ -36,7 +36,7 @@ export default function ArticlesPage() {
       <PublicNavbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-brand-blue text-white relative overflow-hidden">
+      <section className="pt-32 pb-16 bg-brand-brown text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/pattern-islamic.png')] opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -126,7 +126,7 @@ export default function ArticlesPage() {
                     <div className="p-6 space-y-3">
                       {/* Category Badge */}
                       {post.category && (
-                        <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-blue rounded-full text-xs font-semibold">
+                        <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-brown rounded-full text-xs font-semibold">
                           {post.category.name}
                         </div>
                       )}
@@ -152,7 +152,7 @@ export default function ArticlesPage() {
                             year: "numeric",
                           })}
                         </span>
-                        <span className="text-brand-blue font-semibold text-sm group-hover:text-brand-gold transition-colors">
+                        <span className="text-brand-brown font-semibold text-sm group-hover:text-brand-gold transition-colors">
                           Baca Selengkapnya →
                         </span>
                       </div>

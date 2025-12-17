@@ -5,8 +5,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --brand-gold: #efc940;
+  --brand-gold: #d3a428;
   --brand-blue: #4a4c70;
+  --brand-brown: #5a4f3a;
   --brand-dark: #333333;
 }
 
@@ -18,6 +19,7 @@
   --color-brand-gold: var(--brand-gold);
   --color-brand-blue: var(--brand-blue);
   --color-brand-dark: var(--brand-dark);
+  --color-brand-brown: var(--brand-brown);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -38,7 +38,7 @@ export default function ProgramsPage() {
       <PublicNavbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-brand-blue text-white relative overflow-hidden">
+      <section className="pt-32 pb-16 bg-brand-brown text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/pattern-islamic.png')] opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -125,7 +125,7 @@ export default function ProgramsPage() {
 
                       {/* Date Badge over Image */}
                       {program.date && (
-                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brand-blue shadow-lg">
+                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brand-brown shadow-lg">
                           {new Date(program.date).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
@@ -154,7 +154,7 @@ export default function ProgramsPage() {
 
                       {/* CTA */}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
-                        <span className="text-brand-blue font-semibold text-sm group-hover:text-brand-gold transition-colors">
+                        <span className="text-brand-brown font-semibold text-sm group-hover:text-brand-gold transition-colors">
                           Lihat Detail →
                         </span>
                       </div>
@@ -168,7 +168,7 @@ export default function ProgramsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-brand-blue text-white">
+      <section className="py-16 bg-brand-brown text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial="hidden"
@@ -188,7 +188,7 @@ export default function ProgramsPage() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/donasi"
-                className="inline-block px-10 py-4 bg-brand-gold text-brand-blue font-bold text-lg rounded-full hover:bg-[#d4b035] transition-all shadow-xl"
+                className="inline-block px-10 py-4 bg-brand-gold text-brand-brown font-bold text-lg rounded-full hover:bg-[#D3A428] transition-all shadow-xl"
               >
                 Donasi Sekarang
               </Link>

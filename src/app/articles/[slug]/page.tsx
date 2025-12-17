@@ -46,6 +46,21 @@ export async function generateMetadata({
 
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
+  // Convert relative image path to absolute URL for Open Graph
+  const getAbsoluteImageUrl = (imagePath: string | undefined) => {
+    if (!imagePath) return undefined;
+
+    // If already absolute URL, return as is
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+
+    // Convert relative path to absolute URL
+    return `${baseUrl}${imagePath.startsWith("/") ? "" : "/"}${imagePath}`;
+  };
+
+  const absoluteImageUrl = getAbsoluteImageUrl(post.post_image);
+
   return {
     metadataBase: new URL(baseUrl),
     title: `${post.post_title} - Markaz Al-Hijrah`,
@@ -53,17 +68,26 @@ export async function generateMetadata({
     openGraph: {
       title: post.post_title,
       description: post.post_excerpt || post.post_title,
-      url: `/articles/${slug}`,
+      url: `${baseUrl}/articles/${slug}`,
       siteName: "Markaz Al-Hijrah",
       locale: "id_ID",
-      images: post.post_image ? [post.post_image] : [],
+      images: absoluteImageUrl
+        ? [
+            {
+              url: absoluteImageUrl,
+              width: 1200,
+              height: 630,
+              alt: post.post_title,
+            },
+          ]
+        : [],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
       title: post.post_title,
       description: post.post_excerpt || post.post_title,
-      images: post.post_image ? [post.post_image] : [],
+      images: absoluteImageUrl ? [absoluteImageUrl] : [],
     },
   };
 }
@@ -92,7 +116,7 @@ export default async function ArticleDetailPage({
             <div className="mb-8 animate-fade-in-up">
               <Link
                 href="/articles"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-blue font-medium transition-colors"
+                className="inline-flex items-center gap-2 text-gray-600 hover:text-brand-brown font-medium transition-colors"
               >
                 <FiArrowLeft /> Kembali ke Artikel
               </Link>
@@ -104,7 +128,7 @@ export default async function ArticleDetailPage({
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
                   {post.category && (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-brand-blue rounded-full font-semibold">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-brand-brown rounded-full font-semibold">
                       <FiTag size={14} />
                       {post.category.name}
                     </div>
@@ -149,7 +173,7 @@ export default async function ArticleDetailPage({
                   className="prose prose-lg max-w-none prose-gray
                     prose-headings:text-gray-900 prose-headings:font-bold
                     prose-p:text-gray-900 prose-p:leading-relaxed
-                    prose-a:text-brand-blue prose-a:no-underline hover:prose-a:text-brand-gold hover:prose-a:underline
+                    prose-a:text-brand-brown prose-a:no-underline hover:prose-a:text-brand-gold hover:prose-a:underline
                     prose-strong:text-gray-900 prose-strong:font-bold
                     prose-li:text-gray-900
                     prose-img:rounded-xl prose-img:shadow-lg

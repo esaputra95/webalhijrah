@@ -1,15 +1,26 @@
-declare global {
-  interface Window {
-    fbq?: (event: string, eventName: string, data?: unknown) => void;
-  }
-}
+export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID as
+  | string
+  | undefined;
 
-export const FPixel = {
-  track: (event: string, data?: unknown) => {
-    if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("track", event, data);
-    } else {
-      console.warn("Facebook Pixel not initialized or blocked");
-    }
-  },
+export type FacebookEvent =
+  | "PageView"
+  | "ViewContent"
+  | "AddToCart"
+  | "InitiateCheckout"
+  | "AddPaymentInfo"
+  | "Purchase"
+  | "Lead"
+  | "CompleteRegistration";
+
+export const pageView = (): void => {
+  if (!window.fbq) return;
+  window.fbq("track", "PageView");
+};
+
+export const track = (
+  event: FacebookEvent,
+  params: Record<string, unknown> = {}
+): void => {
+  if (!window.fbq) return;
+  window.fbq("track", event, params);
 };

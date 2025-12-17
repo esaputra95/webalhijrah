@@ -32,7 +32,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <FacebookPixel />
         <Suspense fallback={<div>Loading...</div>}>
           <Providers>
             {children}
@@ -50,6 +49,7 @@ export default function RootLayout({
             />
           </Providers>
         </Suspense>
+        <FacebookPixel />
       </body>
     </html>
   );

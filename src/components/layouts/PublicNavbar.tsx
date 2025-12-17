@@ -49,7 +49,7 @@ export default function PublicNavbar() {
             alt="Logo"
             width={50}
             height={50}
-            className="w-full h-10 flex items-center justify-center font-bold text-xl transition-colors text-brand-blue"
+            className="w-full h-10 flex items-center justify-center font-bold text-xl transition-colors text-brand-brown"
           />
         </Link>
 
@@ -61,7 +61,7 @@ export default function PublicNavbar() {
               href={link.href}
               className={`font-medium transition-colors ${
                 link.name === "Donasi"
-                  ? "px-5 py-2 rounded-full font-semibold transition-all bg-brand-gold text-brand-blue hover:bg-[#d4b035]"
+                  ? "px-5 py-2 rounded-full font-semibold transition-all bg-brand-gold text-brand-brown hover:bg-[#D3A428]"
                   : ""
               }`}
             >
@@ -106,7 +106,7 @@ export default function PublicNavbar() {
               ))}
               <Link
                 href="/login"
-                className="px-6 py-2 bg-brand-gold text-brand-blue rounded-full font-semibold hover:bg-[#d4b035]"
+                className="px-6 py-2 bg-brand-gold text-brand-brown rounded-full font-semibold hover:bg-[#D3A428]"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Login
