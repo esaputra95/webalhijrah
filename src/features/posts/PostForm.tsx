@@ -238,7 +238,6 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
               label: item.label,
               value: item.id,
             }))}
-            required
           />
         )}
       </div>

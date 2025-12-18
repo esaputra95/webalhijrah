@@ -35,7 +35,13 @@ export const PostCreateSchema = z.object({
   post_category_id: z.coerce.number().int().nullable().optional(),
   post_image: z.string().trim().min(1, "Gambar wajib diisi"),
   date: z.union([z.string(), z.date()]).nullable().optional(),
-  account: z.number().optional(),
+  account: z.preprocess(
+    (val) =>
+      val === "" || val === null || (typeof val === "number" && isNaN(val))
+        ? undefined
+        : val,
+    z.number().optional()
+  ),
 });
 
 // ====== Update Schema (all optional) ======
@@ -51,9 +57,15 @@ export const PostUpdateSchema = z
     post_mime_type: z.string().trim().max(MIME_MAX).nullable().optional(),
     user_id: z.coerce.number().int().optional(),
     post_category_id: z.coerce.number().int().nullable().optional(),
-    post_image: z.string().trim().min(1, "Gambar wajib diisi"),
+    post_image: z.string().trim().min(1, "Gambar wajib diisi").optional(),
     date: z.union([z.string(), z.date()]).nullable().optional(),
-    account: z.number().optional(),
+    account: z.preprocess(
+      (val) =>
+        val === "" || val === null || (typeof val === "number" && isNaN(val))
+          ? undefined
+          : val,
+      z.number().optional()
+    ),
   })
   .strict();
 

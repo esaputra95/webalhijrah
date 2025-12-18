@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
 import { FiUpload, FiX, FiImage } from "react-icons/fi";
 
@@ -24,6 +24,11 @@ export default function ImageUpload({
   const [preview, setPreview] = useState<string>(value || "");
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync preview with value prop changes (e.g., when form resets)
+  useEffect(() => {
+    setPreview(value || "");
+  }, [value]);
 
   const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

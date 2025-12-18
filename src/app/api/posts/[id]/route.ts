@@ -20,6 +20,8 @@ const SELECT_FIELDS = {
   created_at: true,
   updated_at: true,
   date: true,
+  post_image: true,
+  code: true,
   account: true,
   users: {
     select: { id: true, name: true, email: true },
