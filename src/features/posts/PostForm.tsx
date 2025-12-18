@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { format } from "date-fns";
 import { useState } from "react";
+import { bankAccount } from "@/const/bankAccount";
 
 // Dynamic import to prevent SSR hydration mismatch
 const RichTextEditor = dynamic(
@@ -39,10 +40,10 @@ function generateSlug(title: string): string {
   return title
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "") // Remove special characters
-    .replace(/\s+/g, "-") // Replace spaces with hyphens
-    .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
-    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 const PostForm: FC<Props> = ({ initialValues, mode }) => {
@@ -131,6 +132,8 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
       }
     );
   };
+
+  console.log({ errors });
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -223,6 +226,21 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
           disabled={mode === "view"}
           option={optionsPostCategoryArticle ?? []}
         />
+      </div>
+      <div>
+        {watch("post_type") === "donation" && (
+          <SelectInput
+            {...register("account", { valueAsNumber: true })}
+            label="Rekening"
+            disabled={mode === "view"}
+            errors={errors.account?.message}
+            option={bankAccount.map((item) => ({
+              label: item.label,
+              value: item.id,
+            }))}
+            required
+          />
+        )}
       </div>
 
       <div className="border-t pt-4">

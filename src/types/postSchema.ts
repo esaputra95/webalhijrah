@@ -35,6 +35,7 @@ export const PostCreateSchema = z.object({
   post_category_id: z.coerce.number().int().nullable().optional(),
   post_image: z.string().trim().min(1, "Gambar wajib diisi"),
   date: z.union([z.string(), z.date()]).nullable().optional(),
+  account: z.number().optional(),
 });
 
 // ====== Update Schema (all optional) ======
@@ -52,6 +53,7 @@ export const PostUpdateSchema = z
     post_category_id: z.coerce.number().int().nullable().optional(),
     post_image: z.string().trim().min(1, "Gambar wajib diisi"),
     date: z.union([z.string(), z.date()]).nullable().optional(),
+    account: z.number().optional(),
   })
   .strict();
 
@@ -71,6 +73,7 @@ export type PostType = {
   user_id: string;
   post_category_id?: number | null;
   post_image: string;
+  account?: number;
   date?: string | Date | null;
   created_at?: string | null;
   updated_at?: string | null;

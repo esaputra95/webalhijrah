@@ -20,6 +20,7 @@ const SELECT_FIELDS = {
   created_at: true,
   updated_at: true,
   date: true,
+  account: true,
   users: {
     select: { id: true, name: true, email: true },
   },
@@ -82,6 +83,7 @@ export const PUT = wrap(
     if (parsed.date !== undefined)
       data.date = parsed.date ? new Date(parsed.date) : null;
     if (parsed.post_image !== undefined) data.post_image = parsed.post_image;
+    if (parsed.account !== undefined) data.account = parsed.account;
 
     const updated = await prisma.neo_posts.update({
       where: { id: Number(id) },

@@ -1,5 +1,6 @@
 import ActionButton from "@/components/ui/buttons/ActionButton";
 import { Column, Table } from "@/components/ui/tables/Table";
+import { bankAccount } from "@/const/bankAccount";
 import { PostType } from "@/types/postSchema";
 import React, { FC, useMemo } from "react";
 
@@ -58,6 +59,15 @@ const PostTable: FC<Props> = ({
           { value: "post", label: "Post" },
           { value: "donation", label: "Donasi" },
         ],
+      },
+      {
+        header: "Rekening",
+        accessor: "account",
+        sortable: true,
+        filterable: true,
+        render: (row: PostType) => (
+          <div>{bankAccount.find((x) => x.id === row.account)?.label}</div>
+        ),
       },
       {
         header: "Aksi",

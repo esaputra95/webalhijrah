@@ -32,6 +32,7 @@ const SELECT_FIELDS = {
   post_image: true,
   date: true,
   code: true,
+  account: true,
   users: {
     select: { id: true, name: true, email: true },
   },
@@ -158,6 +159,7 @@ export const POST = wrap(async (req: Request) => {
       post_image: parsed.post_image,
       code: parsed.code,
       date: parsed.date ? new Date(parsed.date) : null,
+      account: parsed.account,
     },
     select: SELECT_FIELDS,
   });

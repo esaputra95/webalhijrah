@@ -60,6 +60,43 @@ export function useCreateDonation() {
   });
 }
 
+// ====== Create Master Donation (Admin manual entry) ======
+export function useCreateDonationMaster() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: CreateDonationPayload) => {
+      const response = await api.post(apiUrl.donationMaster, payload);
+      return response.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["Donations"] });
+    },
+  });
+}
+
+// ====== Update Master Donation ======
+export function useUpdateDonationMaster() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...payload
+    }: { id: string } & Partial<DonationType>) =>
+      (await api.put(`${apiUrl.donationMaster}/${id}`, payload)).data,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["Donations"] }),
+  });
+}
+
+// ====== Delete Master Donation ======
+export function useDeleteDonationMaster() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id }: { id: string }) =>
+      (await api.delete(`${apiUrl.donationMaster}/${id}`)).data,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["Donations"] }),
+  });
+}
+
 // ====== Update Donation ======
 export function useUpdateDonation() {
   const qc = useQueryClient();

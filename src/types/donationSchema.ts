@@ -15,6 +15,7 @@ export const DonationStatusEnum = z.enum([
 
 // ====== Create Schema ======
 export const DonationCreateSchema = z.object({
+  id: z.number().optional(),
   invoice_number: z
     .string()
     .trim()
@@ -31,6 +32,7 @@ export const DonationCreateSchema = z.object({
 // ====== Update Schema (all optional) ======
 export const DonationUpdateSchema = z
   .object({
+    id: z.number().optional(),
     invoice_number: z.string().trim().min(1).max(NAME_MAX).optional(),
     name: z.string().trim().min(1).max(NAME_MAX).optional(),
     phone_number: z.string().trim().max(PHONE_MAX).nullable().optional(),

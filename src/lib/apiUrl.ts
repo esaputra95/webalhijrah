@@ -10,7 +10,9 @@ const apiUrl = {
   posts: "/api/posts",
   terms: "/api/terms",
   donations: "/api/donations",
+  donationMaster: "/api/donation-master",
   postCategories: "/api/post-categories",
+  programCategories: "/api/program-categories",
   programs: "/api/programs",
   sliders: "/api/sliders",
 };

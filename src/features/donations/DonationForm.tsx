@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import TextInput from "@/components/ui/inputs/TextInput";
 import {
-  useCreateDonation,
-  useUpdateDonation,
+  useCreateDonationMaster,
+  useUpdateDonationMaster,
 } from "@/hooks/masters/useDonations";
 import { toast } from "react-toastify";
 import { DonationCreateSchema, DonationType } from "@/types/donationSchema";
@@ -33,24 +33,28 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
 
   useEffect(() => {
     if (initialValues) {
+      console.log({ initialValues });
+
       reset({
         ...initialValues,
       });
     }
   }, [initialValues, reset]);
 
-  const create = useCreateDonation();
-  const update = useUpdateDonation();
+  const create = useCreateDonationMaster();
+  const update = useUpdateDonationMaster();
 
   const onSubmit = async (values: Partial<DonationType>) => {
+    console.log({ values });
+
     if (mode === "create") {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       create.mutate(values as any, {
         onSuccess: () => {
-          toast.success("Donasi berhasil ditambahkan");
+          toast.success("Donasi berhasil ditambahkan (Manual)");
           onCancel?.();
         },
-        onError: (error) => {
+        onError: (error: unknown) => {
           const err = handleErrorResponse(error);
           toast.error(err);
         },
@@ -62,10 +66,10 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
       { id: values?.id as string, ...values },
       {
         onSuccess: () => {
-          toast.success("Donasi berhasil diupdate");
+          toast.success("Donasi berhasil diupdate (Manual)");
           onCancel?.();
         },
-        onError: (e) => toast.error(handleErrorResponse(e)),
+        onError: (e: unknown) => toast.error(handleErrorResponse(e)),
       }
     );
   };

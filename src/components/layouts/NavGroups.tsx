@@ -40,6 +40,12 @@ export const navGroups: NavGroup[] = [
         path: "/admins/masters/sliders",
         role: ["SUPER_ADMIN"],
       },
+      {
+        icon: FiFileText,
+        label: "Group Program",
+        path: "/admins/masters/program-categories",
+        role: ["SUPER_ADMIN"],
+      },
     ],
   },
   {
@@ -62,11 +68,6 @@ export const navGroups: NavGroup[] = [
         path: "/admins/programs",
         role: ["SUPER_ADMIN"],
       },
-    ],
-  },
-  {
-    label: "Donasi",
-    items: [
       {
         icon: FiFileText,
         label: "Daftar Donasi",
@@ -75,7 +76,6 @@ export const navGroups: NavGroup[] = [
       },
     ],
   },
-
   {
     label: "Laporan",
     items: [

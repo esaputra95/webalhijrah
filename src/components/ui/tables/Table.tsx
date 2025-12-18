@@ -46,9 +46,18 @@ const Pagination: React.FC<PaginationProps> = ({
 
     range.push(1);
     if (showLeftDots) range.push("...");
-    for (let i = left; i <= right; i++) range.push(i);
+
+    for (let i = left; i <= right; i++) {
+      // Avoid duplication of 1 or totalPages if already pushed explicitly
+      if (i !== 1 && i !== totalPages) {
+        range.push(i);
+      }
+    }
+
     if (showRightDots) range.push("...");
-    range.push(totalPages);
+    if (totalPages > 1) {
+      range.push(totalPages);
+    }
 
     return range;
   };
@@ -175,6 +184,12 @@ export function Table<T extends { id?: string | number }>({
     () => parseInt(searchParams.get("page") || "1", 10),
     [searchParams]
   );
+
+  const currentLimit = useMemo(
+    () => parseInt(searchParams.get("limit") || "10", 10),
+    [searchParams]
+  );
+
   const sortBy = searchParams.get("sortby") || "";
   const sortDir = searchParams.get("sort") || "";
 
@@ -211,6 +226,13 @@ export function Table<T extends { id?: string | number }>({
   const handlePageChange = (page: number) => {
     setQuery((sp) => {
       sp.set("page", String(page));
+    });
+  };
+
+  const handleLimitChange = (limit: number) => {
+    setQuery((sp) => {
+      sp.set("limit", String(limit));
+      sp.set("page", "1"); // reset to page 1 when limit changes
     });
   };
 
@@ -494,21 +516,40 @@ export function Table<T extends { id?: string | number }>({
         </tbody>
       </table>
 
-      <div className="mt-2 flex justify-between px-2 items-end">
-        <button
-          onClick={() => {
-            setFilters({});
-            setQuery((sp) => {
-              sp.set("page", "1");
-              columnKeys.forEach((k) => sp.delete(k)); // bersihkan semua filter terdaftar
-              sp.delete("sortby");
-              sp.delete("sort");
-            });
-          }}
-          className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded"
-        >
-          Reset Filter
-        </button>
+      <div className="mt-2 flex flex-wrap gap-4 justify-between px-2 items-center">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => {
+              setFilters({});
+              setQuery((sp) => {
+                sp.set("page", "1");
+                sp.set("limit", "10");
+                columnKeys.forEach((k) => sp.delete(k)); // bersihkan semua filter terdaftar
+                sp.delete("sortby");
+                sp.delete("sort");
+              });
+            }}
+            className="text-sm bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded"
+          >
+            Reset Filter
+          </button>
+
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span>Show</span>
+            <select
+              value={currentLimit}
+              onChange={(e) => handleLimitChange(Number(e.target.value))}
+              className="px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 outline-none h-8"
+            >
+              {[10, 20, 50, 100].map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <span>entries</span>
+          </div>
+        </div>
 
         {totalPages > 1 && (
           <Pagination

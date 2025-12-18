@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import * as z from "zod";
 import { useCreateDonation } from "@/hooks/masters/useDonations";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import { FiCreditCard, FiCopy } from "react-icons/fi";
 import { FaMoneyBillWave, FaQrcode } from "react-icons/fa";
 import Image from "next/image";
 import { track } from "@/lib/pixel";
+import { bankAccount } from "@/const/bankAccount";
 
 // Schema validasi
 const PublicDonationFormSchema = z.object({
@@ -38,7 +39,13 @@ const tabContentVariants = {
   exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
-export default function PublicDonationForm() {
+export default function PublicDonationForm({
+  account,
+}: // _code,
+{
+  account?: number;
+  // _code?: string;
+}) {
   const [activeTab, setActiveTab] = useState<"automatic" | "manual" | "qris">(
     "manual"
   );
@@ -88,6 +95,10 @@ export default function PublicDonationForm() {
     setValue("amount", amount, { shouldValidate: true });
   };
 
+  const bank = useMemo(() => {
+    return bankAccount.find((bank) => bank.id === account);
+  }, [account]);
+
   return (
     <div className="w-full bg-white">
       {/* Tab Navigation */}
@@ -109,23 +120,26 @@ export default function PublicDonationForm() {
             />
           )}
         </button>
-        <button
-          onClick={() => setActiveTab("automatic")}
-          className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
-            activeTab === "automatic"
-              ? "text-brand-brown"
-              : "text-gray-500 hover:text-brand-brown hover:bg-gray-50"
-          }`}
-        >
-          <FiCreditCard className="text-lg" />
-          <span>Sistem Otomatis</span>
-          {activeTab === "automatic" && (
-            <motion.div
-              layoutId="activeTabIndicator"
-              className="absolute bottom-0 left-0 right-0 h-1 bg-brand-gold rounded-t-full"
-            />
-          )}
-        </button>
+        {bank?.type === "alhijrah" && (
+          <button
+            onClick={() => setActiveTab("automatic")}
+            className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
+              activeTab === "automatic"
+                ? "text-brand-brown"
+                : "text-gray-500 hover:text-brand-brown hover:bg-gray-50"
+            }`}
+          >
+            <FiCreditCard className="text-lg" />
+            <span>Sistem Otomatis</span>
+            {activeTab === "automatic" && (
+              <motion.div
+                layoutId="activeTabIndicator"
+                className="absolute bottom-0 left-0 right-0 h-1 bg-brand-gold rounded-t-full"
+              />
+            )}
+          </button>
+        )}
+
         <button
           onClick={() => setActiveTab("qris")}
           className={`flex-1 py-4 px-4 text-center font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all duration-300 relative ${
@@ -305,89 +319,38 @@ export default function PublicDonationForm() {
 
               <div className="grid gap-4">
                 {/* Bank Item 1 */}
-                <div className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-brand-brown shadow-sm">
-                      BSI
-                    </div>
-                    <div className="text-left">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">
-                        Bank Syariah Indonesia
-                      </p>
-                      <p className="text-lg font-bold text-gray-800 font-mono">
-                        3000 5000 45
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        a.n Yayasan Markaz Al Hijrah
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText("3000500045");
-                      toast.success("No. Rekening BSI Disalin!");
-                    }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+                {bank?.accounts?.map((account) => (
+                  <div
+                    key={account.code}
+                    className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4"
                   >
-                    <FiCopy /> Salin
-                  </button>
-                </div>
-
-                {/* Bank Item 2 */}
-                <div className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-yellow-700 shadow-sm">
-                      MANDIRI
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-brand-brown shadow-sm">
+                        {account.code}
+                      </div>
+                      <div className="text-left">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">
+                          {account.name}
+                        </p>
+                        <p className="text-lg font-bold text-gray-800 font-mono">
+                          {account.number}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          a.n {account.owner}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-left">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">
-                        Bank Mandiri
-                      </p>
-                      <p className="text-lg font-bold text-gray-800 font-mono">
-                        108 000 3434 124
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        a.n Yayasan Markaz Al Hijrah
-                      </p>
-                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(account.number);
+                        toast.success("No. Rekening Disalin!");
+                      }}
+                      className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
+                    >
+                      <FiCopy /> Salin
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText("1080003434124");
-                      toast.success("No. Rekening Mandiri Disalin!");
-                    }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
-                  >
-                    <FiCopy /> Salin
-                  </button>
-                </div>
-                <div className="p-4 border border-gray-200 rounded-xl bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-100 font-bold text-xs text-blue-700 shadow-sm">
-                      BRI
-                    </div>
-                    <div className="text-left">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">
-                        Bank BRI
-                      </p>
-                      <p className="text-lg font-bold text-gray-800 font-mono">
-                        0696 0103 2635 509
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        a.n Yayasan Markaz Al Hijrah
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText("069601032635509");
-                      toast.success("No. Rekening Mandiri Disalin!");
-                    }}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:text-brand-brown hover:border-brand-blue hover:bg-brand-brown/5 transition-all flex items-center gap-2 w-full sm:w-auto justify-center"
-                  >
-                    <FiCopy /> Salin
-                  </button>
-                </div>
+                ))}
               </div>
 
               <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4 mt-6 flex gap-3 items-start">

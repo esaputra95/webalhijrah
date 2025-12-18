@@ -2,7 +2,10 @@
 import HeaderModal from "@/components/ui/modals/Header";
 import Modal from "@/components/ui/modals/Modal";
 import { DonationForm, DonationTable } from "@/features/donations";
-import { useDeleteDonation, useDonations } from "@/hooks/masters/useDonations";
+import {
+  useDeleteDonationMaster,
+  useDonations,
+} from "@/hooks/masters/useDonations";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { DonationType } from "@/types/donationSchema";
@@ -14,7 +17,7 @@ const Donations = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [dataSelect, setDataSelect] = useState<Partial<DonationType>>();
   const { data, isLoading, isError } = useDonations();
-  const deleteDonation = useDeleteDonation();
+  const deleteDonation = useDeleteDonationMaster();
 
   useEffect(() => {
     if (isError) {
@@ -23,6 +26,8 @@ const Donations = () => {
   }, [isError]);
 
   const onUpdate = (data?: DonationType) => {
+    console.log({ data });
+
     setIsModalOpen(true);
     setDataSelect(data);
   };
@@ -54,7 +59,7 @@ const Donations = () => {
               { id },
               {
                 onSuccess: () => resolve(),
-                onError: (error) => reject(error),
+                onError: (error: unknown) => reject(error),
               }
             );
           });

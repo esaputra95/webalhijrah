@@ -206,7 +206,7 @@ export default async function DonationDetailPage({
                       Form Donasi Online (Aman & Terpercaya)
                     </p>
                   </div>
-                  <PublicDonationForm />
+                  <PublicDonationForm account={post?.account} />
                 </div>
               </div>
             </div>
