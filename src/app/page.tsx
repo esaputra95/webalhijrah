@@ -482,7 +482,7 @@ const LandingPage = () => {
                   </p>
                 </div>
                 <div className="p-6 md:p-8">
-                  <PublicDonationForm />
+                  <PublicDonationForm account={1} />
                 </div>
               </div>
             </motion.div>
