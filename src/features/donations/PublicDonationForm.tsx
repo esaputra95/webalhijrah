@@ -150,7 +150,7 @@ export default function PublicDonationForm({
         >
           <FaQrcode className="text-lg" />
           <span>Scan QRIS</span>
-          {activeTab === "qris" && (
+          {activeTab === "qris" && bank?.qris && (
             <motion.div
               layoutId="activeTabIndicator"
               className="absolute bottom-0 left-0 right-0 h-1 bg-brand-gold rounded-t-full"
@@ -342,6 +342,11 @@ export default function PublicDonationForm({
                     </div>
                     <button
                       onClick={() => {
+                        track("Purchase", {
+                          currency: "IDR",
+                          content_name: "Donation",
+                        });
+
                         navigator.clipboard.writeText(account.number);
                         toast.success("No. Rekening Disalin!");
                       }}
@@ -376,7 +381,7 @@ export default function PublicDonationForm({
           )}
 
           {/* TAB 3: QRIS */}
-          {activeTab === "qris" && (
+          {activeTab === "qris" && bank?.qris && (
             <motion.div
               key="qris"
               variants={tabContentVariants}
@@ -389,7 +394,7 @@ export default function PublicDonationForm({
                 {/* QRIS Placeholder Image */}
                 <div className="w-72 h-96 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 relative overflow-hidden">
                   <Image
-                    src="/images/qris-markaz-alhijrah.jpeg"
+                    src={`${bank?.urlQris}`}
                     alt="QRIS"
                     width={285}
                     height={320}
@@ -406,9 +411,13 @@ export default function PublicDonationForm({
                   Scan QRIS di atas menggunakan aplikasi E-Wallet (GoPay, OVO,
                   Dana, LinkAja) atau Mobile Banking apa saja.
                 </p>
-                <button className="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors shadow-sm">
+                <a
+                  href={`${bank?.urlQris}`}
+                  target="_blank"
+                  className="px-6 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-colors shadow-sm"
+                >
                   Download QRIS Image ⬇️
-                </button>
+                </a>
               </div>
             </motion.div>
           )}

@@ -57,7 +57,7 @@ const AdminDashboard = () => {
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("id-ID", {
-      style: "currency",
+      style: "decimal",
       currency: "IDR",
       maximumFractionDigits: 0,
     }).format(amount);

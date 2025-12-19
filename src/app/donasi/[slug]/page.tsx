@@ -156,37 +156,8 @@ export default async function DonationDetailPage({
                     {post.post_title}
                   </h1>
 
-                  {/* Meta Info Bar */}
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-brand-gold/20 flex items-center justify-center text-brand-brown">
-                      <FiTag size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
-                        Kategori
-                      </p>
-                      <p className="text-sm font-bold text-brand-brown">
-                        {post.category?.name || "Umum"}
-                      </p>
-                    </div>
-                    <div className="w-px h-8 bg-gray-100 mx-2" />
-                    <div>
-                      <p className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
-                        Waktu
-                      </p>
-                      <p className="text-sm font-bold text-gray-700">
-                        {post.date
-                          ? new Date(post.date).toLocaleDateString("id-ID", {
-                              day: "numeric",
-                              month: "short",
-                            })
-                          : "Hari Ini"}
-                      </p>
-                    </div>
-                  </div>
-
                   {/* Mobile Progress Stats (Kitabisa Inspiration) */}
-                  <div className="lg:hidden bg-gray-50 rounded-2xl p-4 mb-8">
+                  <div className="lg:hidden bg-gray-50 rounded-2xl py-2 px-4 mb-8">
                     <div className="flex justify-between items-end mb-2">
                       <p className="text-xs text-gray-500 font-medium tracking-tight">
                         Terkumpul{" "}
@@ -200,33 +171,17 @@ export default async function DonationDetailPage({
                       </p>
                     </div>
                     {/* Progress Bar */}
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                    <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mb-2">
                       <div
-                        className="h-full bg-brand-gold rounded-full transition-all duration-1000"
+                        className="h-full px-4 flex items-center justify-center bg-brand-gold rounded-full font-semibold text-sm transition-all duration-1000"
                         style={{
                           width: `${Math.min(
                             (currentAmount / needAmount) * 100,
                             100
                           )}%`,
                         }}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-gray-900 font-bold text-lg">
-                          {Math.round((currentAmount / needAmount) * 100)}%
-                        </span>
-                        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-                          Tercapai
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-brand-brown font-bold text-lg">
-                          54
-                        </span>
-                        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-right">
-                          Hari Lagi
-                        </span>
+                      >
+                        {Math.round((currentAmount / needAmount) * 100)}%
                       </div>
                     </div>
                   </div>
@@ -239,20 +194,6 @@ export default async function DonationDetailPage({
                       </p>
                     </div>
                   )}
-
-                  {/* Tabs/Section Header (Mobile) */}
-                  <div className="lg:hidden flex border-b border-gray-100 mb-6 gap-6 overflow-x-auto no-scrollbar">
-                    <button className="pb-3 border-b-2 border-brand-brown text-brand-brown font-bold text-sm whitespace-nowrap">
-                      Cerita
-                    </button>
-                    <button className="pb-3 text-gray-400 font-bold text-sm whitespace-nowrap">
-                      Kabar Terbaru
-                    </button>
-                    <button className="pb-3 text-gray-400 font-bold text-sm whitespace-nowrap">
-                      Donasi
-                    </button>
-                  </div>
-
                   {/* Content */}
                   <div
                     className="prose prose-sm md:prose-lg max-w-none prose-gray
@@ -389,9 +330,16 @@ export default async function DonationDetailPage({
 
       {/* Mobile Sticky CTA (Kitabisa Inspired) */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 p-3 pb-safe flex gap-3 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
-        <button className="flex items-center justify-center w-14 h-14 rounded-2xl border-2 border-gray-100 text-gray-500 hover:bg-gray-50 transition-colors">
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(
+            `${post.post_title} - ${post.post_name}`
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-14 h-14 rounded-2xl border-2 border-gray-100 text-gray-500 hover:bg-gray-50 transition-colors"
+        >
           <FiShare2 size={24} />
-        </button>
+        </a>
         <Link
           href="#donation-form"
           className="flex-1 flex items-center justify-center bg-brand-gold text-brand-brown font-extrabold text-base rounded-2xl shadow-lg shadow-brand-gold/20 active:scale-[0.98] transition-all"
