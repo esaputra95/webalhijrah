@@ -19,7 +19,11 @@ const navLinks: NavLink[] = [
   { name: "Donasi", href: "/donasi" },
 ];
 
-export default function PublicNavbar() {
+export default function PublicNavbar({
+  withScrolled = true,
+}: {
+  withScrolled?: boolean;
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -37,7 +41,7 @@ export default function PublicNavbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled
+        isScrolled || !withScrolled
           ? "bg-white shadow-lg py-3 text-gray-800"
           : "bg-transparent shadow-md py-4 text-gray-300"
       }`}

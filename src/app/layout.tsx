@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
         <meta name="apple-mobile-web-app-title" content="Markaz Alhijrah" />
         <meta name="application-name" content="Markaz Alhijrah" />
