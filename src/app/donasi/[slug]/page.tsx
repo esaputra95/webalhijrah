@@ -24,7 +24,7 @@ async function getPostBySlug(slug: string): Promise<Post | null> {
 
 import { Metadata } from "next";
 import Image from "next/image";
-import { FiTag, FiChevronLeft, FiShare2 } from "react-icons/fi";
+import { FiChevronLeft, FiShare2 } from "react-icons/fi";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import PublicDonationForm from "@/features/donations/PublicDonationForm";
@@ -62,7 +62,6 @@ export async function generateMetadata({
   };
 
   const absoluteImageUrl = getAbsoluteImageUrl(post.post_image);
-
   return {
     metadataBase: new URL(baseUrl),
     title: `${post.post_title} - Donasi Markaz Al-Hijrah`,
@@ -108,6 +107,8 @@ export default async function DonationDetailPage({
   if (!post) {
     return notFound();
   }
+
+  console.log({ post });
 
   return (
     <div className="min-h-screen bg-white lg:bg-gray-50 pb-32 lg:pb-0">
@@ -157,34 +158,36 @@ export default async function DonationDetailPage({
                   </h1>
 
                   {/* Mobile Progress Stats (Kitabisa Inspiration) */}
-                  <div className="lg:hidden bg-gray-50 rounded-2xl py-2 px-4 mb-8">
-                    <div className="flex justify-between items-end mb-2">
-                      <p className="text-xs text-gray-500 font-medium tracking-tight">
-                        Terkumpul{" "}
-                        <span className="text-gray-900 font-bold">
-                          Rp {currentAmount.toLocaleString("id-ID")}
-                        </span>{" "}
-                        dari{" "}
-                        <span className="text-gray-900 font-bold">
-                          Rp {needAmount.toLocaleString("id-ID")}
-                        </span>
-                      </p>
-                    </div>
-                    {/* Progress Bar */}
-                    <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mb-2">
-                      <div
-                        className="h-full px-4 flex items-center justify-center bg-brand-gold rounded-full font-semibold text-sm transition-all duration-1000"
-                        style={{
-                          width: `${Math.min(
-                            (currentAmount / needAmount) * 100,
-                            100
-                          )}%`,
-                        }}
-                      >
-                        {Math.round((currentAmount / needAmount) * 100)}%
+                  {post.post_categories?.title === "Program Pembangunan" && (
+                    <div className="lg:hidden bg-gray-50 rounded-2xl py-2 px-4 mb-8">
+                      <div className="flex justify-between items-end mb-2">
+                        <p className="text-xs text-gray-500 font-medium tracking-tight">
+                          Terkumpul{" "}
+                          <span className="text-gray-900 font-bold">
+                            Rp {currentAmount.toLocaleString("id-ID")}
+                          </span>{" "}
+                          dari{" "}
+                          <span className="text-gray-900 font-bold">
+                            Rp {needAmount.toLocaleString("id-ID")}
+                          </span>
+                        </p>
+                      </div>
+                      {/* Progress Bar */}
+                      <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mb-2">
+                        <div
+                          className="h-full px-4 flex items-center justify-center bg-brand-gold rounded-full font-semibold text-sm transition-all duration-1000"
+                          style={{
+                            width: `${Math.min(
+                              (currentAmount / needAmount) * 100,
+                              100
+                            )}%`,
+                          }}
+                        >
+                          {Math.round((currentAmount / needAmount) * 100)}%
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Excerpt */}
                   {post.post_excerpt && (
@@ -231,35 +234,41 @@ export default async function DonationDetailPage({
                   </div>
 
                   {/* Desktop Progress Bar (New) */}
-                  <div className="p-6 pb-2">
-                    <div className="flex justify-between items-end mb-2 text-sm text-gray-500 font-medium">
-                      <span>Terkumpul</span>
-                      <span className="text-gray-900 font-bold">
-                        Rp {currentAmount.toLocaleString("id-ID")}
-                      </span>
+                  {post.post_categories?.title === "Program Pembangunan" && (
+                    <div className="p-6 pb-2">
+                      <div className="flex justify-between items-end mb-2 text-sm text-gray-500 font-medium">
+                        <span>Terkumpul</span>
+                        <span className="text-gray-900 font-bold">
+                          Rp {currentAmount.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden mb-3">
+                        <div
+                          className="h-full bg-brand-gold rounded-full transition-all duration-1000"
+                          style={{
+                            width: `${Math.min(
+                              (currentAmount / needAmount) * 100,
+                              100
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="text-brand-brown text-sm">
+                          {Math.round((currentAmount / needAmount) * 100)}%
+                          Tercapai
+                        </span>
+                        <span>Rp {needAmount.toLocaleString("id-ID")}</span>
+                      </div>
                     </div>
-                    <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden mb-3">
-                      <div
-                        className="h-full bg-brand-gold rounded-full transition-all duration-1000"
-                        style={{
-                          width: `${Math.min(
-                            (currentAmount / needAmount) * 100,
-                            100
-                          )}%`,
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider">
-                      <span className="text-brand-brown text-sm">
-                        {Math.round((currentAmount / needAmount) * 100)}%
-                        Tercapai
-                      </span>
-                      <span>Rp {needAmount.toLocaleString("id-ID")}</span>
-                    </div>
-                  </div>
-
+                  )}
                   <div id="donation-form-desktop" className="p-1">
-                    <PublicDonationForm account={post?.account} />
+                    <PublicDonationForm
+                      type={Boolean(
+                        post.post_categories?.title === "Program Pembangunan"
+                      )}
+                      account={post?.account}
+                    />
                   </div>
                 </div>
 

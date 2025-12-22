@@ -41,9 +41,11 @@ const tabContentVariants = {
 
 export default function PublicDonationForm({
   account,
+  type,
 }: // _code,
 {
   account?: number;
+  type?: boolean;
   // _code?: string;
 }) {
   const [activeTab, setActiveTab] = useState<"automatic" | "manual" | "qris">(

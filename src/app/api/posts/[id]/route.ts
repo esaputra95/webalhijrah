@@ -35,7 +35,15 @@ export const GET = wrap(
 
     const post = await prisma.neo_posts.findUnique({
       where: { id: Number(id) },
-      select: SELECT_FIELDS,
+      select: {
+        ...SELECT_FIELDS,
+        post_categories: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
     });
 
     if (!post) {

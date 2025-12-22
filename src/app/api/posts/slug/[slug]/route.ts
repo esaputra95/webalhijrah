@@ -33,7 +33,15 @@ export const GET = wrap(
 
     const post = await prisma.neo_posts.findFirst({
       where: { post_name: slug },
-      select: SELECT_FIELDS,
+      select: {
+        ...SELECT_FIELDS,
+        post_categories: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
     });
 
     if (!post) {

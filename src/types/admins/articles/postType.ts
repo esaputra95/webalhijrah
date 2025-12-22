@@ -8,9 +8,9 @@ export interface Post {
   code?: string;
   account?: number;
   date: Date;
-  category?: {
+  post_categories?: {
     id: string;
-    name: string;
+    title: string;
   };
   created_at: string;
   updated_at: string;
