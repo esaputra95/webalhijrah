@@ -131,10 +131,10 @@ export default async function DonationDetailPage({
                 <div className="p-6 md:p-10">
                   {/* Meta Info */}
                   <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
-                    {post.category && (
+                    {post.post_categories && (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-gold/10 text-brand-brown rounded-full font-bold">
                         <FiTag size={14} />
-                        {post.category.name}
+                        {post.post_categories.title}
                       </span>
                     )}
                     <span className="flex items-center gap-1.5 text-gray-500 font-medium">

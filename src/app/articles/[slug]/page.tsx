@@ -127,10 +127,10 @@ export default async function ArticleDetailPage({
               <div className="p-8 md:p-12">
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
-                  {post.category && (
+                  {post.post_categories && (
                     <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-brand-brown rounded-full font-semibold">
                       <FiTag size={14} />
-                      {post.category.name}
+                      {post.post_categories.title}
                     </div>
                   )}
                   <div className="flex items-center gap-2">

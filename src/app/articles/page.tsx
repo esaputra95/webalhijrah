@@ -125,9 +125,9 @@ export default function ArticlesPage() {
                     {/* Article Content */}
                     <div className="p-6 space-y-3">
                       {/* Category Badge */}
-                      {post.category && (
+                      {post.post_categories && (
                         <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-brown rounded-full text-xs font-semibold">
-                          {post.category.name}
+                          {post.post_categories.title}
                         </div>
                       )}
 
