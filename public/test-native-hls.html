@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Native HLS - Ashiil TV</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      h1 {
+        color: #333;
+      }
+      video {
+        width: 100%;
+        background: #000;
+        border-radius: 8px;
+      }
+      .info {
+        background: #fff;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .error {
+        background: #fee;
+        border-left: 4px solid #c33;
+        padding: 10px;
+        margin: 10px 0;
+      }
+      .success {
+        background: #efe;
+        border-left: 4px solid #3c3;
+        padding: 10px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Test Native HLS Playback</h1>
+    <div class="info">
+      <strong>Stream URL:</strong><br />
+      <code id="streamUrl"
+        >https://ams.juraganstreaming.com:5443/LiveApp/streams/ashiiltv2.m3u8</code
+      >
+    </div>
+
+    <video id="video" controls autoplay muted playsinline></video>
+
+    <div id="status" class="info">
+      <strong>Status:</strong> <span id="statusText">Initializing...</span>
+    </div>
+
+    <div id="logs" class="info">
+      <strong>Event Logs:</strong>
+      <div
+        id="logContent"
+        style="font-size: 12px; max-height: 200px; overflow-y: auto"
+      ></div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const statusText = document.getElementById("statusText");
+      const logContent = document.getElementById("logContent");
+      const streamUrl =
+        "https://ams.juraganstreaming.com:5443/LiveApp/streams/ashiiltv2.m3u8";
+
+      function log(message, type = "info") {
+        const time = new Date().toLocaleTimeString();
+        const color =
+          type === "error" ? "red" : type === "success" ? "green" : "blue";
+        logContent.innerHTML += `<div style="color: ${color}">[${time}] ${message}</div>`;
+        logContent.scrollTop = logContent.scrollHeight;
+      }
+
+      function updateStatus(text, type = "info") {
+        statusText.textContent = text;
+        statusText.style.color =
+          type === "error" ? "red" : type === "success" ? "green" : "blue";
+      }
+
+      // Check native HLS support
+      if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        log("✅ Browser supports native HLS", "success");
+        updateStatus("Native HLS supported - trying to play...", "success");
+        video.src = streamUrl;
+      } else {
+        log("❌ Browser does not support native HLS", "error");
+        updateStatus("Native HLS NOT supported", "error");
+      }
+
+      // Video event listeners
+      video.addEventListener("loadstart", () => {
+        log("Event: loadstart - Starting to load");
+      });
+
+      video.addEventListener("loadedmetadata", () => {
+        log("Event: loadedmetadata - Metadata loaded", "success");
+        updateStatus("Metadata loaded!", "success");
+      });
+
+      video.addEventListener("loadeddata", () => {
+        log("Event: loadeddata - Data loaded", "success");
+      });
+
+      video.addEventListener("canplay", () => {
+        log("Event: canplay - Ready to play", "success");
+        updateStatus("Ready to play!", "success");
+      });
+
+      video.addEventListener("canplaythrough", () => {
+        log("Event: canplaythrough - Can play without buffering", "success");
+      });
+
+      video.addEventListener("play", () => {
+        log("Event: play - Playing started", "success");
+        updateStatus("PLAYING ✅", "success");
+      });
+
+      video.addEventListener("playing", () => {
+        log("Event: playing - Currently playing", "success");
+      });
+
+      video.addEventListener("pause", () => {
+        log("Event: pause - Paused");
+      });
+
+      video.addEventListener("waiting", () => {
+        log("Event: waiting - Buffering...");
+        updateStatus("Buffering...", "info");
+      });
+
+      video.addEventListener("stalled", () => {
+        log("Event: stalled - Download stalled", "error");
+      });
+
+      video.addEventListener("suspend", () => {
+        log("Event: suspend - Download suspended");
+      });
+
+      video.addEventListener("error", (e) => {
+        const error = video.error;
+        let errorMsg = "Unknown error";
+        if (error) {
+          switch (error.code) {
+            case MediaError.MEDIA_ERR_ABORTED:
+              errorMsg = "MEDIA_ERR_ABORTED - Playback aborted";
+              break;
+            case MediaError.MEDIA_ERR_NETWORK:
+              errorMsg = "MEDIA_ERR_NETWORK - Network error";
+              break;
+            case MediaError.MEDIA_ERR_DECODE:
+              errorMsg = "MEDIA_ERR_DECODE - Decoding error";
+              break;
+            case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+              errorMsg = "MEDIA_ERR_SRC_NOT_SUPPORTED - Format not supported";
+              break;
+          }
+          errorMsg += ` (${error.message})`;
+        }
+        log(`❌ ERROR: ${errorMsg}`, "error");
+        updateStatus(`Error: ${errorMsg}`, "error");
+      });
+
+      video.addEventListener("ended", () => {
+        log("Event: ended - Playback ended");
+      });
+
+      // Log video properties periodically
+      setInterval(() => {
+        if (video.readyState > 0) {
+          log(
+            `Status: readyState=${video.readyState}, networkState=${
+              video.networkState
+            }, currentTime=${video.currentTime.toFixed(2)}s, duration=${
+              video.duration ? video.duration.toFixed(2) + "s" : "unknown"
+            }`
+          );
+        }
+      }, 5000);
+    </script>
+  </body>
+</html>

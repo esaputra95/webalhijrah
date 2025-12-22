@@ -16,6 +16,7 @@ const navLinks: NavLink[] = [
   { name: "Tentang", href: "/#about" },
   { name: "Program", href: "/programs" },
   { name: "Artikel", href: "/articles" },
+  { name: "Live Ashiil", href: "/live-ashiil" },
   { name: "Donasi", href: "/donasi" },
 ];
 
