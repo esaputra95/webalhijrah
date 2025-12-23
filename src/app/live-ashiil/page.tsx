@@ -155,7 +155,7 @@ const LiveAshiilPage = () => {
               </h1>
               <p className="text-gray-600 text-lg max-w-2xl">
                 Saksikan siaran langsung kajian dan program dakwah terbaik dari
-                Ashiil TV.
+                Ashiil TV. Reload halaman jika stream tidak muncul.
               </p>
             </div>
 

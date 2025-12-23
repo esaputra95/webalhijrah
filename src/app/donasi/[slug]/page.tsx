@@ -1,25 +1,9 @@
 import { Post } from "@/types/admins/articles/postType";
-import apiUrl from "@/lib/apiUrl";
-import { BaseApiResponse } from "@/types/apiType";
+import { postService } from "@/lib/postService";
 
-// Helper helper get data from API (SSR)
+// Helper helper get data from database directly (SSR)
 async function getPostBySlug(slug: string): Promise<Post | null> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXTAUTH_URL}${apiUrl.posts}/slug/${slug}`,
-      {
-        cache: "no-store", // SSR: always fetch fresh data
-      }
-    );
-
-    if (!res.ok) return null;
-
-    const json = (await res.json()) as BaseApiResponse<Post>;
-    return json.data || null;
-  } catch (error) {
-    console.error("Error fetching post:", error);
-    return null;
-  }
+  return await postService.getPostBySlug(slug);
 }
 
 import { Metadata } from "next";
