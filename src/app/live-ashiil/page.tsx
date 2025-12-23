@@ -133,7 +133,7 @@ const LiveAshiilPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      <PublicNavbar />
+      <PublicNavbar withScrolled={false} />
 
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4">
@@ -212,27 +212,6 @@ const LiveAshiilPage = () => {
               />
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-white text-brand-brown border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2 shadow-sm"
-              >
-                <span>🔄</span> Coba Lagi
-              </button>
-              <button
-                onClick={() => {
-                  const testUrl =
-                    "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
-                  setStreamUrl(testUrl);
-                  setError(null);
-                  setIsBuffering(true);
-                  setTimeout(() => window.location.reload(), 100);
-                }}
-                className="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl text-sm font-semibold hover:bg-blue-100 transition-colors flex items-center gap-2 shadow-sm"
-              >
-                <span>🧪</span> Test Stream (Demo)
-              </button>
-            </div>
             {lastError && (
               <div className="mt-3 text-xs text-gray-500 font-mono bg-gray-50 p-2 rounded border border-gray-200">
                 Debug: {lastError}
@@ -251,17 +230,6 @@ const LiveAshiilPage = () => {
                     ini, kami berharap dapat menjangkau lebih banyak jamaah di
                     mana pun berada.
                   </p>
-                  <div className="flex flex-wrap gap-4 mt-6">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl text-sm font-medium text-brand-brown border border-gray-100">
-                      <span>📡</span> High Definition
-                    </div>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl text-sm font-medium text-brand-brown border border-gray-100">
-                      <span>🌍</span> Akses Global
-                    </div>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl text-sm font-medium text-brand-brown border border-gray-100">
-                      <span>📖</span> Konten Syar&apos;i
-                    </div>
-                  </div>
                 </div>
               </div>
 

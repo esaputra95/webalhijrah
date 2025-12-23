@@ -113,8 +113,8 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
             textShadow: "0 2px 12px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,1)",
           }}
         >
-          Siapkan Donasi Terbaik Markaz Al Hijrah Nusantara. Dari Kaum Muslimin,
-          Untuk Kaum Muslimin, dan Milik Kaum Muslimin.
+          Siapkan Donasi Terbaik Markaz Sunnah Nusantara Al Hijrah. Dari Kaum
+          Muslimin, Untuk Kaum Muslimin, dan Milik Kaum Muslimin.
         </motion.p>
         <motion.div
           variants={fadeInUp}

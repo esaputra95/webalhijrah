@@ -124,7 +124,7 @@ const LandingPage = () => {
                       src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${
                         isAboutVideoInView ? 1 : 0
                       }&mute=1&loop=1&playlist=${youtubeId}`}
-                      title="About Markaz Al Hijrah"
+                      title="About Markaz Sunnah Nusantara Al Hijrah"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
@@ -136,7 +136,10 @@ const LandingPage = () => {
                         aboutItem?.image ||
                         "/images/kegiatan-masjid-markaz-alhijrah-1.webp"
                       }
-                      alt={aboutItem?.description || "About Markaz Al Hijrah"}
+                      alt={
+                        aboutItem?.description ||
+                        "About Markaz Sunnah Nusantara Al Hijrah"
+                      }
                       width={800}
                       height={800}
                       className="w-full h-auto object-cover"
@@ -144,7 +147,7 @@ const LandingPage = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                     <div className="absolute bottom-6 left-6 text-white text-left">
                       <p className="font-bold text-xl">
-                        Masjid Markaz Al Hijrah
+                        Markaz Sunnah Nusantara Al Hijrah
                       </p>
                       <p className="text-sm opacity-90">
                         Pusat Peradaban & Ilmu
@@ -171,10 +174,10 @@ const LandingPage = () => {
               </h2>
               <div className="w-20 h-1.5 bg-brand-gold rounded-full mx-auto lg:mx-0" />
               <p className="text-lg text-gray-600 leading-relaxed">
-                Markaz Al Hijrah Nusantara adalah Pusat Halaqoh Ilmiah Islam
-                Terbesar di Nusantara. Kami berdedikasi untuk menjadi wadah bagi
-                kaum muslimin dalam menuntut ilmu, beribadah, dan mempererat
-                ukhuwah islamiyah.
+                Markaz Sunnah Nusantara Al Hijrah adalah Pusat Halaqoh Ilmiah
+                Islam Terbesar di Nusantara. Kami berdedikasi untuk menjadi
+                wadah bagi kaum muslimin dalam menuntut ilmu, beribadah, dan
+                mempererat ukhuwah islamiyah.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
                 <span className="font-semibold text-gray-800">
