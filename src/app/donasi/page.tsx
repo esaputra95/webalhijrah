@@ -23,6 +23,7 @@ export default function DonasiPage() {
       </head>
       {/* Hero Section with Carousel */}
       <div className="relative overflow-hidden bg-brand-brown text-white min-h-[500px] flex items-center">
+        <div className="absolute inset-0 z-1 opacity-50 bg-black" />
         <div className="absolute inset-0 z-0">
           <Carousel
             swiperProps={{
@@ -180,7 +181,7 @@ export default function DonasiPage() {
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 max-w-5xl mx-auto transform -translate-y-4">
             <div className="bg-gradient-to-r from-brand-blue to-brand-gold p-1.5 h-3 w-full"></div>
             <div className="p-1">
-              <PublicDonationForm />
+              <PublicDonationForm account={1} />
             </div>
           </div>
         </div>

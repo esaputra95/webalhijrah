@@ -244,7 +244,7 @@ const LiveAshiilPage = () => {
                     program dakwah.
                   </p>
                   <Link
-                    href="/donasi"
+                    href="/donasi/pembangunan-studio-ashill-tv"
                     className="inline-block w-full py-4 bg-brand-gold text-brand-brown font-bold text-center rounded-2xl hover:bg-[#D3A428] transition-all relative z-10 transform group-hover:scale-[1.02]"
                   >
                     Infaq Sekarang
