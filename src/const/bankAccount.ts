@@ -30,27 +30,19 @@ export const bankAccount = [
   {
     id: 2,
     label: "Ashiil TV",
-    qris: true,
-    urlQris:
-      "/api/files/1766132396132-e09bbb48-7857-46e3-8382-10a483b4508f.jpg",
+    qris: false,
     accounts: [
-      {
-        name: "Bank Syariah Indonesia",
-        code: "BSI",
-        number: "3000500045",
-        owner: "Yayasan Markaz Al Hijrah",
-      },
       {
         name: "Bank Mandiri",
         code: "MANDIRI",
-        number: "1080003434124",
-        owner: "Yayasan Markaz Al Hijrah",
+        number: "1080058008005",
+        owner: "Ashiil Cahaya Tauhid",
       },
       {
-        name: "Bank BCA",
-        code: "BCA",
-        number: "069601032635509",
-        owner: "Yayasan Markaz Al Hijrah",
+        name: "Bank Syariah Indonesia",
+        code: "BSI",
+        number: "8175507079",
+        owner: "Ashiil Cahaya Tauhid",
       },
     ],
   },

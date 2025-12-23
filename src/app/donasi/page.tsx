@@ -4,6 +4,7 @@ import Carousel from "@/components/ui/swiper/Carousel";
 import { SwiperSlide } from "swiper/react";
 import { useHeroSliders } from "@/hooks/masters/useSliders";
 import { fallbackImages } from "@/utils/defaultImage";
+import Link from "next/link";
 
 export default function DonasiPage() {
   const { data: slidersData } = useHeroSliders("hero-slider");
@@ -18,7 +19,7 @@ export default function DonasiPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
       <head>
-        <title>Donasi Masjid Alhijrah Nusantara</title>
+        <title>Donasi Markaz Sunnah Nusantara Al hijrah</title>
         <meta name="description" content="Donasi untuk masjid Alhijrah" />
       </head>
       {/* Hero Section with Carousel */}
@@ -51,9 +52,12 @@ export default function DonasiPage() {
         <div className="container mx-auto px-4 py-16 md:py-24 relative z-10 pointer-events-none">
           <div className="max-w-4xl mx-auto text-center pointer-events-auto">
             <div className="inline-block mb-6 px-4 py-2 bg-brand-gold/20 border border-brand-gold/30 backdrop-blur-sm rounded-full">
-              <span className="text-sm font-bold text-brand-gold tracking-wide uppercase">
-                🕌 Markaz Al-Hijrah Nusantara
-              </span>
+              <Link
+                href="/"
+                className="text-sm font-bold text-brand-gold tracking-wide uppercase"
+              >
+                🕌 Kembali ke Markaz Sunnah Nusantara Al hijrah
+              </Link>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-lg">
               Berdonasi untuk <br className="hidden md:block" />
@@ -61,7 +65,7 @@ export default function DonasiPage() {
             </h1>
             <p className="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
               Insyaa Allah akan menjadi pusat pembelajaran islam berbasis sunnah
-              terbesar di Indonesia. Mari bersama wujudkan pembangunan ini.
+              terbesar di Nusantara. Mari bersama wujudkan pembangunan ini.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm md:text-base font-medium">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/20">

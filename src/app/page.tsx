@@ -249,9 +249,9 @@ const LandingPage = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid md:grid-cols-3 lg:grid-cols-4 gap-8"
+            className="grid md:grid-cols-4 lg:grid-cols-5 gap-8"
           >
-            {donationPosts?.data?.slice(0, 4)?.map((program, i) => (
+            {donationPosts?.data?.slice(0, 5)?.map((program, i) => (
               <motion.div
                 key={i}
                 variants={fadeInUp}
