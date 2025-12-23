@@ -9,6 +9,12 @@ import { useRef } from "react";
 import { useHeroSliders } from "@/hooks/masters/useSliders";
 import { usePublicPosts } from "@/hooks/masters/usePosts";
 import Hero from "@/components/home/Hero";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+
+// Swiper Styles
+import "swiper/css";
+import "swiper/css/pagination";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -249,39 +255,58 @@ const LandingPage = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid md:grid-cols-4 lg:grid-cols-5 gap-8"
+            className="w-full"
           >
-            {donationPosts?.data?.slice(0, 5)?.map((program, i) => (
-              <motion.div
-                key={i}
-                variants={fadeInUp}
-                whileHover={{ y: -10 }}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group flex flex-col items-start"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                  {/* Default Icon or Dynamic if available */}
-                  <Image
-                    src={program.post_image}
-                    alt={program.post_title}
-                    width={64}
-                    height={64}
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
-                </div>
-                <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors line-clamp-2">
-                  {program.post_title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed mb-6 line-clamp-3 text-sm flex-grow">
-                  {program.post_excerpt || "Mari berdonasi untuk program ini."}
-                </p>
-                <Link
-                  href={`/donasi/${program.post_name}`}
-                  className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-brand-gold uppercase tracking-wider transition-colors mt-auto"
-                >
-                  Donasi Sekarang <span className="ml-2">→</span>
-                </Link>
-              </motion.div>
-            ))}
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              spaceBetween={20}
+              slidesPerView={1}
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+              }}
+              pagination={{ clickable: true }}
+              breakpoints={{
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                768: { slidesPerView: 3, spaceBetween: 30 },
+                1024: { slidesPerView: 4, spaceBetween: 30 },
+              }}
+              className="pb-14 donation-swiper"
+            >
+              {donationPosts?.data?.slice(0, 10)?.map((program, i) => (
+                <SwiperSlide key={i} className="h-auto">
+                  <motion.div
+                    variants={fadeInUp}
+                    whileHover={{ y: -10 }}
+                    className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 group flex flex-col items-start h-full"
+                  >
+                    <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                      {/* Default Icon or Dynamic if available */}
+                      <Image
+                        src={program.post_image}
+                        alt={program.post_title}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-cover rounded-2xl"
+                      />
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-brown mb-3 group-hover:text-brand-gold transition-colors line-clamp-2">
+                      {program.post_title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed mb-6 line-clamp-3 text-sm flex-grow">
+                      {program.post_excerpt ||
+                        "Mari berdonasi untuk program ini."}
+                    </p>
+                    <Link
+                      href={`/donasi/${program.post_name}`}
+                      className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-brand-gold uppercase tracking-wider transition-colors mt-auto"
+                    >
+                      Donasi Sekarang <span className="ml-2">→</span>
+                    </Link>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </motion.div>
         </div>
       </section>
