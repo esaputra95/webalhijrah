@@ -100,7 +100,7 @@ export default function ProgramsPage() {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {programs.map((program, index) => (
                 <motion.div
                   key={program.id}
@@ -115,7 +115,7 @@ export default function ProgramsPage() {
                     className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                   >
                     {/* Program Image */}
-                    <div className="relative h-60 bg-gray-200 overflow-hidden">
+                    <div className="relative h-44 bg-gray-200 overflow-hidden">
                       {program.image ? (
                         <Image
                           src={program.image}
