@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import TextInput from "@/components/ui/inputs/TextInput";
 import {
   useCreateDonationMaster,
@@ -13,6 +13,7 @@ import { handleErrorResponse } from "@/utils/handleErrorResponse";
 import { FC, useEffect } from "react";
 import SelectInput from "@/components/ui/inputs/SelectInput";
 import TextareaInput from "@/components/ui/inputs/TextareaInput";
+import ImageUpload from "@/components/ui/inputs/ImageUpload";
 
 type Props = {
   onCancel?: () => void;
@@ -25,6 +26,7 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<Partial<DonationType>>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +35,11 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
 
   useEffect(() => {
     if (initialValues) {
-      console.log({ initialValues });
-
       reset({
         ...initialValues,
       });
+    } else {
+      reset({ amount: 0 });
     }
   }, [initialValues, reset]);
 
@@ -45,8 +47,6 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
   const update = useUpdateDonationMaster();
 
   const onSubmit = async (values: Partial<DonationType>) => {
-    console.log({ values });
-
     if (mode === "create") {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       create.mutate(values as any, {
@@ -75,57 +75,76 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
   };
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-      <TextInput
-        label="No. Invoice"
-        {...register("invoice_number")}
-        disabled={mode === "view"}
-        errors={errors.invoice_number?.message}
-        required
-      />
-      <TextInput
-        label="Nama Donatur"
-        {...register("name")}
-        disabled={mode === "view"}
-        errors={errors.name?.message}
-        required
-      />
-      <TextInput
-        label="No. Telepon"
-        {...register("phone_number")}
-        disabled={mode === "view"}
-        errors={errors.phone_number?.message}
-      />
-      <TextInput
-        label="Jumlah"
-        type="number"
-        {...register("amount", { valueAsNumber: true })}
-        disabled={mode === "view"}
-        errors={errors.amount?.message}
-        required
-      />
-      <TextInput
-        label="Link Pembayaran"
-        {...register("payment_link")}
-        disabled={mode === "view"}
-        errors={errors.payment_link?.message}
-      />
-      <SelectInput
-        {...register("status")}
-        label="Status"
-        required
-        option={[
-          { value: "pending", label: "Pending" },
-          { value: "settled", label: "Settled" },
-          { value: "expired", label: "Expired" },
-          { value: "failed", label: "Failed" },
-        ]}
-      />
-      <TextareaInput
-        label="Catatan"
-        {...register("note")}
-        disabled={mode === "view"}
-        errors={errors.note?.message}
+    <form
+      className="space-y-3 max-h-[calc(100vh-200px)] overflow-auto"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="grid grid-cols-2 gap-4">
+        <TextInput
+          label="No. Invoice"
+          {...register("invoice_number")}
+          disabled={mode === "view"}
+          errors={errors.invoice_number?.message}
+          required
+        />
+        <TextInput
+          label="Nama Donatur"
+          {...register("name")}
+          disabled={mode === "view"}
+          errors={errors.name?.message}
+          required
+        />
+        <TextInput
+          label="No. Telepon"
+          {...register("phone_number")}
+          disabled={mode === "view"}
+          errors={errors.phone_number?.message}
+        />
+        <TextInput
+          label="Jumlah"
+          type="number"
+          {...register("amount", { valueAsNumber: true })}
+          disabled={mode === "view"}
+          errors={errors.amount?.message}
+          required
+        />
+        <TextInput
+          label="Link Pembayaran"
+          {...register("payment_link")}
+          disabled={mode === "view"}
+          errors={errors.payment_link?.message}
+        />
+        <SelectInput
+          {...register("status")}
+          label="Status"
+          required
+          option={[
+            { value: "pending", label: "Pending" },
+            { value: "settled", label: "Settled" },
+            { value: "expired", label: "Expired" },
+            { value: "failed", label: "Failed" },
+          ]}
+        />
+        <TextareaInput
+          label="Catatan"
+          {...register("note")}
+          disabled={mode === "view"}
+          errors={errors.note?.message}
+        />
+      </div>
+      <Controller
+        name="image"
+        control={control}
+        render={({ field }) => (
+          <ImageUpload
+            label="Bukti Transaksi"
+            value={field.value || ""}
+            onChange={field.onChange}
+            disabled={mode === "view"}
+            errors={errors.image?.message}
+            required
+          />
+        )}
       />
       <div className="mt-4 flex justify-end gap-2">
         <Button onClick={onCancel} type="button" color="error">

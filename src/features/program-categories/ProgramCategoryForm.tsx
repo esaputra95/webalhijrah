@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm, Resolver } from "react-hook-form";
+import { useForm, Resolver, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import {
@@ -13,6 +13,7 @@ import {
 import { handleErrorResponse } from "@/utils/handleErrorResponse";
 import Button from "@/components/ui/buttons/Button";
 import TextInput from "@/components/ui/inputs/TextInput";
+import ImageUpload from "@/components/ui/inputs/ImageUpload";
 
 interface ProgramCategoryFormProps {
   initialValues?: Partial<ProgramCategoryType>;
@@ -29,6 +30,7 @@ const ProgramCategoryForm: React.FC<ProgramCategoryFormProps> = ({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ProgramCategoryType>({
     resolver: zodResolver(
@@ -97,6 +99,20 @@ const ProgramCategoryForm: React.FC<ProgramCategoryFormProps> = ({
           </p>
         )}
       </div>
+      <Controller
+        name="image"
+        control={control}
+        render={({ field }) => (
+          <ImageUpload
+            label="Bukti Transaksi"
+            value={field.value || ""}
+            onChange={field.onChange}
+            disabled={mode === "view"}
+            errors={errors.image?.message}
+            required
+          />
+        )}
+      />
 
       {/* Hidden fields if needed or handled automatically by backend/default values */}
       {/* userCreate / account could be added here if they are input fields. 

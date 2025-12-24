@@ -8,16 +8,14 @@ import { getData } from "@/lib/fatching";
 import useGetParams from "@/lib/useGetParams";
 
 // ====== Fetch Posts ======
-export function usePosts() {
+export function usePosts(params?: Record<string, string | number | boolean>) {
   const queryParams = useGetParams();
+  console.log({ params });
 
   return useQuery<BaseApiResponse<PostType[]>>({
-    queryKey: ["Posts", queryParams],
+    queryKey: ["Posts", queryParams, params],
     queryFn: async () =>
-      getData<{ page?: number }, BaseApiResponse<PostType[]>>(
-        apiUrl.posts,
-        queryParams
-      ),
+      getData<typeof params, BaseApiResponse<PostType[]>>(apiUrl.posts, params),
   });
 }
 

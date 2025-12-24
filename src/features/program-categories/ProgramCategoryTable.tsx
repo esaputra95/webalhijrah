@@ -2,6 +2,7 @@ import React, { FC, useMemo } from "react";
 import { ProgramCategoryType } from "@/types/programCategorySchema";
 import ActionButton from "@/components/ui/buttons/ActionButton";
 import { Column, Table } from "@/components/ui/tables/Table";
+import Image from "next/image";
 
 interface ProgramCategoryTableProps {
   data?: ProgramCategoryType[];
@@ -35,17 +36,15 @@ const ProgramCategoryTable: FC<ProgramCategoryTableProps> = ({
         filterable: true,
       },
       {
-        header: "Tgl Dibuat",
-        accessor: "createdAt",
+        header: "Gambar",
+        accessor: "image",
         sortable: true,
         render: (row) =>
-          row.createdAt
-            ? new Date(row.createdAt).toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })
-            : "-",
+          row.image ? (
+            <Image src={row.image} alt="Gambar" width={100} height={100} />
+          ) : (
+            "-"
+          ),
       },
       {
         header: "Aksi",

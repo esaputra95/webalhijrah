@@ -8,35 +8,41 @@ import { getData } from "@/lib/fatching";
 import apiUrl from "@/lib/apiUrl";
 import { BaseApiResponse } from "@/types/apiType";
 import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
 import { Post } from "@/types/admins/articles/postType";
+import { useProgramCategory } from "@/hooks/masters/useProgramCategories";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-export default function ArticlesPage() {
+export default function ProgramsPage() {
+  const params = useParams();
+  const id = params.id;
   const { data, isLoading } = useQuery<BaseApiResponse<Post[]>>({
-    queryKey: ["PublicPosts"],
+    queryKey: ["PublicPrograms"],
     queryFn: async () =>
-      getData<{ _: ""; post_type?: string }, BaseApiResponse<Post[]>>(
+      getData<{ _: ""; program?: number }, BaseApiResponse<Post[]>>(
         apiUrl.posts,
         {
           _: "",
-          post_type: "post",
+          program: id ? Number(id) : undefined,
         }
       ),
   });
 
-  const posts = data?.data || [];
+  const { data: programCategory } = useProgramCategory(Number(id));
+
+  const programs = data?.data || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
       <head>
-        <title>Markaz Alhijrah - Artikel & Berita</title>
+        <title>Markaz Alhijrah - Program</title>
         <meta
           name="description"
-          content="Baca artikel dan berita terkini seputar kegiatan, kajian, dan informasi dari Markaz Al-Hijrah"
+          content="Lihat berbagai program unggulan dan kegiatan dari Markaz Al-Hijrah"
         />
       </head>
       <PublicNavbar />
@@ -53,21 +59,22 @@ export default function ArticlesPage() {
           >
             <div className="inline-block mb-4 px-4 py-2 bg-brand-gold/20 border border-brand-gold/30 backdrop-blur-sm rounded-full">
               <span className="text-sm font-bold text-brand-gold tracking-wide uppercase">
-                📖 Artikel & Berita
+                🚀 Program Kami
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Artikel <span className="text-brand-gold">Terbaru</span>
+              <span className="text-brand-gold">
+                {programCategory?.data?.title}
+              </span>
             </h1>
             <p className="text-lg text-gray-200">
-              Baca artikel dan berita terkini seputar kegiatan, kajian, dan
-              informasi dari Markaz Al-Hijrah
+              {programCategory?.data?.description}
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Articles Grid */}
+      {/* Programs Grid */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           {isLoading ? (
@@ -87,21 +94,21 @@ export default function ArticlesPage() {
                 </div>
               ))}
             </div>
-          ) : posts.length === 0 ? (
+          ) : programs.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">📭</div>
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                Belum Ada Artikel
+                Belum Ada Program
               </h3>
               <p className="text-gray-600">
-                Artikel akan segera hadir. Nantikan update dari kami!
+                Program akan segera hadir. Nantikan update dari kami!
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {posts.map((post, index) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {programs.map((program, index) => (
                 <motion.div
-                  key={post.id}
+                  key={program.id}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
@@ -109,57 +116,57 @@ export default function ArticlesPage() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link
-                    href={`/articles/${post.post_name}`}
-                    className="block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
+                    href={`/donasi/${program.post_name}`}
+                    className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                   >
-                    {/* Article Image */}
+                    {/* Program Image */}
                     <div className="relative h-60 bg-gray-200 overflow-hidden">
-                      {post.post_image ? (
+                      {program.post_image ? (
                         <Image
-                          src={post.post_image}
-                          alt={post.post_title}
+                          src={program.post_image}
+                          alt={program.post_title || "Program Image"}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-blue to-gray-700 text-white text-4xl">
-                          📄
+                          🚀
+                        </div>
+                      )}
+
+                      {/* Date Badge over Image */}
+                      {program.date && (
+                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-brand-brown shadow-lg">
+                          {new Date(program.date).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
                         </div>
                       )}
                     </div>
 
-                    {/* Article Content */}
-                    <div className="p-6 space-y-3">
-                      {/* Category Badge */}
-                      {post.post_categories && (
-                        <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-brown rounded-full text-xs font-semibold">
-                          {post.post_categories.title}
-                        </div>
-                      )}
-
+                    {/* Program Content */}
+                    <div className="p-6 space-y-3 flex-1 flex flex-col">
                       {/* Title */}
                       <h3 className="text-xl font-bold text-gray-800 group-hover:text-brand-gold transition-colors line-clamp-2">
-                        {post.post_title}
+                        {program.post_title}
                       </h3>
 
-                      {/* Excerpt */}
-                      {post.post_excerpt && (
+                      {/* Description */}
+                      {program.post_content && (
                         <p className="text-gray-600 text-sm line-clamp-3">
-                          {post.post_excerpt}
+                          {program.post_excerpt}
                         </p>
                       )}
 
-                      {/* Meta */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span className="text-xs text-gray-500">
-                          {new Date(post.date).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
-                        </span>
+                      {/* Spacer to push button down */}
+                      <div className="flex-1"></div>
+
+                      {/* CTA */}
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
                         <span className="text-brand-brown font-semibold text-sm group-hover:text-brand-gold transition-colors">
-                          Baca Selengkapnya →
+                          Lihat Detail →
                         </span>
                       </div>
                     </div>
@@ -168,6 +175,36 @@ export default function ArticlesPage() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-brand-brown text-white">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Mulai <span className="text-brand-gold">Investasi Akhirat</span>{" "}
+              Anda Hari Ini
+            </h2>
+            <p className="text-lg text-gray-200 mb-8">
+              Tidak perlu menunggu kaya untuk bersedekah. Mulailah dari yang
+              sedikit namun istiqomah.
+            </p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/donasi"
+                className="inline-block px-10 py-4 bg-brand-gold text-brand-brown font-bold text-lg rounded-full hover:bg-[#D3A428] transition-all shadow-xl"
+              >
+                Donasi Sekarang
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

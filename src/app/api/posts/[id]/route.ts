@@ -23,6 +23,7 @@ const SELECT_FIELDS = {
   post_image: true,
   code: true,
   account: true,
+  program_category_id: true,
   users: {
     select: { id: true, name: true, email: true },
   },
@@ -94,6 +95,8 @@ export const PUT = wrap(
       data.date = parsed.date ? new Date(parsed.date) : null;
     if (parsed.post_image !== undefined) data.post_image = parsed.post_image;
     if (parsed.account !== undefined) data.account = parsed.account;
+    if (parsed.program_category_id !== undefined)
+      data.program_category_id = parsed.program_category_id;
 
     const updated = await prisma.neo_posts.update({
       where: { id: Number(id) },

@@ -19,9 +19,12 @@ export default function ProgramsPage() {
   const { data, isLoading } = useQuery<BaseApiResponse<ProgramType[]>>({
     queryKey: ["PublicPrograms"],
     queryFn: async () =>
-      getData<{ _: "" }, BaseApiResponse<ProgramType[]>>(apiUrl.programs, {
-        _: "",
-      }),
+      getData<{ _: "" }, BaseApiResponse<ProgramType[]>>(
+        apiUrl.programCategories,
+        {
+          _: "",
+        }
+      ),
   });
 
   const programs = data?.data || [];
@@ -53,7 +56,10 @@ export default function ProgramsPage() {
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Program <span className="text-brand-gold">Kegiatan</span>
+              Program{" "}
+              <span className="text-brand-gold">
+                Markaz Sunnah Nusantara Al Hijrah
+              </span>
             </h1>
             <p className="text-lg text-gray-200">
               Berbagai program kegiatan dakwah, sosial, dan pendidikan untuk
@@ -105,7 +111,7 @@ export default function ProgramsPage() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link
-                    href={`/programs/${program.slug}`}
+                    href={`/programs/${program.id}`}
                     className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                   >
                     {/* Program Image */}

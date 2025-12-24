@@ -335,7 +335,7 @@ export default function PublicDonationForm({
                           {account.name}
                         </p>
                         <p className="text-lg font-bold text-gray-800 font-mono">
-                          {account.number}
+                          {account.labelNumber}
                         </p>
                         <p className="text-xs text-gray-500">
                           a.n {account.owner}

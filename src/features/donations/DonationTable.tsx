@@ -1,6 +1,7 @@
 import ActionButton from "@/components/ui/buttons/ActionButton";
 import { Column, Table } from "@/components/ui/tables/Table";
 import { DonationType } from "@/types/donationSchema";
+import Image from "next/image";
 import React, { FC, useMemo } from "react";
 
 type Props = {
@@ -80,6 +81,21 @@ const DonationTable: FC<Props> = ({
           { value: "failed", label: "Failed" },
         ],
         render: (row: DonationType) => statusBadge(row.status),
+      },
+      {
+        header: "Bukti Donasi",
+        accessor: "image",
+        render: (row: DonationType) =>
+          row?.image ? (
+            <Image
+              src={row?.image || ""}
+              alt="Bukti Donasi"
+              width={100}
+              height={100}
+            />
+          ) : (
+            "-"
+          ),
       },
       {
         header: "Aksi",

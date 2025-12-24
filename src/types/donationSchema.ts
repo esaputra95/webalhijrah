@@ -25,8 +25,9 @@ export const DonationCreateSchema = z.object({
   phone_number: z.string().trim().max(PHONE_MAX).nullable().optional(),
   note: z.string().trim().max(NOTE_MAX).nullable().optional(),
   amount: z.coerce.number().min(0, "Jumlah tidak boleh negatif"),
-  payment_link: z.string().url().nullable().optional(),
+  payment_link: z.string().nullable().optional(),
   status: DonationStatusEnum.default("pending"),
+  image: z.string().nullable().optional(),
 });
 
 // ====== Update Schema (all optional) ======
@@ -40,6 +41,7 @@ export const DonationUpdateSchema = z
     amount: z.coerce.number().min(0).optional(),
     payment_link: z.string().url().nullable().optional(),
     status: DonationStatusEnum.optional(),
+    image: z.string().nullable().optional(),
   })
   .strict();
 
@@ -55,6 +57,7 @@ export type DonationType = {
   amount: number;
   payment_link?: string | null;
   status: "pending" | "settled" | "expired" | "failed";
+  image?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;

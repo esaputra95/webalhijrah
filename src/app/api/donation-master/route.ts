@@ -22,11 +22,13 @@ export const POST = wrap(async (req: NextRequest) => {
     phone_number: true,
     note: true,
     status: true,
+    image: true,
   }).partial({
     invoice_number: true,
     phone_number: true,
     note: true,
     status: true,
+    image: true,
   });
 
   const parsed = validationSchema.parse(body);
@@ -42,6 +44,7 @@ export const POST = wrap(async (req: NextRequest) => {
       phone_number: parsed.phone_number,
       note: parsed.note,
       status: parsed.status || "settled",
+      image: parsed.image,
     },
   });
 

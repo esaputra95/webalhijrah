@@ -26,17 +26,13 @@ const Donations = () => {
   }, [isError]);
 
   const onUpdate = (data?: DonationType) => {
-    console.log({ data });
-
     setIsModalOpen(true);
     setDataSelect(data);
   };
 
   const onView = (data?: DonationType) => {
     setIsModalOpen(true);
-    setDataSelect({
-      name: data?.name,
-    });
+    setDataSelect(data);
   };
 
   const onDelete = (id?: string) => {
@@ -82,8 +78,12 @@ const Donations = () => {
   return (
     <div className="p-4">
       <TitleContent
+        title="Daftar Donasi"
         titleButton="+ Donasi"
-        onClickButton={() => setIsModalOpen(true)}
+        onClickButton={() => {
+          setDataSelect({});
+          setIsModalOpen(true);
+        }}
       />
       <Modal isOpen={isModalOpen} onClose={onClose}>
         <HeaderModal>Form Donasi</HeaderModal>

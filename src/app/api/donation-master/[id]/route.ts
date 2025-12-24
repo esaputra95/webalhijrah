@@ -16,6 +16,7 @@ const SELECT_FIELDS = {
   status: true,
   created_at: true,
   updated_at: true,
+  image: true,
 } as const;
 
 // ====== GET /api/donation-master/[id] ======
@@ -48,8 +49,6 @@ export const PUT = wrap(
     const { id } = await ctx.params;
     const body = await req.json();
     const parsed = DonationUpdateSchema.parse(body);
-
-    console.log({ id });
 
     // Check if exists and not deleted
     const exists = await prisma.neo_donation_public.findFirst({

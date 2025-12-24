@@ -22,6 +22,7 @@ const SELECT_FIELDS = {
   account: true,
   createdAt: true,
   updatedAt: true,
+  image: true,
 } as const;
 
 // ====== Parse Pagination & Filters ======
@@ -118,6 +119,7 @@ export const POST = wrap(async (req: Request) => {
         description: parsed.description,
         userCreate: parsed.userCreate,
         account: parsed.account,
+        image: parsed.image,
       },
       select: SELECT_FIELDS,
     });

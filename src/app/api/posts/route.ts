@@ -27,6 +27,7 @@ const SELECT_FIELDS = {
   post_mime_type: true,
   user_id: true,
   post_category_id: true,
+  program_category_id: true,
   created_at: true,
   updated_at: true,
   post_image: true,
@@ -62,6 +63,7 @@ function parsePagination(req: NextRequest) {
   const q = (sp.get("q") || "").trim();
   const post_status = (sp.get("post_status") || "").trim();
   const post_type = (sp.get("post_type") || "").trim();
+  const program = (sp.get("program") || "").trim();
 
   const where: Prisma.neo_postsWhereInput = {
     AND: [
@@ -76,6 +78,7 @@ function parsePagination(req: NextRequest) {
         : {},
       post_status ? { post_status: { equals: post_status } } : {},
       post_type ? { post_type: { equals: post_type } } : {},
+      program ? { program_category_id: { equals: Number(program) } } : {},
     ],
   };
 
@@ -160,6 +163,7 @@ export const POST = wrap(async (req: Request) => {
       code: parsed.code,
       date: parsed.date ? new Date(parsed.date) : null,
       account: parsed.account,
+      program_category_id: parsed.program_category_id,
     },
     select: SELECT_FIELDS,
   });

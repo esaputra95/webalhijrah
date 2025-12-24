@@ -131,9 +131,9 @@ export default function PublicNavbar({
           })}
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href="/login"
+              href="/admins?callbackUrl=/admins"
               className={`font-medium transition-colors ${
-                pathname === "/login"
+                pathname === "/admins"
                   ? "text-brand-gold font-bold"
                   : isScrolled || !withScrolled
                   ? "text-gray-700 hover:text-brand-gold"

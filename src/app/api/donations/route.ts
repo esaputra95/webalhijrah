@@ -28,6 +28,7 @@ const SELECT_FIELDS = {
   status: true,
   created_at: true,
   updated_at: true,
+  image: true,
 } as const;
 
 // ====== Parse Pagination & Filters ======
@@ -54,6 +55,8 @@ function parsePagination(req: NextRequest) {
   const q = (sp.get("q") || "").trim();
   const status = (sp.get("status") || "").trim();
   const name = (sp.get("name") || "").trim();
+  const phone_number = (sp.get("phone_number") || "").trim();
+  const invoice_number = (sp.get("invoice_number") || "").trim();
 
   const where: Prisma.neo_donation_publicWhereInput = {
     AND: [
@@ -64,7 +67,6 @@ function parsePagination(req: NextRequest) {
             OR: [
               { name: { contains: q } },
               { invoice_number: { contains: q } },
-              { phone_number: { contains: q } },
             ],
           }
         : {},
@@ -76,6 +78,8 @@ function parsePagination(req: NextRequest) {
           }
         : {},
       name ? { name: { contains: name } } : {},
+      phone_number ? { phone_number: { contains: phone_number } } : {},
+      invoice_number ? { invoice_number: { contains: invoice_number } } : {},
     ],
   };
 

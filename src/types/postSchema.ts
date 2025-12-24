@@ -42,6 +42,7 @@ export const PostCreateSchema = z.object({
         : val,
     z.number().optional()
   ),
+  program_category_id: z.coerce.number().int().nullable().optional(),
 });
 
 // ====== Update Schema (all optional) ======
@@ -66,6 +67,7 @@ export const PostUpdateSchema = z
           : val,
       z.number().optional()
     ),
+    program_category_id: z.coerce.number().int().nullable().optional(),
   })
   .strict();
 
@@ -84,6 +86,7 @@ export type PostType = {
   post_mime_type?: string | null;
   user_id: string;
   post_category_id?: number | null;
+  program_category_id?: number | null;
   post_image: string;
   account?: number;
   date?: string | Date | null;

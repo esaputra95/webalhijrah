@@ -8,6 +8,7 @@ export const ProgramCategorySchema = z.object({
   account: z.coerce.number().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  image: z.string().optional(),
 });
 
 export const ProgramCategoryCreateSchema = ProgramCategorySchema.omit({

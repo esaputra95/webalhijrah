@@ -5,6 +5,8 @@ export interface Post {
   post_content: string;
   post_excerpt?: string;
   post_image?: string;
+  post_type?: string;
+  post_status?: string;
   code?: string;
   account?: number;
   date: Date;

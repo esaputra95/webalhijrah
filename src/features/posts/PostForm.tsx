@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 import { format } from "date-fns";
 import { useState } from "react";
 import { bankAccount } from "@/const/bankAccount";
+import { useProgramCategories } from "@/hooks/masters/useProgramCategories";
 
 // Dynamic import to prevent SSR hydration mismatch
 const RichTextEditor = dynamic(
@@ -86,9 +87,16 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
   }, [postTitle, mode, setValue]);
 
   const { data: postCategoryArticle } = usePostCategroyType("article");
+  const { data: postCategoryProgram } = useProgramCategories();
 
   const optionsPostCategoryArticle =
     postCategoryArticle?.data?.map((x) => ({
+      label: x.title,
+      value: x.id as number,
+    })) ?? [];
+
+  const optionsPostCategoryProgram =
+    postCategoryProgram?.data?.map((x) => ({
       label: x.title,
       value: x.id as number,
     })) ?? [];
@@ -227,7 +235,7 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
           option={optionsPostCategoryArticle ?? []}
         />
       </div>
-      <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {watch("post_type") === "donation" && (
           <SelectInput
             {...register("account", { valueAsNumber: true })}
@@ -238,6 +246,14 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
               label: item.label,
               value: item.id,
             }))}
+          />
+        )}
+        {watch("post_type") === "donation" && (
+          <SelectInput
+            {...register("program_category_id")}
+            label="Kategori Program"
+            disabled={mode === "view"}
+            option={optionsPostCategoryProgram ?? []}
           />
         )}
       </div>
