@@ -46,6 +46,12 @@ export const navGroups: NavGroup[] = [
         path: "/admins/masters/program-categories",
         role: ["SUPER_ADMIN"],
       },
+      {
+        icon: FiFile,
+        label: "Pengaturan",
+        path: "/admins/masters/settings",
+        role: ["SUPER_ADMIN"],
+      },
     ],
   },
   {

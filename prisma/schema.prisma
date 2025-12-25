@@ -226,3 +226,11 @@ model program_categories {
   account     Int?
   image String?
 }
+
+model settings {
+  id    Int     @id @default(autoincrement()) @db.UnsignedInt
+  key   String? @db.VarChar(255)
+  label String? @db.LongText
+  type  String? @db.VarChar(50)
+  value String? @db.LongText
+}

@@ -15,6 +15,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 // Swiper Styles
 import "swiper/css";
 import "swiper/css/pagination";
+import { useGroupedSettings } from "@/hooks/masters/useSettings";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -52,6 +53,15 @@ const LandingPage = () => {
     post_status: "publish",
   });
 
+  const { data: newSettingsData } = useGroupedSettings();
+
+  const herodesc = [
+    { label: "Jamaah", value: newSettingsData?.Hero?.jamaah },
+    { label: "Santri", value: newSettingsData?.Hero?.santri },
+    { label: "Kegiatan/Bulan", value: newSettingsData?.Hero?.kegiatan },
+    { label: "Program", value: newSettingsData?.Hero?.program },
+  ];
+
   const aboutItem = aboutData?.data?.[0];
   const youtubeId = getYouTubeId(aboutItem?.image);
 
@@ -61,6 +71,8 @@ const LandingPage = () => {
     amount: 0.5,
     once: true,
   });
+
+  console.log({ newSettingsData });
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
@@ -80,12 +92,7 @@ const LandingPage = () => {
             variants={staggerContainer}
             className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white"
           >
-            {[
-              { label: "Jamaah", value: "5000+" },
-              { label: "Santri", value: "120+" },
-              { label: "Kegiatan/Bulan", value: "45+" },
-              { label: "Program", value: "10+" },
-            ].map((stat, i) => (
+            {herodesc.map((stat, i) => (
               <motion.div key={i} variants={scaleUp} className="space-y-2">
                 <div className="text-3xl md:text-4xl font-bold text-brand-gold">
                   {stat.value}
@@ -175,54 +182,34 @@ const LandingPage = () => {
                 Tentang Kami
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-brown leading-tight">
-                Membangun Peradaban Melalui{" "}
-                <span className="text-brand-gold">Masjid & Ilmu</span>
+                {newSettingsData?.About?.title}{" "}
+                <span className="text-brand-gold">
+                  {newSettingsData?.About?.title2}
+                </span>
               </h2>
               <div className="w-20 h-1.5 bg-brand-gold rounded-full mx-auto lg:mx-0" />
               <p className="text-lg text-gray-600 leading-relaxed">
-                Markaz Sunnah Nusantara Al Hijrah adalah Pusat Halaqoh Ilmiah
-                Islam Terbesar di Nusantara. Kami berdedikasi untuk menjadi
-                wadah bagi kaum muslimin dalam menuntut ilmu, beribadah, dan
-                mempererat ukhuwah islamiyah.
+                {newSettingsData?.About?.description1}
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
-                <span className="font-semibold text-gray-800">
-                  &quot;Dari Kaum Muslimin, Untuk Kaum Muslimin, dan Milik Kaum
-                  Musikin&quot;
+                <span className="text-lg text-gray-600 leading-relaxed">
+                  {newSettingsData?.About?.description2}
                 </span>
-                . Slogan ini menjadi ruh perjuangan kami untuk terus memberikan
-                manfaat seluas-luasnya bagi umat.
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-left">
-                {[
-                  "Kajian Rutin Harian",
-                  "Pendidikan Tahfidz",
-                  "Program Sosial Kemasyarakatan",
-                  "Fasilitas Ibadah Nyaman",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-yellow-100 text-brand-brown flex items-center justify-center text-xs">
-                      ✓
-                    </span>
-                    <span className="text-gray-700 font-medium">{item}</span>
-                  </li>
-                ))}
+                {newSettingsData?.About?.kegiatan
+                  ?.split("-")
+                  .map((item) => item.trim())
+                  .filter(Boolean)
+                  .map((item, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <span className="w-6 h-6 rounded-full bg-yellow-100 text-brand-brown flex items-center justify-center text-xs">
+                        ✓
+                      </span>
+                      <span className="text-gray-700 font-medium">{item}</span>
+                    </li>
+                  ))}
               </ul>
-              <div className="pt-6">
-                <Link
-                  href="/about"
-                  className="text-brand-brown font-semibold hover:text-brand-gold flex items-center justify-center lg:justify-start gap-2 group"
-                >
-                  Baca Selengkapnya
-                  <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: 5 }}
-                    className="inline-block"
-                  >
-                    →
-                  </motion.span>
-                </Link>
-              </div>
             </motion.div>
           </div>
         </div>

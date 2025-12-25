@@ -11,6 +11,7 @@ import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
+import { useGroupedSettings } from "@/hooks/masters/useSettings";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -31,6 +32,7 @@ const staggerContainer: Variants = {
 const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
   // Fetch hero sliders from API
   const { data: slidersData } = useHeroSliders("hero-slider");
+  const { data: newSettingsData } = useGroupedSettings();
 
   // Use API data if available, otherwise use fallback images
   const heroImages =
@@ -95,7 +97,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
               "0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5)",
           }}
         >
-          Investasi Akhirat <br />
+          {newSettingsData?.Hero?.h1} <br />
           <span
             className="text-brand-gold"
             style={{
@@ -103,7 +105,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
                 "0 4px 20px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,1), 0 0 40px rgba(0,0,0,0.6)",
             }}
           >
-            Jangan Pernah Abaikan
+            {newSettingsData?.Hero?.h2}
           </span>
         </motion.h1>
         <motion.p
@@ -113,8 +115,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
             textShadow: "0 2px 12px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,1)",
           }}
         >
-          Siapkan Donasi Terbaik Markaz Sunnah Nusantara Al Hijrah. Dari Kaum
-          Muslimin, Untuk Kaum Muslimin, dan Milik Kaum Muslimin.
+          {newSettingsData?.Hero?.description}
         </motion.p>
         <motion.div
           variants={fadeInUp}

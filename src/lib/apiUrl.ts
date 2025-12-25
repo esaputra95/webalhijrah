@@ -15,6 +15,7 @@ const apiUrl = {
   programCategories: "/api/program-categories",
   programs: "/api/programs",
   sliders: "/api/sliders",
+  settings: "/api/settings",
 };
 
 export default apiUrl;
