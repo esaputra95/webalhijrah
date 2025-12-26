@@ -73,7 +73,46 @@ export async function POST(req: NextRequest) {
     // 2. Check if donation exists
     const donation = await checkDonationByOrderId(body.order_id);
     if (!donation) {
-      console.error(`❌ Donation not found: ${body.order_id}`);
+      console.log(
+        `⚠️ Donation not found: ${body.order_id}. Checking for forward...`
+      );
+
+      const secondaryWebhookUrl = process.env.SECONDARY_MIDTRANS_WEBHOOK_URL;
+      if (secondaryWebhookUrl) {
+        console.log(`➡️ Forwarding webhook to: ${secondaryWebhookUrl}`);
+        try {
+          // Forward the exact payload and some relevant headers
+          const response = await fetch(secondaryWebhookUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // Optionally forward other headers if needed by Midtrans or the target app
+            },
+            body: JSON.stringify(body),
+          });
+
+          const responseText = await response.text();
+          console.log(`📡 Forwarded status: ${response.status}`);
+
+          return new NextResponse(responseText, {
+            status: response.status,
+            headers: {
+              "Content-Type":
+                response.headers.get("Content-Type") || "application/json",
+            },
+          });
+        } catch (forwardError) {
+          console.error("❌ Error forwarding webhook:", forwardError);
+          return NextResponse.json(
+            { status: false, message: "Error forwarding webhook" },
+            { status: 500 }
+          );
+        }
+      }
+
+      console.error(
+        `❌ Donation not found and no secondary webhook configured: ${body.order_id}`
+      );
       return NextResponse.json(
         { status: false, message: "Donation not found" },
         { status: 404 }
@@ -87,9 +126,17 @@ export async function POST(req: NextRequest) {
     );
 
     // 4. Update donation status
-    await updateStatusByWebhook(body.order_id, newStatus);
+    const result = await updateStatusByWebhook(body.order_id, newStatus);
 
-    console.log(`✅ Donation ${body.order_id} status updated to: ${newStatus}`);
+    if (result && "skipped" in result) {
+      console.log(
+        `ℹ️ Webhook for ${body.order_id} processed (no changes needed)`
+      );
+    } else {
+      console.log(
+        `✅ Donation ${body.order_id} status updated to: ${newStatus}`
+      );
+    }
 
     return NextResponse.json(
       {
