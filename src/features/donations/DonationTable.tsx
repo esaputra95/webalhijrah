@@ -1,6 +1,7 @@
 import ActionButton from "@/components/ui/buttons/ActionButton";
 import { Column, Table } from "@/components/ui/tables/Table";
 import { DonationType } from "@/types/donationSchema";
+import dayjs from "dayjs";
 import Image from "next/image";
 import React, { FC, useMemo } from "react";
 
@@ -81,6 +82,13 @@ const DonationTable: FC<Props> = ({
           { value: "failed", label: "Failed" },
         ],
         render: (row: DonationType) => statusBadge(row.status),
+      },
+      {
+        header: "Waktu Donasi",
+        accessor: "created_at",
+        sortable: true,
+        render: (row: DonationType) =>
+          row.created_at && dayjs(row.created_at).format("DD/MM/YYYY HH:mm:ss"),
       },
       {
         header: "Bukti Donasi",
