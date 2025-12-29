@@ -234,7 +234,7 @@ export default function PublicDonationForm({
                       onFocus={() => {
                         setValue("name", "");
                       }}
-                      className={`w-full px-4 py-3.5 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none transition-all ${
+                      className={`w-full text-gray-600 px-4 py-3.5 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none transition-all ${
                         errors.name ? "border-red-500" : "border-gray-200"
                       }`}
                     />
@@ -253,7 +253,7 @@ export default function PublicDonationForm({
                       {...register("phone_number")}
                       placeholder="08xxxxxxxxxx"
                       type="tel"
-                      className={`w-full px-4 py-3.5 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none transition-all ${
+                      className={`w-full text-gray-600 px-4 py-3.5 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none transition-all ${
                         errors.phone_number
                           ? "border-red-500"
                           : "border-gray-200"
