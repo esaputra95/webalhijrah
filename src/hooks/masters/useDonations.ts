@@ -23,7 +23,7 @@ export function useDonations() {
 
 // ====== Create Donation with Midtrans Payment ======
 interface CreateDonationPayload {
-  name: string;
+  name?: string;
   amount: number;
   phone_number?: string;
   note?: string;
@@ -45,7 +45,7 @@ export function useCreateDonation() {
     mutationFn: async (payload: CreateDonationPayload) => {
       const response = await api.post<CreateDonationResponse>(
         apiUrl.donations,
-        payload
+        { ...payload, name: payload.name ?? "Hamba Allah" }
       );
       return response.data;
     },

@@ -21,10 +21,7 @@ const PublicDonationFormSchema = z.object({
     })
     .min(10000, "Minimal donasi adalah Rp 10.000"),
   name: z.string().min(3, "Nama lengkap minimal 3 karakter"),
-  phone_number: z
-    .string()
-    .min(10, "Nomor WhatsApp minimal 10 digit")
-    .optional(),
+  phone_number: z.string().optional(),
   note: z.string().optional(),
 });
 
@@ -64,7 +61,7 @@ export default function PublicDonationForm({
     resolver: zodResolver(PublicDonationFormSchema),
     defaultValues: {
       amount: 0,
-      name: "",
+      name: "Hamba Allah",
       phone_number: "",
       note: "",
     },
@@ -234,6 +231,9 @@ export default function PublicDonationForm({
                     <input
                       {...register("name")}
                       placeholder="Nama Anda"
+                      onFocus={() => {
+                        setValue("name", "");
+                      }}
                       className={`w-full px-4 py-3.5 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none transition-all ${
                         errors.name ? "border-red-500" : "border-gray-200"
                       }`}

@@ -23,7 +23,7 @@ export function generateInvoiceNumber(): string {
 interface MidtransTransactionParams {
   invoiceNumber: string;
   amount: number;
-  name: string;
+  name?: string;
   phoneNumber?: string | null;
   note?: string | null;
   finishUrl?: string;
@@ -103,7 +103,7 @@ export async function createInvoiceDonation(params: CreateInvoiceParams) {
     const donation = await prisma.neo_donation_public.create({
       data: {
         invoice_number: invoiceNumber,
-        name: params.name,
+        name: params.name ?? "Hamba Allah",
         phone_number: params.phoneNumber,
         note: params.note,
         amount: new Prisma.Decimal(params.amount),
