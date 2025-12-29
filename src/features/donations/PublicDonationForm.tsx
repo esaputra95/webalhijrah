@@ -247,7 +247,7 @@ export default function PublicDonationForm({
 
                   <div className="space-y-2">
                     <label className="block text-sm font-semibold text-gray-700">
-                      Nomor WhatsApp (Opsional)
+                      Nomor WhatsApp
                     </label>
                     <input
                       {...register("phone_number")}

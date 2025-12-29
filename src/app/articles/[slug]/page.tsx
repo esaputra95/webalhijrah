@@ -1,17 +1,21 @@
 import { Post } from "@/types/admins/articles/postType";
 import { postService } from "@/lib/postService";
+export const dynamic = "force-dynamic";
+
+import { notFound } from "next/navigation";
+import { cache } from "react";
 
 // Helper helper get data from database directly (SSR)
-async function getPostBySlug(slug: string): Promise<Post | null> {
+// Wrapped in cache to prevent double increment (Metadata + Page Component)
+const getPostBySlug = cache(async (slug: string): Promise<Post | null> => {
   return await postService.getPostBySlug(slug);
-}
+});
 
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PublicNavbar from "@/components/layouts/PublicNavbar";
-import { FiArrowLeft, FiCalendar, FiTag } from "react-icons/fi";
-import { notFound } from "next/navigation";
+import { FiArrowLeft, FiCalendar, FiTag, FiEye } from "react-icons/fi";
 
 // Generate Metadata for SEO
 export async function generateMetadata({
@@ -124,6 +128,10 @@ export default async function ArticleDetailPage({
                       month: "long",
                       year: "numeric",
                     })}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FiEye size={14} />
+                    {post.count_view || 0} views
                   </div>
                 </div>
 

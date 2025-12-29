@@ -24,6 +24,7 @@ const SELECT_FIELDS = {
   code: true,
   account: true,
   program_category_id: true,
+  count_view: true,
   users: {
     select: { id: true, name: true, email: true },
   },
@@ -34,18 +35,25 @@ export const GET = wrap(
   async (_req: NextRequest, ctx: { params: Promise<{ id: string }> }) => {
     const { id } = await ctx.params;
 
-    const post = await prisma.neo_posts.findUnique({
-      where: { id: Number(id) },
-      select: {
-        ...SELECT_FIELDS,
-        post_categories: {
-          select: {
-            id: true,
-            title: true,
+    const post = await prisma.neo_posts
+      .update({
+        where: { id: Number(id) },
+        data: {
+          count_view: {
+            increment: 1,
           },
         },
-      },
-    });
+        select: {
+          ...SELECT_FIELDS,
+          post_categories: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
+        },
+      })
+      .catch(() => null);
 
     if (!post) {
       throw new AppError("Post tidak ditemukan", {

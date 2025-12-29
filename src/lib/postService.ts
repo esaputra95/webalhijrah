@@ -7,8 +7,18 @@ export const postService = {
    */
   async getPostBySlug(slug: string): Promise<Post | null> {
     try {
-      const post = await prisma.neo_posts.findFirst({
+      const existing = await prisma.neo_posts.findFirst({
         where: { post_name: slug },
+        select: { id: true, count_view: true },
+      });
+
+      if (!existing) return null;
+
+      const post = await prisma.neo_posts.update({
+        where: { id: existing.id },
+        data: {
+          count_view: existing.count_view === null ? 1 : { increment: 1 },
+        },
         select: {
           id: true,
           post_title: true,
@@ -26,6 +36,7 @@ export const postService = {
           post_image: true,
           account: true,
           code: true,
+          count_view: true,
           post_categories: {
             select: {
               id: true,

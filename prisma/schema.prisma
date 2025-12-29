@@ -117,6 +117,7 @@ model neo_posts {
   date DateTime? 
   code String? @db.VarChar(15)
   account Int? @db.UnsignedInt
+  count_view Int? @db.UnsignedInt @default(0) 
   program_category_id Int? @db.UnsignedInt
   program neo_programs? @relation(fields: [program_category_id], references: [id], onDelete: SetNull, map: "fk_neo_posts_to_neo_programs")
   post_categories neo_post_categories? @relation(fields: [post_category_id], references: [id], onDelete: SetNull, map: "fk_neo_posts_to_neo_post_categories")
