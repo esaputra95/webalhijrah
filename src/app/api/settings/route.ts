@@ -27,10 +27,10 @@ function parsePagination(req: NextRequest) {
   // Sorting
   const sortby = sp.get("sortby") || "key";
   const sortdir =
-    (sp.get("sort") || "asc").toLowerCase() === "asc" ? "asc" : "desc";
+    (sp.get("sort") || "desc").toLowerCase() === "asc" ? "asc" : "desc";
   const orderBy = ALLOWED_SORT[sortby]
     ? { [sortby]: sortdir }
-    : { key: "asc" as const };
+    : { key: "desc" as const };
 
   // Filters
   const key = (sp.get("key") || "").trim();

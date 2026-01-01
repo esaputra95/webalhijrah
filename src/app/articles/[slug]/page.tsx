@@ -142,12 +142,14 @@ export default async function ArticleDetailPage({
 
                 {/* Featured Image */}
                 {post.post_image && (
-                  <div className="relative w-full h-[500px] mb-8 bg-gray-100 rounded-xl overflow-hidden">
+                  <div className="mb-8 bg-gray-100 rounded-xl overflow-hidden">
                     <Image
                       src={post.post_image}
                       alt={post.post_title}
-                      fill
-                      className="object-contain"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-full h-auto"
                       priority
                     />
                   </div>

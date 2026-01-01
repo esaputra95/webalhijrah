@@ -70,12 +70,6 @@ export const navGroups: NavGroup[] = [
     items: [
       {
         icon: FiFileText,
-        label: "Daftar Program",
-        path: "/admins/programs",
-        role: ["SUPER_ADMIN"],
-      },
-      {
-        icon: FiFileText,
         label: "Daftar Donasi",
         path: "/admins/donations",
         role: ["SUPER_ADMIN"],

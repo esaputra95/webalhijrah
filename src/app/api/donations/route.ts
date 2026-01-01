@@ -46,10 +46,10 @@ function parsePagination(req: NextRequest) {
   // Sorting
   const sortby = sp.get("sortby") || "created_at";
   const sortdir =
-    (sp.get("sort") || "asc").toLowerCase() === "asc" ? "asc" : "desc";
+    (sp.get("sort") || "desc").toLowerCase() === "asc" ? "asc" : "desc";
   const orderBy = ALLOWED_SORT[sortby]
     ? { [sortby]: sortdir }
-    : { created_at: "asc" as const };
+    : { created_at: "desc" as const };
 
   // Filters
   const q = (sp.get("q") || "").trim();

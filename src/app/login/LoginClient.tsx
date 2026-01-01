@@ -4,13 +4,21 @@ import { useMemo, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
+import { useGroupedSettings } from "@/hooks/masters/useSettings";
 
 type FormValues = { email: string; password: string };
 const DEFAULT_AFTER_LOGIN = "/";
 
 export default function LoginClient() {
+  const { data: newSettingsData } = useGroupedSettings();
+
+  const herodesc = [
+    { label: "Jamaah", value: newSettingsData?.Hero?.jamaah },
+    { label: "Santri", value: newSettingsData?.Hero?.santri },
+    { label: "Kegiatan/Bulan", value: newSettingsData?.Hero?.kegiatan },
+    { label: "Program", value: newSettingsData?.Hero?.program },
+  ];
   const {
     register,
     handleSubmit,
@@ -242,19 +250,15 @@ export default function LoginClient() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-3 gap-8 max-w-2xl">
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-[#EFC940]">5000+</div>
-              <div className="text-sm text-gray-400">Jamaah</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-[#EFC940]">120+</div>
-              <div className="text-sm text-gray-400">Santri</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-3xl font-bold text-[#EFC940]">45+</div>
-              <div className="text-sm text-gray-400">Kegiatan/Bulan</div>
-            </div>
+          <div className="mt-12 grid grid-cols-4 gap-8 max-w-2xl">
+            {herodesc?.map((item) => (
+              <div key={item.label} className="space-y-2">
+                <div className="text-3xl font-bold text-[#EFC940]">
+                  {item.value}
+                </div>
+                <div className="text-sm text-gray-400">{item.label}</div>
+              </div>
+            ))}
           </div>
 
           <div className="mt-12 text-sm text-gray-400 italic max-w-lg">
