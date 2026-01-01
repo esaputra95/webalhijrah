@@ -248,10 +248,9 @@ export default async function DonationDetailPage({
                   )}
                   <div id="donation-form-desktop" className="p-1">
                     <PublicDonationForm
-                      type={Boolean(
-                        post.post_categories?.title === "Program Pembangunan"
-                      )}
                       account={post?.account}
+                      slug={post.post_name}
+                      code={post.code ?? undefined}
                     />
                   </div>
                 </div>
@@ -353,7 +352,11 @@ export default async function DonationDetailPage({
               Isi form di bawah ini untuk berdonasi
             </p>
           </div>
-          <PublicDonationForm account={post?.account} />
+          <PublicDonationForm
+            account={post?.account}
+            slug={post.post_name}
+            code={post.code ?? undefined}
+          />
         </div>
       </div>
 

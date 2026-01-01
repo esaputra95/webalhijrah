@@ -28,6 +28,8 @@ export const DonationCreateSchema = z.object({
   payment_link: z.string().nullable().optional(),
   status: DonationStatusEnum.default("pending"),
   image: z.string().nullable().optional(),
+  slug: z.string().trim().optional(),
+  code: z.string().trim().optional(),
 });
 
 // ====== Update Schema (all optional) ======

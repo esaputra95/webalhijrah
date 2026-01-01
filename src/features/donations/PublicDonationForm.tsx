@@ -38,12 +38,12 @@ const tabContentVariants = {
 
 export default function PublicDonationForm({
   account,
-  type,
-}: // _code,
-{
+  slug,
+  code,
+}: {
   account?: number;
-  type?: boolean;
-  // _code?: string;
+  slug?: string;
+  code?: string;
 }) {
   const [activeTab, setActiveTab] = useState<"automatic" | "manual" | "qris">(
     "manual"
@@ -77,17 +77,20 @@ export default function PublicDonationForm({
       content_name: "Donation",
     });
 
-    createDonation(data, {
-      onSuccess: (response) => {
-        if (response?.data?.redirect_url) {
-          window.location.href = response.data.redirect_url;
-        }
-        reset();
-      },
-      onError: (error) => {
-        console.error("Donation submission error:", error);
-      },
-    });
+    createDonation(
+      { ...data, slug, code },
+      {
+        onSuccess: (response) => {
+          if (response?.data?.redirect_url) {
+            window.location.href = response.data.redirect_url;
+          }
+          reset();
+        },
+        onError: (error) => {
+          console.error("Donation submission error:", error);
+        },
+      }
+    );
   };
 
   const handleAmountSelect = (amount: number) => {

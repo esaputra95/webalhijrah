@@ -27,6 +27,8 @@ interface CreateDonationPayload {
   amount: number;
   phone_number?: string;
   note?: string;
+  slug?: string;
+  code?: string;
 }
 
 interface CreateDonationResponse {

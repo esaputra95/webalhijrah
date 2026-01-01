@@ -105,6 +105,7 @@ export const PUT = wrap(
     if (parsed.account !== undefined) data.account = parsed.account;
     if (parsed.program_category_id !== undefined)
       data.program_category_id = parsed.program_category_id;
+    if (parsed.code !== undefined) data.code = parsed.code;
 
     const updated = await prisma.neo_posts.update({
       where: { id: Number(id) },

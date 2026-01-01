@@ -144,13 +144,15 @@ export async function GET(req: NextRequest) {
 export const POST = wrap(async (req: Request) => {
   const body = await req.json();
 
-  // Validate input - only need name, amount, phone_number, note
+  // Validate input - only need name, amount, phone_number, note, slug, code
   const validationSchema = DonationCreateSchema.pick({
     name: true,
     amount: true,
     phone_number: true,
     note: true,
-  }).partial({ phone_number: true, note: true });
+    slug: true,
+    code: true,
+  }).partial({ phone_number: true, note: true, slug: true, code: true });
 
   const parsed = validationSchema.parse(body);
 
@@ -163,6 +165,8 @@ export const POST = wrap(async (req: Request) => {
     amount: parsed.amount,
     phoneNumber: parsed.phone_number,
     note: parsed.note,
+    postSlug: parsed.slug,
+    postCode: parsed.code,
   });
 
   if (!result.success) {

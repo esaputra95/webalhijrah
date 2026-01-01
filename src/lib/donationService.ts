@@ -11,10 +11,11 @@ const DONATION_CODE_PREFIX = process.env.DONATION_CODE_PREFIX || "DON";
 /**
  * Generate unique invoice number
  */
-export function generateInvoiceNumber(): string {
+export function generateInvoiceNumber(prefix?: string): string {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-  return `${DONATION_CODE_PREFIX}-${timestamp}-${random}`;
+  const finalPrefix = prefix || DONATION_CODE_PREFIX;
+  return `${finalPrefix}-${timestamp}-${random}`;
 }
 
 /**
@@ -77,14 +78,35 @@ interface CreateInvoiceParams {
   amount: number;
   finishUrl?: string;
   errorUrl?: string;
+  postSlug?: string;
+  postCode?: string;
 }
 
 export async function createInvoiceDonation(params: CreateInvoiceParams) {
   try {
-    // 1. Generate invoice number
-    const invoiceNumber = generateInvoiceNumber();
+    // 1. Resolve prefix from post code or slug
+    let prefix = DONATION_CODE_PREFIX;
 
-    // 2. Prepare Midtrans transaction
+    if (params.postCode) {
+      prefix = params.postCode;
+    } else if (params.postSlug) {
+      const post = await prisma.neo_posts.findFirst({
+        where: {
+          post_name: params.postSlug,
+        },
+        select: {
+          code: true,
+        },
+      });
+      if (post?.code) {
+        prefix = post.code;
+      }
+    }
+
+    // 2. Generate invoice number
+    const invoiceNumber = generateInvoiceNumber(prefix);
+
+    // 3. Prepare Midtrans transaction
     const midtransTransaction = prepareMidtransTransaction({
       invoiceNumber,
       amount: params.amount,
@@ -95,11 +117,11 @@ export async function createInvoiceDonation(params: CreateInvoiceParams) {
       errorUrl: params.errorUrl,
     });
 
-    // 3. Create Midtrans Snap transaction
+    // 4. Create Midtrans Snap transaction
     const snap = createSnapClient();
     const snapResponse = await snap.createTransaction(midtransTransaction);
 
-    // 4. Store donation in database
+    // 5. Store donation in database
     const donation = await prisma.neo_donation_public.create({
       data: {
         invoice_number: invoiceNumber,
