@@ -10,12 +10,17 @@ import useGetParams from "@/lib/useGetParams";
 // ====== Fetch Posts ======
 export function usePosts(params?: Record<string, string | number | boolean>) {
   const queryParams = useGetParams();
-  console.log({ params });
 
   return useQuery<BaseApiResponse<PostType[]>>({
     queryKey: ["Posts", queryParams, params],
     queryFn: async () =>
-      getData<typeof params, BaseApiResponse<PostType[]>>(apiUrl.posts, params),
+      getData<Record<string, unknown>, BaseApiResponse<PostType[]>>(
+        apiUrl.posts,
+        {
+          ...queryParams,
+          ...params,
+        }
+      ),
   });
 }
 

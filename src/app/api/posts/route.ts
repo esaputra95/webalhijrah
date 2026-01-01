@@ -64,6 +64,9 @@ function parsePagination(req: NextRequest) {
   const post_status = (sp.get("post_status") || "").trim();
   const post_type = (sp.get("post_type") || "").trim();
   const program = (sp.get("program") || "").trim();
+  const post_title = (sp.get("post_title") || "").trim();
+  const post_name = (sp.get("post_name") || "").trim();
+  const account = (sp.get("account") || "").trim();
 
   const where: Prisma.neo_postsWhereInput = {
     AND: [
@@ -79,6 +82,9 @@ function parsePagination(req: NextRequest) {
       post_status ? { post_status: { equals: post_status } } : {},
       post_type ? { post_type: { equals: post_type } } : {},
       program ? { program_category_id: { equals: Number(program) } } : {},
+      post_title ? { post_title: { contains: post_title } } : {},
+      post_name ? { post_name: { contains: post_name } } : {},
+      account ? { account: { equals: Number(account) } } : {},
     ],
   };
 
