@@ -318,7 +318,7 @@ export default function PublicDonationForm({
                 </h3>
                 <p className="text-gray-500 text-sm">
                   Silakan transfer ke salah satu rekening di bawah ini a.n{" "}
-                  <strong>Yayasan Ashiil Cahaya Hati Tauhid</strong>
+                  <strong>Yayasan Ashiil Cahaya Tauhid</strong>
                 </p>
               </div>
 
