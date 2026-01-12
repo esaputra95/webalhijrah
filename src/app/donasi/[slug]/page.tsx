@@ -124,12 +124,14 @@ export default async function DonationDetailPage({
               <article className="lg:bg-white lg:rounded-3xl lg:shadow-sm lg:border lg:border-gray-100 overflow-hidden">
                 {/* Featured Image - Adjusted Aspect Ratio */}
                 {post.post_image && (
-                  <div className="relative w-full aspect-video bg-gray-100">
+                  <div className="relative w-full bg-gray-100">
                     <Image
                       src={post.post_image}
                       alt={post.post_title}
-                      fill
-                      className="object-cover"
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-full h-auto"
                       priority
                     />
                   </div>
