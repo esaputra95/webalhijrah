@@ -57,6 +57,8 @@ function parsePagination(req: NextRequest) {
   const name = (sp.get("name") || "").trim();
   const phone_number = (sp.get("phone_number") || "").trim();
   const invoice_number = (sp.get("invoice_number") || "").trim();
+  const startAt = sp.get("startAt");
+  const endAt = sp.get("endAt");
 
   const where: Prisma.neo_donation_publicWhereInput = {
     AND: [
@@ -80,6 +82,8 @@ function parsePagination(req: NextRequest) {
       name ? { name: { contains: name } } : {},
       phone_number ? { phone_number: { contains: phone_number } } : {},
       invoice_number ? { invoice_number: { contains: invoice_number } } : {},
+      startAt ? { created_at: { gte: new Date(startAt) } } : {},
+      endAt ? { created_at: { lte: new Date(endAt) } } : {},
     ],
   };
 
@@ -92,13 +96,20 @@ export async function GET(req: NextRequest) {
     const { page, take, skip, orderBy, where, sortby, sortdir } =
       parsePagination(req);
 
-    const [count, donations] = await Promise.all([
+    const sp = req.nextUrl.searchParams;
+    const isExport = sp.get("all") === "true";
+
+    const [count, aggregate, donations] = await Promise.all([
       prisma.neo_donation_public.count({ where }),
+      prisma.neo_donation_public.aggregate({
+        where,
+        _sum: { amount: true },
+      }),
       prisma.neo_donation_public.findMany({
         where,
         orderBy,
-        skip,
-        take,
+        skip: isExport ? undefined : skip,
+        take: isExport ? undefined : take,
         select: SELECT_FIELDS,
       }),
     ]);
@@ -114,6 +125,7 @@ export async function GET(req: NextRequest) {
           page,
           limit: take,
           total: count,
+          total_amount: aggregate._sum.amount || 0,
           nextPage,
           totalPage,
           sortby,

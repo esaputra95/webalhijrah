@@ -68,6 +68,9 @@ function parsePagination(req: NextRequest) {
   const post_name = (sp.get("post_name") || "").trim();
   const account = (sp.get("account") || "").trim();
 
+  const startAt = sp.get("startAt");
+  const endAt = sp.get("endAt");
+
   const where: Prisma.neo_postsWhereInput = {
     AND: [
       q
@@ -85,6 +88,8 @@ function parsePagination(req: NextRequest) {
       post_title ? { post_title: { contains: post_title } } : {},
       post_name ? { post_name: { contains: post_name } } : {},
       account ? { account: { equals: Number(account) } } : {},
+      startAt ? { created_at: { gte: new Date(startAt) } } : {},
+      endAt ? { created_at: { lte: new Date(endAt) } } : {},
     ],
   };
 
@@ -97,13 +102,16 @@ export async function GET(req: NextRequest) {
     const { page, take, skip, orderBy, where, sortby, sortdir } =
       parsePagination(req);
 
+    const sp = req.nextUrl.searchParams;
+    const isExport = sp.get("all") === "true";
+
     const [count, posts] = await Promise.all([
       prisma.neo_posts.count({ where }),
       prisma.neo_posts.findMany({
         where,
         orderBy,
-        skip,
-        take,
+        skip: isExport ? undefined : skip,
+        take: isExport ? undefined : take,
         select: SELECT_FIELDS,
       }),
     ]);

@@ -12,4 +12,5 @@ export interface MetaData {
   total: number;
   nextPage: number | null;
   totalPage: number;
+  total_amount?: number;
 }

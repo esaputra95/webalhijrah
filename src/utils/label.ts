@@ -1,4 +1,4 @@
 export const labelUrl = {
-  "request-reports": "Laporan Pengajuan",
+  "request-reports": "Laporan Donasi",
   "schedule-reports": "Laporan Jadwal",
 };
