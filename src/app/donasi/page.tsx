@@ -49,8 +49,8 @@ export default function DonasiPage() {
           </Carousel>
         </div>
 
-        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10 pointer-events-none">
-          <div className="max-w-4xl mx-auto text-center pointer-events-auto">
+        <div className="container mx-auto px-4 py-16 md:py-24 relative z-50">
+          <div className="max-w-4xl mx-auto text-center">
             <div className="inline-block mb-6 px-4 py-2 bg-brand-gold/20 border border-brand-gold/30 backdrop-blur-sm rounded-full">
               <Link
                 href="/"
@@ -72,10 +72,13 @@ export default function DonasiPage() {
                 <span className="text-green-400 text-lg">✅</span>
                 <span>Aman & Terpercaya</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/20">
+              <a
+                href="#pilih-donasi"
+                className="flex relative z-20 items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/20 cursor-pointer hover:bg-white/20 transition-all"
+              >
                 <span className="text-yellow-400 text-lg">⚡</span>
-                <span>Proses Cepat</span>
-              </div>
+                <span>Donasi Sekarang</span>
+              </a>
             </div>
           </div>
         </div>
@@ -107,16 +110,19 @@ export default function DonasiPage() {
                 <div className="inline-block px-4 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold mb-4 border border-yellow-200 shadow-sm">
                   Update Pembangunan
                 </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                  Prioritas: Tahap 5 <br />
-                  <span className="text-brand-gold">Struktur Rooftop</span>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-tight">
+                  {`"Finishing Lantai 1 : Ruang Sholat Ikhwan"`}
+                  <br />
+                  <span className="text-brand-gold">
+                    InsyaAllah sudah bisa digunakan untuk ibadah Ramadhan 1447 H
+                  </span>
                 </h2>
                 <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
                   <p className="text-lg text-gray-600 leading-relaxed italic border-l-4 border-brand-gold pl-4">
-                    &quot;Kini pembangunan struktur rooftop Masjid Al Hijrah
-                    sedang menjadi prioritas pembangunan. Mari bersama wujudkan
-                    selesainya proses ini lebih cepat dengan donasi terbaik
-                    Anda.&quot;
+                    &quot;Pembangunan Finishing Lantai 1 Ruang Sholat Ikhwan
+                    Masjid Al Hijrah sedang dipercepat. Mari ambil bagian dalam
+                    amal jariyah ini agar ruang sholat dapat segera digunakan
+                    untuk ibadah Ramadhan.&quot;
                   </p>
                 </div>
 
@@ -181,7 +187,7 @@ export default function DonasiPage() {
         </div>
 
         {/* Donation Form moved below Update Info */}
-        <div className="mb-20">
+        <div id="pilih-donasi" className="mb-20 scroll-mt-24">
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 max-w-5xl mx-auto transform -translate-y-4">
             <div className="bg-gradient-to-r from-brand-blue to-brand-gold p-1.5 h-3 w-full"></div>
             <div className="p-1">
