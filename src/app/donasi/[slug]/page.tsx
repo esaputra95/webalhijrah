@@ -77,8 +77,8 @@ export async function generateMetadata({
   };
 }
 
-const needAmount = 10000000;
-const currentAmount = 6500900;
+const needAmount = 8700000000;
+const currentAmount = 826101865;
 
 export default async function DonationDetailPage({
   params,

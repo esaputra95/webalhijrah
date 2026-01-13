@@ -133,7 +133,7 @@ export default function DonasiPage() {
                       Terkumpul
                     </p>
                     <p className="text-2xl font-bold text-green-700">
-                      Rp 739 Jt+
+                      Rp 826 Jt+
                     </p>
                   </div>
                 </div>
