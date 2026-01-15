@@ -179,7 +179,7 @@ const LandingPage = () => {
               className="lg:w-1/2 space-y-6 text-center lg:text-left"
             >
               <div className="inline-block px-3 py-1 bg-yellow-100 text-brand-brown rounded-full text-sm font-semibold mb-2">
-                Tentang Kami
+                Sekilas Tentang Kami
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-brown leading-tight">
                 {newSettingsData?.About?.title}{" "}
@@ -210,6 +210,14 @@ const LandingPage = () => {
                     </li>
                   ))}
               </ul>
+              <div className="w-full px-4">
+                <Link
+                  href="/about"
+                  className="bg-brand-gold text-white px-6 py-2 rounded-full hover:bg-brand-brown transition-colors duration-300"
+                >
+                  Baca Lebih Lanjut
+                </Link>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -415,18 +423,50 @@ const LandingPage = () => {
                 untuk umat melalui dakwah, pendidikan, dan sosial.
               </p>
               <div className="flex gap-4 pt-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{
-                      scale: 1.1,
-                      backgroundColor: "#EFC940",
-                      color: "#4A4C70",
-                    }}
-                    className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                {[
+                  {
+                    label: "IG",
+                    link: "https://www.instagram.com/markazsunnahalhijrah/",
+                    logo: "https://markazalhijrah.or.id/api/files/1768374338144-eafaf50b-d050-49ff-aed7-5f16682ba319.webp",
+                  },
+                  {
+                    label: "FB",
+                    link: "https://www.facebook.com/markazalhijrah",
+                    logo: "https://markazalhijrah.or.id/api/files/1768374928644-aa2d147e-6183-4e93-931d-5d7fd5e93cd0.png",
+                  },
+                  {
+                    label: "TT",
+                    link: "https://www.tiktok.com/@markazsunnahalhijrah",
+                    logo: "https://markazalhijrah.or.id/api/files/1768375222309-dcb98d69-037b-4aee-8219-100b48567359.webp",
+                  },
+                  {
+                    label: "YT",
+                    link: "https://www.youtube.com/@markazsunnahalhijrah",
+                    logo: "https://markazalhijrah.or.id/api/files/1768375353166-7e9729b7-5ad1-49ce-a247-3d11dba7abb9.png",
+                  },
+                ].map((i) => (
+                  <Link
+                    key={i.link}
+                    href={i.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <span className="text-sm">Sos</span>
-                  </motion.div>
+                    <motion.div
+                      whileHover={{
+                        scale: 1.1,
+                        backgroundColor: "#EFC940",
+                        color: "#4A4C70",
+                      }}
+                      className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <Image
+                        src={i.logo}
+                        alt={i.label}
+                        width={20}
+                        height={20}
+                      />
+                    </motion.div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -444,7 +484,7 @@ const LandingPage = () => {
                 </li>
                 <li>
                   <Link
-                    href="/#about"
+                    href="/about"
                     className="hover:text-brand-gold text-gray-200 transition-colors"
                   >
                     Tentang

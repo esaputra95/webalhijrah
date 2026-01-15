@@ -226,6 +226,7 @@ const PostForm: FC<Props> = ({ initialValues, mode }) => {
           option={[
             { value: "post", label: "Artikel" },
             { value: "donation", label: "Donasi" },
+            { value: "about", label: "Halaman Tentang" },
           ]}
         />
         <SelectInput

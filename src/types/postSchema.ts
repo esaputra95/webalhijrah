@@ -19,6 +19,7 @@ export const PostTypeEnum = z.enum([
   "attachment",
   "gallery",
   "donation",
+  "about",
 ]);
 
 // ====== Create Schema ======
@@ -82,7 +83,7 @@ export type PostType = {
   post_content?: string | null;
   post_status: "draft" | "publish" | "pending" | "private" | "trash";
   code?: string | null;
-  post_type: "post" | "page" | "attachment" | "gallery" | "donation";
+  post_type: "post" | "page" | "attachment" | "gallery" | "donation" | "about";
   post_mime_type?: string | null;
   user_id: string;
   post_category_id?: number | null;

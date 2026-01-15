@@ -14,7 +14,7 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { name: "Beranda", href: "/" },
-  { name: "Tentang", href: "/#about" },
+  { name: "Tentang", href: "/about" },
   { name: "Program", href: "/programs" },
   { name: "Artikel", href: "/articles" },
   { name: "Live Ashiil TV", href: "/live-ashiil" },

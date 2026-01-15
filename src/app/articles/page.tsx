@@ -152,11 +152,14 @@ export default function ArticlesPage() {
                       {/* Meta */}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         <span className="text-xs text-gray-500">
-                          {new Date(post.date).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
+                          {new Date(post.created_at).toLocaleDateString(
+                            "id-ID",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
                         </span>
                         <span className="text-brand-brown font-semibold text-sm group-hover:text-brand-gold transition-colors">
                           Baca Selengkapnya →

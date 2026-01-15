@@ -131,7 +131,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href="#about"
+              href="/about"
               className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-bold text-lg rounded-full transition-all flex items-center justify-center"
             >
               Pelajari Lebih Lanjut

@@ -197,6 +197,73 @@ export default async function ArticleDetailPage({
         </div>
       </article>
 
+      {/* Suggested Articles */}
+      <section className="pb-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Artikel <span className="text-brand-gold">Terkait</span>
+              </h2>
+              <Link
+                href="/articles"
+                className="text-brand-brown hover:text-brand-gold font-bold transition-colors"
+              >
+                Lihat Semua Artikel →
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {(await postService.getSuggestions(6, post.id)).map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/articles/${p.post_name}`}
+                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group"
+                >
+                  <div className="relative h-48 bg-gray-100">
+                    {p.post_image ? (
+                      <Image
+                        src={p.post_image}
+                        alt={p.post_title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-brand-brown text-white text-3xl">
+                        📄
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-gold transition-colors line-clamp-2 mb-3">
+                      {p.post_title}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                      {p.post_excerpt || "Baca artikel selengkapnya..."}
+                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <span className="text-xs text-gray-500">
+                        {new Date(p.created_at || "").toLocaleDateString(
+                          "id-ID",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                      <span className="text-brand-brown font-bold text-sm">
+                        Baca →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 border-t border-gray-800">
         <div className="container mx-auto px-4 text-center">
