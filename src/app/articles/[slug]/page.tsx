@@ -220,16 +220,18 @@ export default async function ArticleDetailPage({
                   href={`/articles/${p.post_name}`}
                   className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group"
                 >
-                  <div className="relative h-48 bg-gray-100">
+                  <div className="relative bg-gray-100 overflow-hidden">
                     {p.post_image ? (
                       <Image
                         src={p.post_image}
                         alt={p.post_title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-brand-brown text-white text-3xl">
+                      <div className="w-full h-48 flex items-center justify-center bg-brand-brown text-white text-3xl">
                         📄
                       </div>
                     )}

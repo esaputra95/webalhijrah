@@ -115,16 +115,18 @@ export default function ProgramsPage() {
                     className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                   >
                     {/* Program Image */}
-                    <div className="relative h-44 bg-gray-200 overflow-hidden">
+                    <div className="relative bg-gray-200 overflow-hidden">
                       {program.image ? (
                         <Image
                           src={program.image}
                           alt={program.title || "Program Image"}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-blue to-gray-700 text-white text-4xl">
+                        <div className="w-full h-44 flex items-center justify-center bg-gradient-to-br from-brand-blue to-gray-700 text-white text-4xl">
                           🚀
                         </div>
                       )}

@@ -113,16 +113,18 @@ export default function ArticlesPage() {
                     className="block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group"
                   >
                     {/* Article Image */}
-                    <div className="relative h-60 bg-gray-200 overflow-hidden">
+                    <div className="relative bg-gray-200 overflow-hidden">
                       {post.post_image ? (
                         <Image
                           src={post.post_image}
                           alt={post.post_title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-blue to-gray-700 text-white text-4xl">
+                        <div className="w-full h-60 flex items-center justify-center bg-gradient-to-br from-brand-blue to-gray-700 text-white text-4xl">
                           📄
                         </div>
                       )}
