@@ -18,7 +18,7 @@ export const GET = wrap(
     }
 
     return setResponse(post, "Detail Post");
-  }
+  },
 );
 
 // End of file

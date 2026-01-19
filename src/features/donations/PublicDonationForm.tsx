@@ -40,13 +40,15 @@ export default function PublicDonationForm({
   account,
   slug,
   code,
+  phone,
 }: {
   account?: number;
   slug?: string;
   code?: string;
+  phone?: string;
 }) {
   const [activeTab, setActiveTab] = useState<"automatic" | "manual" | "qris">(
-    "manual"
+    "manual",
   );
   const { mutate: createDonation, isPending } = useCreateDonation();
 
@@ -89,7 +91,7 @@ export default function PublicDonationForm({
         onError: (error) => {
           console.error("Donation submission error:", error);
         },
-      }
+      },
     );
   };
 
@@ -373,7 +375,7 @@ export default function PublicDonationForm({
                     catat.
                   </p>
                   <a
-                    href="https://wa.me/6285174368006"
+                    href={`https://wa.me/${phone ?? "6285174368006"}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block mt-2 text-brand-brown font-bold hover:underline"

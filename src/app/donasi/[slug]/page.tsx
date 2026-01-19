@@ -92,8 +92,6 @@ export default async function DonationDetailPage({
     return notFound();
   }
 
-  console.log({ post });
-
   return (
     <div className="min-h-screen bg-white lg:bg-gray-50 pb-32 lg:pb-0">
       {/* Navbar show only on desktop */}
@@ -165,7 +163,7 @@ export default async function DonationDetailPage({
                           style={{
                             width: `${Math.min(
                               (currentAmount / needAmount) * 100,
-                              100
+                              100,
                             )}%`,
                           }}
                         >
@@ -234,7 +232,7 @@ export default async function DonationDetailPage({
                           style={{
                             width: `${Math.min(
                               (currentAmount / needAmount) * 100,
-                              100
+                              100,
                             )}%`,
                           }}
                         />
@@ -244,7 +242,10 @@ export default async function DonationDetailPage({
                           {Math.round((currentAmount / needAmount) * 100)}%
                           Tercapai
                         </span>
-                        <span>Rp {needAmount.toLocaleString("id-ID")}</span>
+                        <span>
+                          Rp {needAmount.toLocaleString("id-ID")}{" "}
+                          {post.program_categories?.title}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -253,6 +254,11 @@ export default async function DonationDetailPage({
                       account={post?.account}
                       slug={post.post_name}
                       code={post.code ?? undefined}
+                      phone={
+                        post.program_categories?.title === "Masjid Alhijrah"
+                          ? "628117550202"
+                          : undefined
+                      }
                     />
                   </div>
                 </div>
@@ -326,7 +332,7 @@ export default async function DonationDetailPage({
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 p-3 pb-safe flex gap-3 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
         <a
           href={`https://wa.me/?text=${encodeURIComponent(
-            `${post.post_title} - ${post.post_name}`
+            `${post.post_title} - ${post.post_name}`,
           )}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -351,13 +357,19 @@ export default async function DonationDetailPage({
           <div className="p-4 border-b border-gray-50 text-center">
             <h3 className="font-bold text-gray-900">Salurkan Kebaikan</h3>
             <p className="text-xs text-gray-500">
-              Isi form di bawah ini untuk berdonasi
+              Isi form di bawah ini untuk berdonasi{" "}
+              {post.post_categories?.title} ss
             </p>
           </div>
           <PublicDonationForm
             account={post?.account}
             slug={post.post_name}
             code={post.code ?? undefined}
+            phone={
+              post.program_categories?.title === "Masjid Alhijrah"
+                ? "628117550202"
+                : undefined
+            }
           />
         </div>
       </div>

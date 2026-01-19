@@ -10,9 +10,18 @@ export interface Post {
   code?: string;
   account?: number;
   date: Date;
+  post_category_id?: number;
   post_categories?: {
     id: string;
     title: string;
+  };
+  program?: {
+    id?: string;
+    title?: string;
+  };
+  program_categories?: {
+    id?: string;
+    title?: string;
   };
   count_view?: number;
   created_at: string;

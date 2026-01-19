@@ -43,6 +43,11 @@ export const postService = {
               title: true,
             },
           },
+          program_categories: {
+            select: {
+              title: true,
+            },
+          },
         },
       });
 
@@ -62,6 +67,9 @@ export const postService = {
               ...post.post_categories,
               id: String(post.post_categories.id),
             }
+          : undefined,
+        program: post.program_categories
+          ? { ...post.program_categories }
           : undefined,
         created_at: post.created_at?.toISOString() || new Date().toISOString(),
         updated_at: post.updated_at?.toISOString() || new Date().toISOString(),
