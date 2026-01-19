@@ -22,8 +22,8 @@ export const bankAccount = [
         owner: "Yayasan Ashiil Cahaya Tauhid",
       },
       {
-        name: "Bank BCA",
-        code: "BCA",
+        name: "Bank BRI",
+        code: "BRI",
         number: "069601032635509",
         labelNumber: "06-9601-0326-35509",
         owner: "Yayasan Ashiil Cahaya Tauhid",
