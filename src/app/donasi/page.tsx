@@ -125,24 +125,6 @@ export default function DonasiPage() {
                     untuk ibadah Ramadhan.&quot;
                   </p>
                 </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-5 rounded-2xl border border-gray-200">
-                    <p className="text-gray-500 text-sm mb-1 font-medium">
-                      Kebutuhan
-                    </p>
-                    <p className="text-2xl font-bold text-gray-900">Rp 8.7 M</p>
-                  </div>
-                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-2xl border border-green-200">
-                    <p className="text-green-600 text-sm mb-1 font-medium">
-                      Terkumpul
-                    </p>
-                    <p className="text-2xl font-bold text-green-700">
-                      Rp 826 Jt+
-                    </p>
-                  </div>
-                </div>
               </div>
               <div className="md:w-1/2 w-full">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] transform hover:scale-[1.02] transition-transform duration-500 group">
