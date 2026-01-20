@@ -20,14 +20,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
-    apple: "/12x12.png",
+    apple: "/12x12x12x12.png",
   },
   title: "Masjid Markaz Al Hijrah Nusantara",
   description: "Sistem Informasi Panel Masjid Markaz Al Hijrah Nusantara",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Al Hijrah",
+    title: "AL HIJRAH",
   },
 };
 
