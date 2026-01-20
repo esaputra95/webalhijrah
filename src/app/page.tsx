@@ -72,8 +72,6 @@ const LandingPage = () => {
     once: true,
   });
 
-  console.log({ newSettingsData });
-
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       {/* Navbar */}
