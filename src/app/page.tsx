@@ -462,6 +462,7 @@ const LandingPage = () => {
                         alt={i.label}
                         width={20}
                         height={20}
+                        unoptimized
                       />
                     </motion.div>
                   </Link>

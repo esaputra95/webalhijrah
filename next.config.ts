@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "markazalhijrah.or.id",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.markazalhijrah.or.id",
+        pathname: "/**",
       },
     ],
   },
