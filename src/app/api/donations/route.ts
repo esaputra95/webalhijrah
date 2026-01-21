@@ -39,7 +39,7 @@ function parsePagination(req: NextRequest) {
   const page = Math.max(parseInt(sp.get("page") || "1", 10), 1);
   const take = Math.min(
     100,
-    Math.max(parseInt(sp.get("limit") || "10", 10), 1)
+    Math.max(parseInt(sp.get("limit") || "10", 10), 1),
   );
   const skip = (page - 1) * take;
 
@@ -59,6 +59,7 @@ function parsePagination(req: NextRequest) {
   const invoice_number = (sp.get("invoice_number") || "").trim();
   const startAt = sp.get("startAt");
   const endAt = sp.get("endAt");
+  const methode = sp.get("methode");
 
   const where: Prisma.neo_donation_publicWhereInput = {
     AND: [
@@ -82,8 +83,33 @@ function parsePagination(req: NextRequest) {
       name ? { name: { contains: name } } : {},
       phone_number ? { phone_number: { contains: phone_number } } : {},
       invoice_number ? { invoice_number: { contains: invoice_number } } : {},
-      startAt ? { created_at: { gte: new Date(startAt) } } : {},
-      endAt ? { created_at: { lte: new Date(endAt) } } : {},
+      startAt
+        ? {
+            OR: [
+              { created_at: { gte: new Date(startAt) } },
+              { created_at: null },
+            ],
+          }
+        : {},
+      endAt
+        ? {
+            OR: [
+              { created_at: { lte: new Date(endAt) } },
+              { created_at: null },
+            ],
+          }
+        : {},
+      methode === "midtrans"
+        ? {
+            payment_link: {
+              contains: "http",
+            },
+          }
+        : methode === "manual"
+          ? {
+              OR: [{ payment_link: null }, { payment_link: "" }],
+            }
+          : {},
     ],
   };
 
@@ -133,13 +159,13 @@ export async function GET(req: NextRequest) {
         },
         data: donations,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/donations error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Donations" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -188,7 +214,7 @@ export const POST = wrap(async (req: Request) => {
         message: result.message,
         redirect_url: result.redirect_url,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -199,6 +225,6 @@ export const POST = wrap(async (req: Request) => {
       token: result.token,
     },
     result.message,
-    201
+    201,
   );
 });

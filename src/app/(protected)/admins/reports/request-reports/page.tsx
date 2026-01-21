@@ -15,17 +15,19 @@ const DonationReportPage = () => {
   const searchParams = useSearchParams();
 
   const [startDate, setStartDate] = useState(
-    searchParams.get("startAt") || dayjs().startOf("month").format("YYYY-MM-DD")
+    searchParams.get("startAt") ||
+      dayjs().startOf("month").format("YYYY-MM-DD"),
   );
   const [endDate, setEndDate] = useState(
-    searchParams.get("endAt") || dayjs().endOf("month").format("YYYY-MM-DD")
+    searchParams.get("endAt") || dayjs().endOf("month").format("YYYY-MM-DD"),
   );
   const [invoiceNumber, setInvoiceNumber] = useState(
-    searchParams.get("invoice_number") || ""
+    searchParams.get("invoice_number") || "",
   );
   const [name, setName] = useState(searchParams.get("name") || "");
   const [phone, setPhone] = useState(searchParams.get("phone_number") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "");
+  const [methode, setMethode] = useState(searchParams.get("methode") || "");
 
   const { data, isLoading, isError } = useDonations();
 
@@ -65,6 +67,9 @@ const DonationReportPage = () => {
     if (status) sp.set("status", status);
     else sp.delete("status");
 
+    if (methode) sp.set("methode", methode);
+    else sp.delete("methode");
+
     sp.set("page", "1");
     router.replace(`${pathname}?${sp.toString()}`);
   };
@@ -78,6 +83,7 @@ const DonationReportPage = () => {
     setName("");
     setPhone("");
     setStatus("");
+    setMethode("");
 
     const sp = new URLSearchParams();
     sp.set("startAt", start);
@@ -134,6 +140,20 @@ const DonationReportPage = () => {
               <option value="settled">Settled</option>
               <option value="expired">Expired</option>
               <option value="failed">Failed</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">
+              Metode Donasi
+            </label>
+            <select
+              value={methode}
+              onChange={(e) => setMethode(e.target.value)}
+              className="block h-10 w-full px-3 rounded-md border-0 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 outline-none"
+            >
+              <option value="">Semua Metode</option>
+              <option value="manual">Manual</option>
+              <option value="midtrans">Midtrans</option>
             </select>
           </div>
           <div className="flex gap-2 lg:col-span-2">

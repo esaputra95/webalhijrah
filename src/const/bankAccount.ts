@@ -1,7 +1,7 @@
 export const bankAccount = [
   {
     id: 1,
-    label: "Pembangunan Masjid",
+    label: "Pembangunan",
     type: "alhijrah",
     qris: true,
     urlQris:
@@ -32,7 +32,7 @@ export const bankAccount = [
   },
   {
     id: 2,
-    label: "Ashiil TV",
+    label: "Operasional Ashiil TV",
     qris: false,
     accounts: [
       {
@@ -69,7 +69,7 @@ export const bankAccount = [
   },
   {
     id: 4,
-    label: "Operasional Santri",
+    label: "Operasional Kesantrian",
     qris: false,
     urlQris: "",
     accounts: [
@@ -95,6 +95,36 @@ export const bankAccount = [
         number: "2021155155",
         labelNumber: "2021-1551-55",
         owner: "ASHIILTV PEDULI",
+      },
+    ],
+  },
+  {
+    id: 6,
+    label: "Thaharoh - Penyucian Harta",
+    qris: false,
+    urlQris: "",
+    accounts: [
+      {
+        name: "Bank Syariah Indonesia",
+        code: "BSI",
+        number: "7557555007",
+        labelNumber: "755-755-5007",
+        owner: "Yayasan Ashiil Thaharoh",
+      },
+    ],
+  },
+  {
+    id: 7,
+    label: "Program Ramadhan",
+    qris: false,
+    urlQris: "",
+    accounts: [
+      {
+        name: "Bank Syariah Indonesia",
+        code: "BSI",
+        number: "8175506064",
+        labelNumber: "8175-5060-64",
+        owner: "Yayasan Ashiil Cahaya Tauhid",
       },
     ],
   },
