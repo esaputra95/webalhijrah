@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { setResponse } from "@/lib/http";
 import { wrap } from "@/lib/errorApi";
 import { DonationCreateSchema } from "@/types/donationSchema";
+import dayjs from "dayjs";
 
 // ====== Allowed Sort Fields ======
 const ALLOWED_SORT: Record<string, true> = {
@@ -86,7 +87,7 @@ function parsePagination(req: NextRequest) {
       startAt
         ? {
             OR: [
-              { created_at: { gte: new Date(startAt) } },
+              { created_at: { gte: dayjs(startAt).startOf("day").toDate() } },
               { created_at: null },
             ],
           }
@@ -94,7 +95,7 @@ function parsePagination(req: NextRequest) {
       endAt
         ? {
             OR: [
-              { created_at: { lte: new Date(endAt) } },
+              { created_at: { lte: dayjs(endAt).endOf("day").toDate() } },
               { created_at: null },
             ],
           }
