@@ -90,13 +90,13 @@ const Pagination: React.FC<PaginationProps> = ({
             className={cn(
               baseBtn,
               page === currentPage &&
-                "bg-blue-700 border-blue-700 text-white font-semibold"
+                "bg-blue-700 border-blue-700 text-white font-semibold",
             )}
             onClick={() => onPageChange(page)}
           >
             {page}
           </button>
-        )
+        ),
       )}
 
       <button
@@ -164,7 +164,7 @@ export function Table<T extends { id?: string | number }>({
   // daftar key kolom (stabil untuk dependency)
   const columnKeys = useMemo(
     () => columns.map((c) => String(c.accessor)),
-    [columns]
+    [columns],
   );
 
   // helper: build query baru & navigate — hanya jika berubah
@@ -177,24 +177,24 @@ export function Table<T extends { id?: string | number }>({
       if (next === curr) return; // guard: hindari replace jika sama
       router.replace(`${pathname}${next ? `?${next}` : ""}`, { scroll: false });
     },
-    [router, pathname, searchParams]
+    [router, pathname, searchParams],
   );
 
   const currentPage = useMemo(
     () => parseInt(searchParams.get("page") || "1", 10),
-    [searchParams]
+    [searchParams],
   );
 
   const currentLimit = useMemo(
     () => parseInt(searchParams.get("limit") || "10", 10),
-    [searchParams]
+    [searchParams],
   );
 
   const sortBy = searchParams.get("sortby") || "";
   const sortDir = searchParams.get("sort") || "";
 
   const [lastFocusedFilter, setLastFocusedFilter] = useState<string | null>(
-    null
+    null,
   );
 
   // init filter dari URL
@@ -284,14 +284,14 @@ export function Table<T extends { id?: string | number }>({
       return cn(
         "sticky left-0 bg-white",
         isHeader ? "z-[3]" : "z-[2]",
-        "after:absolute after:inset-y-0 after:-right-[1px] after:w-[1px] after:bg-gray-200"
+        "after:absolute after:inset-y-0 after:-right-[1px] after:w-[1px] after:bg-gray-200",
       );
     }
     if (sticky === "right") {
       return cn(
         "sticky right-0 bg-white",
         isHeader ? "z-[3]" : "z-[2]",
-        "before:pointer-events-none before:absolute before:inset-y-0 before:-left-2 before:w-2 before:bg-gradient-to-l before:from-gray-200/60 before:to-transparent"
+        "before:pointer-events-none before:absolute before:inset-y-0 before:-left-2 before:w-2 before:bg-gradient-to-l before:from-gray-200/60 before:to-transparent",
       );
     }
     return "";
@@ -305,7 +305,7 @@ export function Table<T extends { id?: string | number }>({
             {renderDetail && (
               <th
                 className={cn(
-                  "px-2 py-3 whitespace-wrap"
+                  "px-2 py-3 whitespace-wrap",
                   // no sticky for detail column
                 )}
                 style={{ width: detailColumnWidth }}
@@ -320,7 +320,7 @@ export function Table<T extends { id?: string | number }>({
                   className={cn(
                     "px-2 py-3 cursor-pointer select-none whitespace-wrap",
                     getStickyClass(col.sticky, true),
-                    col.headerClassName
+                    col.headerClassName,
                   )}
                   onClick={() =>
                     col.sortable && toggleSort(col.accessor as string)
@@ -346,7 +346,7 @@ export function Table<T extends { id?: string | number }>({
             {renderDetail && (
               <th
                 className={cn(
-                  "px-2 py-2 whitespace-wrap"
+                  "px-2 py-2 whitespace-wrap",
                   // no sticky for detail column
                 )}
                 style={{ width: detailColumnWidth }}
@@ -360,7 +360,7 @@ export function Table<T extends { id?: string | number }>({
                 className={cn(
                   "px-2 py-2 cursor-pointer select-none whitespace-wrap",
                   getStickyClass(col.sticky, true),
-                  col.headerClassName
+                  col.headerClassName,
                 )}
               >
                 {!col.filterable ? (
@@ -435,7 +435,7 @@ export function Table<T extends { id?: string | number }>({
                     className={cn(
                       "px-2 py-3",
                       getStickyClass(col.sticky, false),
-                      col.className
+                      col.className,
                     )}
                   >
                     <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
@@ -478,7 +478,7 @@ export function Table<T extends { id?: string | number }>({
                           <HiChevronDown
                             className={cn(
                               "w-4 h-4 transition-transform",
-                              isOpen && "rotate-180"
+                              isOpen && "rotate-180",
                             )}
                           />
                         </button>
@@ -490,7 +490,7 @@ export function Table<T extends { id?: string | number }>({
                         className={cn(
                           "px-2 py-2 whitespace-wrap align-top",
                           getStickyClass(col.sticky, false),
-                          col.className
+                          col.className,
                         )}
                       >
                         {col.render
@@ -541,7 +541,7 @@ export function Table<T extends { id?: string | number }>({
               onChange={(e) => handleLimitChange(Number(e.target.value))}
               className="px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 outline-none h-8"
             >
-              {[10, 20, 50, 100].map((opt) => (
+              {[10, 20, 50, 100, 1000, 10000].map((opt) => (
                 <option key={opt} value={opt}>
                   {opt}
                 </option>
