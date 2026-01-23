@@ -121,8 +121,8 @@ export default function PublicNavbar({
                   active
                     ? "px-5 py-2 rounded-full font-bold bg-brand-gold text-brand-brown shadow-sm"
                     : isScrolled || !withScrolled
-                    ? "text-gray-700 hover:text-brand-gold"
-                    : "text-white hover:text-brand-gold"
+                      ? "text-gray-700 hover:text-brand-gold"
+                      : "text-white hover:text-brand-gold"
                 }`}
               >
                 {link.name}
@@ -136,8 +136,8 @@ export default function PublicNavbar({
                 pathname === "/admins"
                   ? "text-brand-gold font-bold"
                   : isScrolled || !withScrolled
-                  ? "text-gray-700 hover:text-brand-gold"
-                  : "text-white hover:text-brand-gold"
+                    ? "text-gray-700 hover:text-brand-gold"
+                    : "text-white hover:text-brand-gold"
               }`}
             >
               Login

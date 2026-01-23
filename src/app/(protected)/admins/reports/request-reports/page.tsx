@@ -14,6 +14,9 @@ const DonationReportPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const [dateFilter, setDateFilter] = useState(
+    searchParams.get("dateFilter") || "custom",
+  );
   const [startDate, setStartDate] = useState(
     searchParams.get("startAt") ||
       dayjs().startOf("month").format("YYYY-MM-DD"),
@@ -28,6 +31,27 @@ const DonationReportPage = () => {
   const [phone, setPhone] = useState(searchParams.get("phone_number") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "");
   const [methode, setMethode] = useState(searchParams.get("methode") || "");
+
+  useEffect(() => {
+    let start = startDate;
+    let end = endDate;
+
+    if (dateFilter === "harian") {
+      start = dayjs().format("YYYY-MM-DD");
+      end = dayjs().format("YYYY-MM-DD");
+    } else if (dateFilter === "mingguan") {
+      start = dayjs().startOf("week").format("YYYY-MM-DD");
+      end = dayjs().endOf("week").format("YYYY-MM-DD");
+    } else if (dateFilter === "bulanan") {
+      start = dayjs().startOf("month").format("YYYY-MM-DD");
+      end = dayjs().endOf("month").format("YYYY-MM-DD");
+    }
+
+    if (dateFilter !== "custom") {
+      setStartDate(start);
+      setEndDate(end);
+    }
+  }, [dateFilter]);
 
   const { data, isLoading, isError } = useDonations();
 
@@ -49,6 +73,9 @@ const DonationReportPage = () => {
 
   const handleFilter = () => {
     const sp = new URLSearchParams(searchParams.toString());
+    if (dateFilter) sp.set("dateFilter", dateFilter);
+    else sp.delete("dateFilter");
+
     if (startDate) sp.set("startAt", startDate);
     else sp.delete("startAt");
 
@@ -77,6 +104,7 @@ const DonationReportPage = () => {
   const handleReset = () => {
     const start = dayjs().startOf("month").format("YYYY-MM-DD");
     const end = dayjs().endOf("month").format("YYYY-MM-DD");
+    setDateFilter("custom");
     setStartDate(start);
     setEndDate(end);
     setInvoiceNumber("");
@@ -86,6 +114,7 @@ const DonationReportPage = () => {
     setMethode("");
 
     const sp = new URLSearchParams();
+    sp.set("dateFilter", "custom");
     sp.set("startAt", start);
     sp.set("endAt", end);
     sp.set("page", "1");
@@ -98,18 +127,38 @@ const DonationReportPage = () => {
 
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
-          <TextInput
-            label="Tanggal Mulai"
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <TextInput
-            label="Tanggal Selesai"
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">
+              Tipe Filter Waktu
+            </label>
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="block h-10 w-full px-3 rounded-md border-0 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 outline-none"
+            >
+              <option value="harian">Harian</option>
+              <option value="mingguan">Mingguan</option>
+              <option value="bulanan">Bulanan</option>
+              <option value="custom">Rentang Tanggal</option>
+            </select>
+          </div>
+
+          {dateFilter === "custom" && (
+            <>
+              <TextInput
+                label="Tanggal Mulai"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              <TextInput
+                label="Tanggal Selesai"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </>
+          )}
           <TextInput
             label="No. Invoice"
             placeholder="Cari No. Invoice"
@@ -173,17 +222,27 @@ const DonationReportPage = () => {
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6 border-l-4 border-blue-600">
-        <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-          Total Donasi
-        </h2>
-        <p className="text-2xl font-bold text-gray-900 mt-1">
-          {new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-          }).format(data?.metaData?.total_amount || 0)}
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+            Total Donasi
+          </h2>
+          <p className="text-2xl font-bold text-gray-900 mt-1">
+            {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+            }).format(data?.metaData?.total_amount || 0)}
+          </p>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-600">
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+            Total Orang Berdonasi
+          </h2>
+          <p className="text-2xl font-bold text-gray-900 mt-1">
+            {new Intl.NumberFormat("id-ID").format(data?.metaData?.total || 0)}
+          </p>
+        </div>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg py-2">

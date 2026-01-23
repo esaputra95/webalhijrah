@@ -83,7 +83,7 @@ const DonationReportTable: FC<Props> = ({ data, isLoading, totalPages }) => {
           row.created_at && dayjs(row.created_at).format("DD/MM/YYYY HH:mm:ss"),
       },
     ],
-    []
+    [],
   );
 
   const fetchAllData = async () => {
@@ -106,7 +106,9 @@ const DonationReportTable: FC<Props> = ({ data, isLoading, totalPages }) => {
   const exportExcel = async () => {
     const dataToExport = await fetchAllData();
     if (!dataToExport || dataToExport.length === 0) return;
-    const ws = XLSX.utils.json_to_sheet(
+
+    // Prepare rows with flexible type for summary rows
+    const rows: Record<string, string | number | null | undefined>[] =
       dataToExport.map((item) => ({
         "No. Invoice": item.invoice_number,
         Nama: item.name,
@@ -116,13 +118,49 @@ const DonationReportTable: FC<Props> = ({ data, isLoading, totalPages }) => {
         "Waktu Donasi": item.created_at
           ? dayjs(item.created_at).format("DD/MM/YYYY HH:mm:ss")
           : "-",
-      }))
+      }));
+
+    // Calculate totals
+    const totalAmount = dataToExport.reduce(
+      (sum, item) => sum + Number(item.amount || 0),
+      0,
     );
+    const totalQuantity = dataToExport.length;
+
+    // Add empty row for spacing
+    rows.push({
+      "No. Invoice": "",
+      Nama: "",
+      "No. Telepon": "",
+      Jumlah: undefined,
+      Status: "",
+      "Waktu Donasi": "",
+    });
+
+    // Add totals rows
+    rows.push({
+      "No. Invoice": "TOTAL DONASI",
+      Nama: "",
+      "No. Telepon": "",
+      Jumlah: totalAmount,
+      Status: "",
+      "Waktu Donasi": "",
+    });
+    rows.push({
+      "No. Invoice": "TOTAL QUANTITY",
+      Nama: "",
+      "No. Telepon": "",
+      Jumlah: totalQuantity,
+      Status: "",
+      "Waktu Donasi": "",
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Laporan Donasi");
     XLSX.writeFile(
       wb,
-      `Laporan_Donasi_${dayjs().format("YYYYMMDD_HHmmss")}.xlsx`
+      `Laporan_Donasi_${dayjs().format("YYYYMMDD_HHmmss")}.xlsx`,
     );
   };
 
