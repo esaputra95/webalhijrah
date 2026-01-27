@@ -128,4 +128,19 @@ export const bankAccount = [
       },
     ],
   },
+  {
+    id: 8,
+    label: "Operasiona Dakwah Markaz",
+    qris: false,
+    urlQris: "",
+    accounts: [
+      {
+        name: "Bank Syariah Indonesia",
+        code: "BSI",
+        number: "1005000552",
+        labelNumber: "100-5000-552",
+        owner: "Donasi Dakwah Markaz",
+      },
+    ],
+  },
 ];
