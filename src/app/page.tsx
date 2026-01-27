@@ -16,6 +16,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useGroupedSettings } from "@/hooks/masters/useSettings";
+import PrayerTimes from "@/components/layouts/PrayerTimes";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -76,6 +77,9 @@ const LandingPage = () => {
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       {/* Navbar */}
       <PublicNavbar />
+      <div className="absolute text-xs z-50 top-20 left-4 lg:left-24 text-white">
+        <PrayerTimes />
+      </div>
 
       {/* Hero Section */}
       <Hero />

@@ -6,6 +6,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import PrayerTimes from "./PrayerTimes";
 
 interface NavLink {
   name: string;
@@ -206,6 +207,17 @@ export default function PublicNavbar({
           </motion.div>
         )}
       </AnimatePresence>
+      {/* <div
+        className={`bg-brand-brown/10 backdrop-blur-sm border-b border-gray-100/50 py-1 transition-all duration-300 ${
+          isScrolled
+            ? "h-0 py-0 opacity-0 overflow-hidden"
+            : "h-auto opacity-100"
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <PrayerTimes />
+        </div>
+      </div> */}
     </nav>
   );
 }

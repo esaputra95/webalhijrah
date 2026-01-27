@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { useGroupedSettings } from "@/hooks/masters/useSettings";
+import PrayerTimes from "../layouts/PrayerTimes";
 
 // Animation Variants
 const fadeInUp: Variants = {
