@@ -12,7 +12,6 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { useGroupedSettings } from "@/hooks/masters/useSettings";
-import PrayerTimes from "../layouts/PrayerTimes";
 
 // Animation Variants
 const fadeInUp: Variants = {
@@ -84,11 +83,10 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
         animate="visible"
         className="container mx-auto px-4 relative z-10 text-center text-white space-y-6 pointer-events-none"
       >
-        <motion.div variants={fadeInUp} className="inline-block">
-          <div className="px-4 py-1.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-sm font-medium tracking-wide pointer-events-auto">
-            Pusat Halaqoh Ilmiah Islam
-          </div>
-        </motion.div>
+        <motion.div
+          variants={fadeInUp}
+          className="inline-block mt-12"
+        ></motion.div>
 
         <motion.h1
           variants={fadeInUp}

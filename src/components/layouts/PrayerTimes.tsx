@@ -57,13 +57,58 @@ export default function PrayerTimes() {
     { name: "Isya", time: data.jadwal.isya },
   ];
 
+  const getHijriDate = () => {
+    const date = new Date();
+    try {
+      // Try to get Hijri date using Intl
+      const hijriMonths = [
+        "Muharram",
+        "Safar",
+        "Rabiul Awal",
+        "Rabiul Akhir",
+        "Jumadil Awal",
+        "Jumadil Akhir",
+        "Rajab",
+        "Sya'ban",
+        "Ramadhan",
+        "Syawal",
+        "Dzulqa'dah",
+        "Dzulhijjah",
+      ];
+
+      // Use English locale to get reliable numeric parts for Islamic calendar
+      const formatter = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      });
+
+      const parts = formatter.formatToParts(date);
+      const day = parts.find((p) => p.type === "day")?.value;
+      const monthPart = parts.find((p) => p.type === "month")?.value;
+      const year = parts.find((p) => p.type === "year")?.value;
+
+      if (day && monthPart && year) {
+        const monthIndex = parseInt(monthPart) - 1;
+        return `${day} ${hijriMonths[monthIndex]} ${year}`;
+      }
+
+      return dayjs().format("DD/MM/YYYY");
+    } catch (error) {
+      console.error("Hijri formatting error:", error);
+      return dayjs().format("DD/MM/YYYY");
+    }
+  };
+
+  const hijriDate = getHijriDate();
+
   return (
     <div className="flex items-center gap-4 overflow-x-auto no-scrollbar whitespace-nowrap py-1">
-      {/* <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <span className="text-xs font-bold uppercase text-brand-gold">
-          Pekanbaru:
+          {hijriDate}
         </span>
-      </div> */}
+      </div>
       <div className="flex items-center gap-4">
         {prayers.map((prayer) => (
           <div
