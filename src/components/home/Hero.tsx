@@ -43,7 +43,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
   return (
     <section
       id="hero"
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Swiper Background Slider */}
       <div className="absolute inset-0 z-0 select-none">
@@ -90,7 +90,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
 
         <motion.h1
           variants={fadeInUp}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl mx-auto"
+          className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight max-w-5xl mx-auto [@media(orientation:landscape)_and_(max-width:1023px)]:pt-8"
           style={{
             textShadow:
               "0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.5)",
@@ -118,7 +118,7 @@ const Hero = ({ linkDonasi }: { linkDonasi?: { donasi: string } }) => {
         </motion.p>
         <motion.div
           variants={fadeInUp}
-          className="flex flex-col sm:flex-row gap-4 justify-center pt-8 pointer-events-auto"
+          className="flex flex-col sm:flex-row gap-4 justify-center pt-8 pointer-events-auto [@media(orientation:landscape)_and_(max-width:1023px)]:pb-8"
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
