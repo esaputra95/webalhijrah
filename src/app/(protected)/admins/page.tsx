@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                         {donation.invoice_number} •{" "}
                         {donation.created_at
                           ? dayjs(donation.created_at).format(
-                              "DD MMM YYYY, HH:mm"
+                              "DD MMM YYYY, HH:mm",
                             )
                           : "-"}
                       </p>
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
                         "text-[10px] px-2 py-0.5 rounded-full font-bold uppercase",
                         donation.status === "settled"
                           ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
+                          : "bg-amber-100 text-amber-700",
                       )}
                     >
                       {donation.status}
@@ -235,7 +235,7 @@ const AdminDashboard = () => {
                       "text-[10px] px-2 py-0.5 rounded-full font-bold uppercase",
                       article.post_status === "publish"
                         ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-700"
+                        : "bg-gray-100 text-gray-700",
                     )}
                   >
                     {article.post_status}

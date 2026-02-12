@@ -63,7 +63,7 @@ export const GET = wrap(
     }
 
     return setResponse(post, "Detail Post");
-  }
+  },
 );
 
 // ====== PUT /api/posts/[id] ======
@@ -114,7 +114,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "Post berhasil diupdate");
-  }
+  },
 );
 
 // ====== DELETE /api/posts/[id] ======
@@ -138,5 +138,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(deleted, "Post berhasil dihapus");
-  }
+  },
 );

@@ -43,7 +43,7 @@ export const postService = {
               title: true,
             },
           },
-          program_categories: {
+          program_category: {
             select: {
               title: true,
             },
@@ -68,8 +68,8 @@ export const postService = {
               id: String(post.post_categories.id),
             }
           : undefined,
-        program: post.program_categories
-          ? { ...post.program_categories }
+        program: post.program_category
+          ? { ...post.program_category }
           : undefined,
         created_at: post.created_at?.toISOString() || new Date().toISOString(),
         updated_at: post.updated_at?.toISOString() || new Date().toISOString(),

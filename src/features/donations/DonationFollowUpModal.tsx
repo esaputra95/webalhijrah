@@ -26,7 +26,7 @@ const DonationFollowUpModal: FC<Props> = ({ isOpen, onClose, donation }) => {
         minimumFractionDigits: 0,
       }).format(donation.amount);
 
-      const template = `Assalamu'alaikum Wr. Wb.
+      const template = `Assalam'alaikum warahmatullahi wabarakatuh.
 Terima kasih Bapak/Ibu ${donation.name}, donasi Anda sebesar ${amountFormatted} dengan No. Invoice ${donation.invoice_number} telah kami terima.
 
 Jazakumullah Khairan atas dukungannya. Semoga menjadi amal jariyah yang terus mengalir pahalanya. Amin.`;

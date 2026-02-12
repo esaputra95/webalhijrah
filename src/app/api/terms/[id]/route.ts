@@ -32,7 +32,7 @@ export const GET = wrap(
     }
 
     return setResponse(term, "Detail Term");
-  }
+  },
 );
 
 // ====== PUT /api/terms/[id] ======
@@ -65,7 +65,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "Term berhasil diupdate");
-  }
+  },
 );
 
 // ====== DELETE /api/terms/[id] ======
@@ -89,5 +89,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(deleted, "Term berhasil dihapus");
-  }
+  },
 );

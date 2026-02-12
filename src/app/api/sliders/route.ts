@@ -38,13 +38,13 @@ export async function GET(req: NextRequest) {
         message: "Data Sliders berhasil diambil",
         data: sliders,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/sliders error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Sliders" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

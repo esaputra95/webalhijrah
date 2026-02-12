@@ -1,12 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { HiMenu, HiX } from "react-icons/hi";
+import { useState, useEffect, useRef } from "react";
+import {
+  HiMenu,
+  HiX,
+  HiUserCircle,
+  HiLogout,
+  HiViewGrid,
+  HiBriefcase,
+} from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import PrayerTimes from "./PrayerTimes";
+import { useSession, signOut } from "next-auth/react";
 
 interface NavLink {
   name: string;
@@ -17,6 +24,7 @@ const navLinks: NavLink[] = [
   { name: "Beranda", href: "/" },
   { name: "Tentang", href: "/about" },
   { name: "Program", href: "/programs" },
+  { name: "Halaqoh", href: "/halaqoh" },
   { name: "Artikel", href: "/articles" },
   { name: "Live Ashiil TV", href: "/live-ashiil" },
   { name: "Donasi", href: "/donasi" },
@@ -27,10 +35,26 @@ export default function PublicNavbar({
 }: {
   withScrolled?: boolean;
 }) {
+  const { data: session, status } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const pathname = usePathname();
   const [hash, setHash] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const updateHash = () => {
@@ -51,12 +75,10 @@ export default function PublicNavbar({
   const isActive = (href: string) => {
     const currentHash = hash;
 
-    // Beranda ("/") → aktif hanya jika pathname "/" dan tidak ada hash
     if (href === "/") {
       return pathname === "/" && currentHash === "";
     }
 
-    // Hash sections ("/#about")
     if (href.includes("#")) {
       const [path, section] = href.split("#");
       const currentPath = pathname === "/" ? "" : pathname;
@@ -73,7 +95,7 @@ export default function PublicNavbar({
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    handleScroll(); // Sync immediately on mount
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -130,31 +152,121 @@ export default function PublicNavbar({
               </Link>
             );
           })}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
-              href="/admins?callbackUrl=/admins"
-              className={`font-medium transition-colors ${
-                pathname === "/admins"
-                  ? "text-brand-gold font-bold"
-                  : isScrolled || !withScrolled
-                    ? "text-gray-700 hover:text-brand-gold"
-                    : "text-white hover:text-brand-gold"
-              }`}
-            >
-              Login
-            </Link>
-          </motion.div>
+
+          {status === "authenticated" ? (
+            <div className="relative" ref={dropdownRef}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${
+                  isScrolled || !withScrolled
+                    ? "border-gray-200 hover:bg-gray-50"
+                    : "border-white/30 hover:bg-white/10"
+                }`}
+              >
+                {session.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt="User"
+                    width={28}
+                    height={28}
+                    className="rounded-full overflow-hidden border border-brand-gold"
+                  />
+                ) : (
+                  <HiUserCircle className="text-2xl" />
+                )}
+                <span className="text-sm font-semibold truncate max-w-[100px]">
+                  {session.user?.name}
+                </span>
+              </motion.button>
+
+              <AnimatePresence>
+                {profileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden text-gray-800"
+                  >
+                    <div className="p-4 bg-gray-50 border-b border-gray-100">
+                      <p className="text-sm font-bold text-gray-900 truncate">
+                        {session.user?.name}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                    <div className="p-2">
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
+                        onClick={() => setProfileMenuOpen(false)}
+                      >
+                        <HiViewGrid className="text-lg" />
+                        <span>Dashboard Saya</span>
+                      </Link>
+
+                      {String(session.user?.role).toUpperCase() === "ADMIN" && (
+                        <Link
+                          href="/admins"
+                          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
+                          onClick={() => setProfileMenuOpen(false)}
+                        >
+                          <HiBriefcase className="text-lg" />
+                          <span>Admin Panel</span>
+                        </Link>
+                      )}
+
+                      <button
+                        onClick={() => signOut()}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-red-600 hover:bg-red-50 transition-colors mt-1"
+                      >
+                        <HiLogout className="text-lg" />
+                        <span>Keluar</span>
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/login"
+                className={`font-medium transition-colors ${
+                  pathname === "/login"
+                    ? "text-brand-gold font-bold"
+                    : isScrolled || !withScrolled
+                      ? "text-gray-700 hover:text-brand-gold"
+                      : "text-white hover:text-brand-gold"
+                }`}
+              >
+                Login
+              </Link>
+            </motion.div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className={`md:hidden text-2xl transition-colors ${
-            isScrolled || !withScrolled ? "text-gray-800" : "text-white"
-          }`}
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <HiX /> : <HiMenu />}
-        </button>
+        <div className="flex items-center gap-4 md:hidden">
+          {status === "authenticated" && (
+            <Link
+              href="/dashboard"
+              className={`text-2xl ${isScrolled || !withScrolled ? "text-gray-800" : "text-white"}`}
+            >
+              <HiUserCircle />
+            </Link>
+          )}
+          <button
+            className={`text-2xl transition-colors ${
+              isScrolled || !withScrolled ? "text-gray-800" : "text-white"
+            }`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <HiX /> : <HiMenu />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -192,32 +304,39 @@ export default function PublicNavbar({
                   </Link>
                 );
               })}
-              <Link
-                href="/login"
-                className={`w-4/5 text-center px-6 py-3 rounded-full font-bold transition-all ${
-                  pathname === "/login"
-                    ? "bg-brand-gold text-brand-brown"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Login
-              </Link>
+              {status === "authenticated" ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="w-4/5 text-center px-6 py-3 rounded-full font-bold bg-brand-gold/10 text-brand-gold transition-all"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Dashboard Saya
+                  </Link>
+                  <button
+                    onClick={() => signOut()}
+                    className="w-4/5 text-center px-6 py-3 rounded-full font-bold bg-red-50 text-red-600 transition-all"
+                  >
+                    Keluar
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className={`w-4/5 text-center px-6 py-3 rounded-full font-bold transition-all ${
+                    pathname === "/login"
+                      ? "bg-brand-gold text-brand-brown"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* <div
-        className={`bg-brand-brown/10 backdrop-blur-sm border-b border-gray-100/50 py-1 transition-all duration-300 ${
-          isScrolled
-            ? "h-0 py-0 opacity-0 overflow-hidden"
-            : "h-auto opacity-100"
-        }`}
-      >
-        <div className="container mx-auto px-4">
-          <PrayerTimes />
-        </div>
-      </div> */}
     </nav>
   );
 }

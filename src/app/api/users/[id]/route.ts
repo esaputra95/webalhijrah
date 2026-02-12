@@ -39,7 +39,7 @@ export const GET = wrap(
     }
 
     return setResponse(user, "Detail User");
-  }
+  },
 );
 
 // PUT /api/users/[id]
@@ -84,7 +84,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "User diupdate");
-  }
+  },
 );
 
 // DELETE /api/users/[id]
@@ -108,5 +108,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(deleted, "User dihapus");
-  }
+  },
 );

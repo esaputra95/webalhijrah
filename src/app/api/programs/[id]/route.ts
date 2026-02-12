@@ -7,7 +7,7 @@ import { ProgramUpdateSchema } from "@/types/programSchema";
 // ====== GET /api/programs/[id] ======
 export async function GET(
   _req: NextRequest,
-  props: { params: Promise<{ id: string }> }
+  props: { params: Promise<{ id: string }> },
 ) {
   try {
     const params = await props.params;
@@ -15,7 +15,7 @@ export async function GET(
     if (isNaN(id)) {
       return NextResponse.json(
         { status: false, message: "ID Program tidak valid" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function GET(
     if (!program) {
       return NextResponse.json(
         { status: false, message: "Program tidak ditemukan" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -36,13 +36,13 @@ export async function GET(
         message: "Data Program berhasil diambil",
         data: program,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/programs/[id] error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Program" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -80,14 +80,14 @@ export const PUT = wrap(
         date: parsed.date
           ? new Date(parsed.date)
           : parsed.date === null
-          ? null
-          : undefined,
+            ? null
+            : undefined,
         updated_at: new Date(),
       },
     });
 
     return setResponse(updated, "Program berhasil diupdate", 200);
-  }
+  },
 );
 
 // ====== DELETE /api/programs/[id] ======
@@ -112,5 +112,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(null, "Program berhasil dihapus", 200);
-  }
+  },
 );

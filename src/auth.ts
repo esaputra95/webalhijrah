@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
@@ -7,6 +8,10 @@ import type { NextAuthConfig } from "next-auth";
 export const authConfig: NextAuthConfig = {
   trustHost: true,
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       name: "Credentials",
       credentials: {
@@ -32,7 +37,7 @@ export const authConfig: NextAuthConfig = {
           },
         });
 
-        if (!dbUser) {
+        if (!dbUser || !dbUser.password) {
           return null;
         }
 
@@ -46,7 +51,7 @@ export const authConfig: NextAuthConfig = {
           id: String(dbUser.id),
           name: dbUser.name,
           email: dbUser.email,
-          role: dbUser.role || "USER",
+          role: String(dbUser.role || "USER").toUpperCase(),
         };
       },
     }),
@@ -55,17 +60,57 @@ export const authConfig: NextAuthConfig = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        if (!user.email) return false;
+
+        const existingUser = await prisma.users.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser) {
+          const newUser = await prisma.users.create({
+            data: {
+              email: user.email,
+              name: user.name || user.email.split("@")[0],
+              password: "", // Google users don't have local password
+              role: "USER",
+            },
+          });
+          user.id = String(newUser.id);
+          user.role = String(newUser.role || "USER").toUpperCase();
+        } else {
+          user.id = String(existingUser.id);
+          user.role = String(existingUser.role || "USER").toUpperCase();
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id as string;
-        token.role = user.role as string;
+        // If it's a credentials login, use the id from user object
+        // If it's an OAuth login, we should have the DB id from the signIn callback already
+        // But to be super safe, let's ensure we have the numeric ID
+        if (account?.provider === "google") {
+          const dbUser = await prisma.users.findUnique({
+            where: { email: user.email as string },
+            select: { id: true, role: true },
+          });
+          if (dbUser) {
+            token.id = String(dbUser.id);
+            token.role = String(dbUser.role || "USER").toUpperCase();
+          }
+        } else {
+          token.id = user.id as string;
+          token.role = String(user.role as string).toUpperCase();
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.id = String(token.id);
+        session.user.role = String(token.role);
       }
       return session;
     },
@@ -74,7 +119,7 @@ export const authConfig: NextAuthConfig = {
 
       // Protect /admins routes
       if (pathname.startsWith("/admins")) {
-        return !!auth?.user;
+        return auth?.user?.role === "ADMIN";
       }
 
       return true;

@@ -11,7 +11,12 @@ export class AppError extends Error {
 
   constructor(
     message: string,
-    opts?: { code?: string; field?: string; status?: number; details?: unknown }
+    opts?: {
+      code?: string;
+      field?: string;
+      status?: number;
+      details?: unknown;
+    },
   ) {
     super(message);
     this.name = "AppError";
@@ -81,7 +86,7 @@ export function toErrorResponse(err: unknown) {
 
   // Prisma Validation
   if (err instanceof Prisma.PrismaClientValidationError) {
-    return fail("Input tidak valid untuk database", {
+    return fail("Input tidak valid untuk database: " + err.message, {
       code: "PRISMA_VALIDATION",
       status: 400,
     });
@@ -98,24 +103,24 @@ export function toErrorResponse(err: unknown) {
 // Overload for handlers without context
 export function wrap(
   handler: (
-    req: NextRequest
-  ) => Response | NextResponse | Promise<Response | NextResponse>
+    req: NextRequest,
+  ) => Response | NextResponse | Promise<Response | NextResponse>,
 ): (req: NextRequest) => Promise<Response | NextResponse>;
 
 // Overload for handlers with context
 export function wrap<TCtx>(
   handler: (
     req: NextRequest,
-    ctx: TCtx
-  ) => Response | NextResponse | Promise<Response | NextResponse>
+    ctx: TCtx,
+  ) => Response | NextResponse | Promise<Response | NextResponse>,
 ): (req: NextRequest, ctx: TCtx) => Promise<Response | NextResponse>;
 
 // Implementation
 export function wrap<TCtx = unknown>(
   handler: (
     req: NextRequest,
-    ctx?: TCtx
-  ) => Response | NextResponse | Promise<Response | NextResponse>
+    ctx?: TCtx,
+  ) => Response | NextResponse | Promise<Response | NextResponse>,
 ) {
   return async (req: NextRequest, ctx?: TCtx) => {
     try {

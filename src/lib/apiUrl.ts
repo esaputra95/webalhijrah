@@ -16,6 +16,14 @@ const apiUrl = {
   programs: "/api/programs",
   sliders: "/api/sliders",
   settings: "/api/settings",
+  halaqohCategories: "/api/halaqoh/categories",
+  halaqohMentors: "/api/halaqoh/mentors",
+  halaqohClasses: "/api/halaqoh/classes",
+  halaqohRegistrations: "/api/halaqoh/registrations",
+  halaqohMyPrograms: "/api/halaqoh/my-programs",
+  halaqohParticipants: "/api/halaqoh/participants",
+  halaqohAttendance: "/api/halaqoh/attendance",
+  halaqohFollowUp: "/api/halaqoh/follow-up",
 };
 
 export default apiUrl;

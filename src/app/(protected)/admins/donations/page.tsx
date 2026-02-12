@@ -2,6 +2,7 @@
 import HeaderModal from "@/components/ui/modals/Header";
 import Modal from "@/components/ui/modals/Modal";
 import { DonationForm, DonationTable } from "@/features/donations";
+import DonationFollowUpModal from "@/features/donations/DonationFollowUpModal";
 import {
   useDeleteDonationMaster,
   useDonations,
@@ -15,9 +16,18 @@ import TitleContent from "@/components/layouts/TitleContent";
 
 const Donations = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isFollowUpOpen, setIsFollowUpOpen] = useState(false);
   const [dataSelect, setDataSelect] = useState<Partial<DonationType>>();
+  const [selectedDonation, setSelectedDonation] = useState<DonationType>();
+
   const { data, isLoading, isError } = useDonations();
   const deleteDonation = useDeleteDonationMaster();
+
+  const handleCreateSuccess = (donation: DonationType) => {
+    setIsModalOpen(false);
+    setSelectedDonation(donation);
+    setIsFollowUpOpen(true);
+  };
 
   useEffect(() => {
     if (isError) {
@@ -56,7 +66,7 @@ const Donations = () => {
               {
                 onSuccess: () => resolve(),
                 onError: (error: unknown) => reject(error),
-              }
+              },
             );
           });
         } catch (err) {
@@ -91,12 +101,20 @@ const Donations = () => {
           <DonationForm
             initialValues={dataSelect}
             onCancel={() => setIsModalOpen(false)}
+            onSuccess={handleCreateSuccess}
             mode={
               !dataSelect?.name ? "create" : dataSelect?.id ? "update" : "view"
             }
           />
         </div>
       </Modal>
+
+      <DonationFollowUpModal
+        isOpen={isFollowUpOpen}
+        onClose={() => setIsFollowUpOpen(false)}
+        donation={selectedDonation}
+      />
+
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg py-2">
         <DonationTable
           data={data?.data}
