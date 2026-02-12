@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "www.markazalhijrah.or.id",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
   // output: "standalone",

@@ -6,6 +6,7 @@ import {
   updateStatusByWebhook,
   mapMidtransStatus,
 } from "@/lib/donationService";
+import { sendFonnteMessage } from "@/lib/fonnte";
 
 /**
  * Verify Midtrans notification signature
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
       console.error("❌ Invalid signature from Midtrans webhook");
       return NextResponse.json(
         { status: false, message: "Invalid signature" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
     const donation = await checkDonationByOrderId(body.order_id);
     if (!donation) {
       console.log(
-        `⚠️ Donation not found: ${body.order_id}. Checking for forward...`
+        `⚠️ Donation not found: ${body.order_id}. Checking for forward...`,
       );
 
       const secondaryWebhookUrl = process.env.SECONDARY_MIDTRANS_WEBHOOK_URL;
@@ -105,24 +106,24 @@ export async function POST(req: NextRequest) {
           console.error("❌ Error forwarding webhook:", forwardError);
           return NextResponse.json(
             { status: false, message: "Error forwarding webhook" },
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
 
       console.error(
-        `❌ Donation not found and no secondary webhook configured: ${body.order_id}`
+        `❌ Donation not found and no secondary webhook configured: ${body.order_id}`,
       );
       return NextResponse.json(
         { status: false, message: "Donation not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // 3. Map Midtrans status to our status
     const newStatus = mapMidtransStatus(
       body.transaction_status,
-      body.fraud_status
+      body.fraud_status,
     );
 
     // 4. Update donation status
@@ -130,12 +131,37 @@ export async function POST(req: NextRequest) {
 
     if (result && "skipped" in result) {
       console.log(
-        `ℹ️ Webhook for ${body.order_id} processed (no changes needed)`
+        `ℹ️ Webhook for ${body.order_id} processed (no changes needed)`,
       );
-    } else {
+    } else if (result) {
       console.log(
-        `✅ Donation ${body.order_id} status updated to: ${newStatus}`
+        `✅ Donation ${body.order_id} status updated to: ${newStatus}`,
       );
+
+      // 5. Send WhatsApp notification if phone number exists
+      const donationData = result as Record<string, any>;
+      const phoneNumber = donationData.phone_number;
+
+      if (phoneNumber) {
+        let message = "";
+        const formattedAmount = new Intl.NumberFormat("id-ID").format(
+          Number(donationData.amount),
+        );
+        const name = donationData.name;
+        const invoice = donationData.invoice_number;
+
+        if (newStatus === "settled") {
+          message = `Alhamdulillah *${name}*, donasi Anda sebesar *Rp ${formattedAmount}* telah kami terima. Semoga menjadi amal jariyah. Terima kasih. Invoice: ${invoice}`;
+        } else if (newStatus === "expired") {
+          message = `Mohon maaf *${name}*, pembayaran donasi Anda *${invoice}* sebesar *Rp ${formattedAmount}* telah kedaluwarsa. Silakan coba lagi jika berkenan.`;
+        } else if (newStatus === "failed") {
+          message = `Mohon maaf *${name}*, pembayaran donasi Anda *${invoice}* sebesar *Rp ${formattedAmount}* gagal. Silakan coba lagi jika berkenan.`;
+        }
+
+        if (message) {
+          await sendFonnteMessage(phoneNumber, message);
+        }
+      }
     }
 
     return NextResponse.json(
@@ -144,7 +170,7 @@ export async function POST(req: NextRequest) {
         message: "Webhook processed successfully",
         new_status: newStatus,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("❌ Webhook processing error:", error);
@@ -154,7 +180,7 @@ export async function POST(req: NextRequest) {
         message:
           error instanceof Error ? error.message : "Webhook processing failed",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -170,6 +196,6 @@ export async function GET() {
       endpoint: "/api/donations/webhook",
       note: "This endpoint accepts POST requests from Midtrans",
     },
-    { status: 200 }
+    { status: 200 },
   );
 }

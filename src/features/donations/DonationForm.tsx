@@ -17,11 +17,17 @@ import ImageUpload from "@/components/ui/inputs/ImageUpload";
 
 type Props = {
   onCancel?: () => void;
+  onSuccess?: (data: DonationType) => void;
   initialValues?: Partial<DonationType>;
   mode?: "create" | "update" | "view";
 };
 
-const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
+const DonationForm: FC<Props> = ({
+  onCancel,
+  onSuccess,
+  initialValues,
+  mode,
+}) => {
   const {
     register,
     handleSubmit,
@@ -50,9 +56,13 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
     if (mode === "create") {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       create.mutate(values as any, {
-        onSuccess: () => {
+        onSuccess: (res: { data: DonationType }) => {
           toast.success("Donasi berhasil ditambahkan (Manual)");
-          onCancel?.();
+          if (onSuccess) {
+            onSuccess(res.data);
+          } else {
+            onCancel?.();
+          }
         },
         onError: (error: unknown) => {
           const err = handleErrorResponse(error);
@@ -70,7 +80,7 @@ const DonationForm: FC<Props> = ({ onCancel, initialValues, mode }) => {
           onCancel?.();
         },
         onError: (e: unknown) => toast.error(handleErrorResponse(e)),
-      }
+      },
     );
   };
 
