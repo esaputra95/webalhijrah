@@ -40,7 +40,7 @@ export const GET = wrap(
     }
 
     return setResponse(donation, "Detail Donation");
-  }
+  },
 );
 
 // ====== PUT /api/donations/[id] ======
@@ -84,7 +84,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "Donation berhasil diupdate");
-  }
+  },
 );
 
 // ====== DELETE /api/donations/[id] (Soft Delete) ======
@@ -113,5 +113,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(deleted, "Donation berhasil dihapus");
-  }
+  },
 );

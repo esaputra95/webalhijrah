@@ -39,7 +39,7 @@ function parsePagination(req: NextRequest) {
   const page = Math.max(parseInt(sp.get("page") || "1", 10), 1);
   const take = Math.min(
     100,
-    Math.max(parseInt(sp.get("limit") || "10", 10), 1)
+    Math.max(parseInt(sp.get("limit") || "10", 10), 1),
   );
   const skip = (page - 1) * take;
 
@@ -112,13 +112,13 @@ export async function GET(req: NextRequest) {
         },
         data: programs,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/programs error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Programs" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

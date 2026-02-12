@@ -21,7 +21,7 @@ function parsePagination(req: NextRequest) {
   const page = Math.max(parseInt(sp.get("page") || "1", 10), 1);
   const take = Math.min(
     100,
-    Math.max(parseInt(sp.get("limit") || sp.get("take") || "10", 10), 1)
+    Math.max(parseInt(sp.get("limit") || sp.get("take") || "10", 10), 1),
   );
   const skip = (page - 1) * take;
 
@@ -100,13 +100,13 @@ export async function GET(req: NextRequest) {
         },
         data: users,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/users error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Users" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

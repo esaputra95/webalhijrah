@@ -7,7 +7,7 @@ import { SettingUpdateSchema } from "@/types/settingSchema";
 // ====== GET /api/settings/[id] ======
 export async function GET(
   _req: NextRequest,
-  props: { params: Promise<{ id: string }> }
+  props: { params: Promise<{ id: string }> },
 ) {
   try {
     const params = await props.params;
@@ -15,7 +15,7 @@ export async function GET(
     if (isNaN(id)) {
       return NextResponse.json(
         { status: false, message: "ID Setting tidak valid" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function GET(
     if (!setting) {
       return NextResponse.json(
         { status: false, message: "Setting tidak ditemukan" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -36,13 +36,13 @@ export async function GET(
         message: "Data Setting berhasil diambil",
         data: setting,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     console.error("GET /api/settings/[id] error:", err);
     return NextResponse.json(
       { status: false, message: "Gagal mengambil data Setting" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -78,7 +78,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "Setting berhasil diupdate", 200);
-  }
+  },
 );
 
 // ====== DELETE /api/settings/[id] ======
@@ -103,5 +103,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(null, "Setting berhasil dihapus", 200);
-  }
+  },
 );

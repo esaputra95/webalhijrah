@@ -54,7 +54,7 @@ export async function GET() {
           recentArticles,
         },
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error: unknown) {
     console.error("Dashboard API Error:", error);
@@ -65,7 +65,7 @@ export async function GET() {
         message: "Gagal mengambil data dashboard",
         error: message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -93,4 +93,45 @@ export const navGroups: NavGroup[] = [
       },
     ],
   },
+  {
+    label: "Halaqoh",
+    items: [
+      {
+        icon: FiFileText,
+        label: "Kategori Halaqoh",
+        path: "/admins/halaqoh/categories",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Pembimbing",
+        path: "/admins/halaqoh/mentors",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Grup Kelas",
+        path: "/admins/halaqoh/classes",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Absensi Halaqoh",
+        path: "/admins/halaqoh/attendance",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Pendaftaran",
+        path: "/admins/halaqoh/registrations",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Follow Up",
+        path: "/admins/halaqoh/follow-up",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+    ],
+  },
 ];

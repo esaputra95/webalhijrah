@@ -33,7 +33,7 @@ export const GET = wrap(
     }
 
     return setResponse(slider, "Detail Slider");
-  }
+  },
 );
 
 // ====== PUT /api/sliders/[id] ======
@@ -68,7 +68,7 @@ export const PUT = wrap(
     });
 
     return setResponse(updated, "Slider berhasil diupdate");
-  }
+  },
 );
 
 // ====== DELETE /api/sliders/[id] ======
@@ -92,5 +92,5 @@ export const DELETE = wrap(
     });
 
     return setResponse(deleted, "Slider berhasil dihapus");
-  }
+  },
 );
