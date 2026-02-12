@@ -2,6 +2,7 @@
 import { prisma } from "./prisma";
 import { createSnapClient } from "./midtrans";
 import { Prisma } from "@prisma/client";
+import { sendFonnteMessage } from "./fonnte";
 
 /**
  * Configuration constants
@@ -134,6 +135,12 @@ export async function createInvoiceDonation(params: CreateInvoiceParams) {
       },
     });
 
+    // 6. Send WhatsApp notification
+    if (params.phoneNumber) {
+      const message = `Assalamu'alaikum *${donation.name}*, terima kasih telah berdonasi sebesar *Rp ${new Intl.NumberFormat("id-ID").format(params.amount)}*. Silakan selesaikan pembayaran melalui tautan berikut: ${donation.payment_link}. Invoice: ${donation.invoice_number}`;
+      await sendFonnteMessage(params.phoneNumber, message);
+    }
+
     return {
       success: true,
       message: "Transaction created successfully",
@@ -175,7 +182,7 @@ export async function checkDonationByOrderId(invoiceNumber: string) {
  */
 export async function updateStatusByWebhook(
   invoiceNumber: string,
-  newStatus: "pending" | "settled" | "expired" | "failed"
+  newStatus: "pending" | "settled" | "expired" | "failed",
 ) {
   // 1. Get current donation status
   const donation = await prisma.neo_donation_public.findFirst({
@@ -194,7 +201,7 @@ export async function updateStatusByWebhook(
   // Once settled, it's final.
   if (donation.status === "settled") {
     console.log(
-      `ℹ️ Donation ${invoiceNumber} is already settled. Skipping update.`
+      `ℹ️ Donation ${invoiceNumber} is already settled. Skipping update.`,
     );
     return { skipped: true, status: donation.status };
   }
@@ -202,13 +209,13 @@ export async function updateStatusByWebhook(
   // 3. If new status is the same as current status, skip
   if (donation.status === newStatus) {
     console.log(
-      `ℹ️ Donation ${invoiceNumber} already has status: ${newStatus}. Skipping update.`
+      `ℹ️ Donation ${invoiceNumber} already has status: ${newStatus}. Skipping update.`,
     );
     return { skipped: true, status: donation.status };
   }
 
   // 4. Update the status
-  return await prisma.neo_donation_public.updateMany({
+  await prisma.neo_donation_public.updateMany({
     where: {
       invoice_number: invoiceNumber,
       deleted_at: null,
@@ -218,6 +225,14 @@ export async function updateStatusByWebhook(
       updated_at: new Date(),
     },
   });
+
+  // 5. Return the updated donation record
+  return await prisma.neo_donation_public.findFirst({
+    where: {
+      invoice_number: invoiceNumber,
+      deleted_at: null,
+    },
+  });
 }
 
 /**
@@ -225,7 +240,7 @@ export async function updateStatusByWebhook(
  */
 export function mapMidtransStatus(
   transactionStatus: string,
-  fraudStatus?: string
+  fraudStatus?: string,
 ): "pending" | "settled" | "expired" | "failed" {
   // Mapping based on Midtrans documentation
   if (transactionStatus === "capture") {
