@@ -27,9 +27,10 @@ const DonationFollowUpModal: FC<Props> = ({ isOpen, onClose, donation }) => {
       }).format(donation.amount);
 
       const template = `Assalam'alaikum warahmatullahi wabarakatuh.
-Terima kasih Bapak/Ibu ${donation.name}, donasi Anda sebesar ${amountFormatted} dengan No. Invoice ${donation.invoice_number} telah kami terima.
+Terima kasih Bapak/Ibu ${donation.name}, atas donasi Anda sebesar ${amountFormatted}.
 
-Jazakumullah Khairan atas dukungannya. Semoga menjadi amal jariyah yang terus mengalir pahalanya. Amin.`;
+Semoga Allah menerima infak ini, melipatgandakan pahalanya, dan menjadikannya sebab kebaikan di dunia dan akhirat.
+Jazakumullah khairan wa barakallahu fiikum.`;
       setMessage(template);
     }
   }, [donation]);
