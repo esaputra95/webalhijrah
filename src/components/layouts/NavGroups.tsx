@@ -21,7 +21,7 @@ export const navGroups: NavGroup[] = [
         icon: FiLayers,
         label: "Dashboard",
         path: "/admins/",
-        role: ["SUPER_ADMIN", "APPROVER", "ADMIN", "STAFF"],
+        role: ["SUPER_ADMIN", "APPROVER", "ADMIN", "STAFF", "MENTOR"],
       },
     ],
   },
@@ -132,6 +132,59 @@ export const navGroups: NavGroup[] = [
         path: "/admins/halaqoh/follow-up",
         role: ["SUPER_ADMIN", "ADMIN"],
       },
+      {
+        icon: FiFileText,
+        label: "Tingkatan Materi",
+        path: "/admins/halaqoh/material-levels",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Perpindahan Kelas",
+        path: "/admins/halaqoh/promotions",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+    ],
+  },
+  {
+    label: "Laporan Halaqoh",
+    items: [
+      {
+        icon: FiFileText,
+        label: "Laporan Kehadiran",
+        path: "/admins/halaqoh/reports/attendance",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      {
+        icon: FiFileText,
+        label: "Laporan Peserta",
+        path: "/admins/halaqoh/reports/participants",
+        role: ["SUPER_ADMIN", "ADMIN"],
+      },
+      // {
+      //   icon: FiFileText,
+      //   label: "Laporan Registrasi",
+      //   path: "/admins/halaqoh/reports/registrations",
+      //   role: ["SUPER_ADMIN", "ADMIN"],
+      // },
+      // {
+      //   icon: FiFileText,
+      //   label: "Laporan Kenaikan Level",
+      //   path: "/admins/halaqoh/reports/promotions",
+      //   role: ["SUPER_ADMIN", "ADMIN"],
+      // },
+      // {
+      //   icon: FiFileText,
+      //   label: "Laporan Per Mentor",
+      //   path: "/admins/halaqoh/reports/mentors",
+      //   role: ["SUPER_ADMIN", "ADMIN"],
+      // },
+      // {
+      //   icon: FiFileText,
+      //   label: "Laporan Per Kategori",
+      //   path: "/admins/halaqoh/reports/categories",
+      //   role: ["SUPER_ADMIN", "ADMIN"],
+      // },
     ],
   },
 ];

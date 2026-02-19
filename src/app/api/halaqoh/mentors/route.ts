@@ -33,5 +33,10 @@ export const POST = wrap(async (req: NextRequest) => {
     },
   });
 
+  await prisma.users.update({
+    where: { id: parsed.user_id },
+    data: { role: "mentor" },
+  });
+
   return setResponse(created, "Pembimbing berhasil ditambahkan", 201);
 });

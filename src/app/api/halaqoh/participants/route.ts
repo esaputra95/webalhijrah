@@ -66,11 +66,13 @@ export const GET = wrap(async (req: NextRequest) => {
   const sp = req.nextUrl.searchParams;
   const halaqohId = sp.get("halaqoh_id");
   const userId = sp.get("user_id");
+  const status = sp.get("status");
 
   const participants = await prisma.halaqoh_participants.findMany({
     where: {
       ...(halaqohId ? { halaqoh_id: Number(halaqohId) } : {}),
       ...(userId ? { user_id: Number(userId) } : {}),
+      status: status ? (status as any) : "ACTIVE",
     },
     include: {
       user: {
