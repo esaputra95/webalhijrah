@@ -11,6 +11,25 @@ export interface FonnteResponse {
 }
 
 /**
+ * Normalize phone number for Fonnte API.
+ * - Strips leading '+' (E.164 format from PhoneInput)
+ * - Converts leading '08' to '628' (local Indonesian format)
+ * - Leaves numbers already starting with country code as-is
+ */
+function normalizePhoneNumber(phone: string): string {
+  // Strip all non-digit characters (spaces, dashes, +, parentheses, dots)
+  // e.g. "+6 823-8291-7704" → "68232917704"
+  let normalized = phone.replace(/\D/g, "");
+
+  // Convert local Indonesian '08...' to '628...'
+  if (normalized.startsWith("08")) {
+    normalized = "62" + normalized.substring(1);
+  }
+
+  return normalized;
+}
+
+/**
  * Send a WhatsApp message using Fonnte
  * @param target - Phone number or array of phone numbers (e.g., "6281...", ["6281...", "6282..."])
  * @param message - Message content
@@ -22,7 +41,8 @@ export async function sendFonnteMessage(
 ): Promise<FonnteResponse> {
   const token = process.env.FONNTE_TOKEN;
 
-  const targetString = Array.isArray(target) ? target.join(",") : target;
+  const numbers = Array.isArray(target) ? target : [target];
+  const targetString = numbers.map(normalizePhoneNumber).join(",");
 
   if (!token) {
     console.error("FONNTE_TOKEN is not defined in environment variables");

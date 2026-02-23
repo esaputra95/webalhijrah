@@ -70,7 +70,7 @@ export default function PrayerTimes() {
         "Jumadil Akhir",
         "Rajab",
         "Sya'ban",
-        "Ramadhan",
+        "RMD",
         "Syawal",
         "Dzulqa'dah",
         "Dzulhijjah",
