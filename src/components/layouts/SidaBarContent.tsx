@@ -29,10 +29,15 @@ export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
       <nav className="space-y-6">
         {navGroups.map((g, gi) => {
           // Filter items by role first
-          const visibleItems = g.items;
+          const visibleItems = g.items.filter((item) => {
+            if (!item.role || item.role.length === 0) return true; // Show if no role specified
+            return item.role.includes(
+              String(session.data?.user?.role).toUpperCase() || "",
+            );
+          });
 
           // Don't render group if no visible items
-          // if (visibleItems.length === 0) return null;
+          if (visibleItems.length === 0) return null;
 
           return (
             <div key={gi}>
@@ -45,7 +50,6 @@ export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
                 {visibleItems.map((it, ii) => (
                   <Link
                     href={it.path}
-                    // onClick={() => navigation(it.path)}
                     key={ii}
                     className={`group hover:cursor-pointer flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition ${
                       it.path === `/${currentPath}`
@@ -53,18 +57,10 @@ export default function SidebarContent({ collapsed }: { collapsed: boolean }) {
                         : "text-slate-600 hover:bg-slate-50"
                     }`}
                   >
-                    {/* <a
-                    className={`group hover:cursor-pointer flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition ${
-                      it.active
-                        ? "bg-sky-50 text-sky-700 ring-1 ring-inset ring-sky-200"
-                        : "text-slate-600 hover:bg-slate-50"
-                    }`}
-                  > */}
                     <it.icon
                       className={it.active ? "text-sky-600" : "text-slate-400"}
                     />
                     {!collapsed && <span className="truncate">{it.label}</span>}
-                    {/* </a> */}
                   </Link>
                 ))}
               </ul>

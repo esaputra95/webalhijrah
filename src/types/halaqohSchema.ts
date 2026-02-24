@@ -30,6 +30,10 @@ export const HalaqohSchema = z.object({
   id: z.coerce.number().optional(),
   category_id: z.coerce.number(),
   mentor_id: z.coerce.number(),
+  material_level_id: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.coerce.number().optional(),
+  ),
   title: z.string().min(1, "Judul kelas wajib diisi"),
   schedule_info: z.string().optional(),
   location_type: z.enum(["ONLINE", "OFFLINE"]).default("ONLINE"),
@@ -63,3 +67,38 @@ export const HalaqohAttendanceSchema = z.object({
   status: z.enum(["HADIR", "IZIN", "SAKIT", "ALPA"]),
   notes: z.string().optional(),
 });
+
+export const HalaqohMaterialLevelSchema = z.object({
+  id: z.coerce.number().optional(),
+  category_id: z.coerce.number({ message: "Kategori wajib dipilih" }),
+  title: z.string().min(1, "Judul tingkatan wajib diisi"),
+  level_order: z.coerce
+    .number({ message: "Urutan level wajib diisi" })
+    .min(1, "Urutan level minimal 1"),
+  description: z.string().optional(),
+});
+export type HalaqohMaterialLevelType = z.infer<
+  typeof HalaqohMaterialLevelSchema
+>;
+
+export const HalaqohPromotionSchema = z.object({
+  user_id: z.coerce.number({ message: "Peserta wajib dipilih" }),
+  category_id: z.coerce.number({ message: "Kategori wajib dipilih" }),
+  from_halaqoh_id: z.coerce.number().optional(),
+  to_halaqoh_id: z.coerce.number({
+    message: "Kelas tujuan wajib dipilih",
+  }),
+  from_level_id: z.coerce.number().optional(),
+  to_level_id: z.coerce.number({
+    message: "Level tujuan wajib dipilih",
+  }),
+  type: z
+    .enum(["PROMOTION", "DEMOTION", "INITIAL_PLACEMENT"])
+    .default("PROMOTION"),
+  test_score: z.preprocess(
+    (val) => (val === "" || val === null ? undefined : val),
+    z.coerce.number().optional(),
+  ),
+  notes: z.string().optional(),
+});
+export type HalaqohPromotionType = z.infer<typeof HalaqohPromotionSchema>;

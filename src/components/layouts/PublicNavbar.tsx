@@ -199,7 +199,11 @@ export default function PublicNavbar({
                     </div>
                     <div className="p-2">
                       <Link
-                        href="/dashboard"
+                        href={
+                          String(session.user?.role).toUpperCase() === "MENTOR"
+                            ? "/dashboard/mentor"
+                            : "/dashboard"
+                        }
                         className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
                         onClick={() => setProfileMenuOpen(false)}
                       >
@@ -207,7 +211,23 @@ export default function PublicNavbar({
                         <span>Dashboard Saya</span>
                       </Link>
 
-                      {String(session.user?.role).toUpperCase() === "ADMIN" && (
+                      {String(session.user?.role).toUpperCase() ===
+                        "MENTOR" && (
+                        <Link
+                          href="/dashboard/mentor"
+                          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
+                          onClick={() => setProfileMenuOpen(false)}
+                        >
+                          <HiBriefcase className="text-lg" />
+                          <span>Mentor Panel</span>
+                        </Link>
+                      )}
+
+                      {(String(session.user?.role).toUpperCase() === "ADMIN" ||
+                        String(session.user?.role).toUpperCase() ===
+                          "ADMIN_TAKMIR" ||
+                        String(session.user?.role).toUpperCase() ===
+                          "ADMIN_KESANTRIAN") && (
                         <Link
                           href="/admins"
                           className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"
@@ -252,7 +272,11 @@ export default function PublicNavbar({
         <div className="flex items-center gap-4 md:hidden">
           {status === "authenticated" && (
             <Link
-              href="/dashboard"
+              href={
+                String(session.user?.role).toUpperCase() === "MENTOR"
+                  ? "/dashboard/mentor"
+                  : "/dashboard"
+              }
               className={`text-2xl ${isScrolled || !withScrolled ? "text-gray-800" : "text-white"}`}
             >
               <HiUserCircle />
@@ -307,7 +331,11 @@ export default function PublicNavbar({
               {status === "authenticated" ? (
                 <>
                   <Link
-                    href="/dashboard"
+                    href={
+                      String(session.user?.role).toUpperCase() === "MENTOR"
+                        ? "/dashboard/mentor"
+                        : "/dashboard"
+                    }
                     className="w-4/5 text-center px-6 py-3 rounded-full font-bold bg-brand-gold/10 text-brand-gold transition-all"
                     onClick={() => setMobileMenuOpen(false)}
                   >

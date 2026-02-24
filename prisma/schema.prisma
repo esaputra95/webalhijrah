@@ -22,6 +22,8 @@ model users {
   halaqoh_mentors       halaqoh_mentors?
   halaqoh_participants  halaqoh_participants[]
   halaqoh_registrations halaqoh_registrations[]
+  promotions_received   halaqoh_promotions[]    @relation("promotee")
+  promotions_given      halaqoh_promotions[]    @relation("promoter")
   post_categories       neo_post_categories[]
   neo_posts             neo_posts[]
 }
@@ -242,17 +244,19 @@ model settings {
 }
 
 model halaqoh_categories {
-  id            Int                     @id @default(autoincrement()) @db.UnsignedInt
-  title         String                  @db.VarChar(255)
-  slug          String                  @unique @db.VarChar(255)
-  description   String?                 @db.Text
-  created_at    DateTime?               @db.Timestamp(0)
-  updated_at    DateTime?               @db.Timestamp(0)
-  image         String?                 @db.VarChar(255)
-  date_test     DateTime?               @db.DateTime(0)
-  link_meet     String?                 @db.Text
-  registrations halaqoh_registrations[]
-  halaqohs      halaqohs[]
+  id              Int                        @id @default(autoincrement()) @db.UnsignedInt
+  title           String                     @db.VarChar(255)
+  slug            String                     @unique @db.VarChar(255)
+  description     String?                    @db.Text
+  created_at      DateTime?                  @db.Timestamp(0)
+  updated_at      DateTime?                  @db.Timestamp(0)
+  image           String?                    @db.VarChar(255)
+  date_test       DateTime?                  @db.DateTime(0)
+  link_meet       String?                    @db.Text
+  registrations   halaqoh_registrations[]
+  halaqohs        halaqohs[]
+  material_levels halaqoh_material_levels[]
+  promotions      halaqoh_promotions[]
 }
 
 model halaqoh_mentors {
@@ -268,23 +272,28 @@ model halaqoh_mentors {
 }
 
 model halaqohs {
-  id            Int                    @id @default(autoincrement()) @db.UnsignedInt
-  category_id   Int                    @db.UnsignedInt
-  mentor_id     Int                    @db.UnsignedInt
-  title         String                 @db.VarChar(255)
-  schedule_info String?                @db.Text
-  location_type halaqoh_location       @default(ONLINE)
-  meeting_link  String?                @db.VarChar(255)
-  status        halaqoh_status         @default(OPEN)
-  created_at    DateTime?              @db.Timestamp(0)
-  updated_at    DateTime?              @db.Timestamp(0)
-  attendance    halaqoh_attendance[]
-  participants  halaqoh_participants[]
-  category      halaqoh_categories     @relation(fields: [category_id], references: [id])
-  mentor        halaqoh_mentors        @relation(fields: [mentor_id], references: [id])
+  id                Int                        @id @default(autoincrement()) @db.UnsignedInt
+  category_id       Int                        @db.UnsignedInt
+  mentor_id         Int                        @db.UnsignedInt
+  material_level_id Int?                       @db.UnsignedInt
+  title             String                     @db.VarChar(255)
+  schedule_info     String?                    @db.Text
+  location_type     halaqoh_location           @default(ONLINE)
+  meeting_link      String?                    @db.VarChar(255)
+  status            halaqoh_status             @default(OPEN)
+  created_at        DateTime?                  @db.Timestamp(0)
+  updated_at        DateTime?                  @db.Timestamp(0)
+  attendance        halaqoh_attendance[]
+  participants      halaqoh_participants[]
+  category          halaqoh_categories         @relation(fields: [category_id], references: [id])
+  mentor            halaqoh_mentors            @relation(fields: [mentor_id], references: [id])
+  material_level    halaqoh_material_levels?   @relation(fields: [material_level_id], references: [id])
+  promotions_from   halaqoh_promotions[]       @relation("promotion_from")
+  promotions_to     halaqoh_promotions[]       @relation("promotion_to")
 
   @@index([category_id], map: "halaqohs_category_id_fkey")
   @@index([mentor_id], map: "halaqohs_mentor_id_fkey")
+  @@index([material_level_id])
 }
 
 model halaqoh_registrations {
@@ -314,6 +323,7 @@ model halaqoh_participants {
   user_id    Int                @db.UnsignedInt
   status     participant_status @default(ACTIVE)
   joined_at  DateTime?          @default(now()) @db.Timestamp(0)
+  notes      String?            @db.Text
   halaqoh    halaqohs           @relation(fields: [halaqoh_id], references: [id], onDelete: Cascade)
   user       users              @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
@@ -372,4 +382,52 @@ enum attendance_status {
   IZIN
   SAKIT
   ALPA
+}
+
+model halaqoh_material_levels {
+  id          Int                  @id @default(autoincrement()) @db.UnsignedInt
+  category_id Int                  @db.UnsignedInt
+  title       String               @db.VarChar(255)
+  level_order Int                  @db.UnsignedInt
+  description String?              @db.Text
+  created_at  DateTime?            @db.Timestamp(0)
+  updated_at  DateTime?            @db.Timestamp(0)
+  category    halaqoh_categories   @relation(fields: [category_id], references: [id])
+  halaqohs    halaqohs[]
+  promotions_from halaqoh_promotions[] @relation("from_level")
+  promotions_to   halaqoh_promotions[] @relation("to_level")
+
+  @@index([category_id])
+  @@unique([category_id, level_order])
+}
+
+model halaqoh_promotions {
+  id              Int                      @id @default(autoincrement()) @db.UnsignedInt
+  user_id         Int                      @db.UnsignedInt
+  category_id     Int                      @db.UnsignedInt
+  from_halaqoh_id Int?                     @db.UnsignedInt
+  to_halaqoh_id   Int                      @db.UnsignedInt
+  from_level_id   Int?                     @db.UnsignedInt
+  to_level_id     Int                      @db.UnsignedInt
+  type            promotion_type           @default(PROMOTION)
+  test_score      Int?
+  notes           String?                  @db.Text
+  promoted_by     Int                      @db.UnsignedInt
+  promoted_at     DateTime                 @default(now()) @db.Timestamp(0)
+  user            users                    @relation("promotee", fields: [user_id], references: [id])
+  admin           users                    @relation("promoter", fields: [promoted_by], references: [id])
+  category        halaqoh_categories       @relation(fields: [category_id], references: [id])
+  from_halaqoh    halaqohs?                @relation("promotion_from", fields: [from_halaqoh_id], references: [id])
+  to_halaqoh      halaqohs                 @relation("promotion_to", fields: [to_halaqoh_id], references: [id])
+  from_level      halaqoh_material_levels? @relation("from_level", fields: [from_level_id], references: [id])
+  to_level        halaqoh_material_levels  @relation("to_level", fields: [to_level_id], references: [id])
+
+  @@index([user_id])
+  @@index([category_id])
+}
+
+enum promotion_type {
+  PROMOTION
+  DEMOTION
+  INITIAL_PLACEMENT
 }

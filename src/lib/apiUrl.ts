@@ -24,6 +24,17 @@ const apiUrl = {
   halaqohParticipants: "/api/halaqoh/participants",
   halaqohAttendance: "/api/halaqoh/attendance",
   halaqohFollowUp: "/api/halaqoh/follow-up",
+  halaqohMaterialLevels: "/api/halaqoh/material-levels",
+  halaqohPromotions: "/api/halaqoh/promotions",
+  halaqohReportAttendance: "/api/halaqoh/reports/attendance",
+  halaqohReportParticipants: "/api/halaqoh/reports/participants",
+  halaqohReportRegistrations: "/api/halaqoh/reports/registrations",
+  halaqohReportPromotions: "/api/halaqoh/reports/promotions",
+  halaqohReportMentors: "/api/halaqoh/reports/mentors",
+  halaqohReportCategories: "/api/halaqoh/reports/categories",
+  halaqohMentorClasses: "/api/halaqoh/mentor/classes",
+  halaqohMentorStudents: "/api/halaqoh/mentor/students",
+  halaqohMentorStudentNotes: "/api/halaqoh/mentor/students/notes",
 };
 
 export default apiUrl;

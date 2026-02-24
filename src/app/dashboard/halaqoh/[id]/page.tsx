@@ -12,6 +12,7 @@ import {
   HiOutlineCalendar,
   HiOutlineCheckCircle,
   HiOutlineUsers,
+  HiOutlinePencilAlt,
 } from "react-icons/hi";
 import Button from "@/components/ui/buttons/Button";
 import Image from "next/image";
@@ -135,6 +136,29 @@ export default function ProgramDetailPage() {
               </div>
             </motion.section>
 
+            {/* Mentor Notes Section */}
+            {participation.notes && (
+              <motion.section
+                initial="hidden"
+                animate="visible"
+                variants={fadeInUp}
+                className="bg-brand-brown/5 rounded-3xl p-8 border border-brand-brown/10 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-5 text-6xl">
+                  📝
+                </div>
+                <h2 className="text-xl font-bold text-brand-brown mb-4 flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-lg bg-brand-brown/10 text-brand-brown flex items-center justify-center text-lg">
+                    <HiOutlinePencilAlt />
+                  </span>
+                  Catatan Pembimbing
+                </h2>
+                <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl text-[#4A4C70] leading-relaxed italic border border-white/50 shadow-sm">
+                  &quot;{participation.notes}&quot;
+                </div>
+              </motion.section>
+            )}
+
             {/* Classmates Section */}
             <section>
               <h2 className="text-2xl font-bold text-[#4A4C70] mb-6 flex items-center gap-3">
@@ -248,25 +272,31 @@ export default function ProgramDetailPage() {
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Quick Actions / Link */}
-            {halaqoh?.location_type === "ONLINE" && halaqoh?.meeting_link && (
-              <section className="bg-brand-gold rounded-3xl p-6 text-brand-brown shadow-xl shadow-brand-gold/20 flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-4xl mb-4 backdrop-blur-sm">
-                  <HiOutlineVideoCamera />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Masuk Ruang Kelas</h3>
-                <p className="text-sm opacity-80 mb-6 italic">
-                  &quot;Baarakallahu Fiikum, selamat belajar jamaah.&quot;
-                </p>
-                <a
-                  href={halaqoh.meeting_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-4 bg-brand-brown text-white font-bold rounded-2xl hover:bg-opacity-90 transition-all text-center shadow-lg"
-                >
-                  Klik Link Meeting
-                </a>
-              </section>
-            )}
+            {participation.status !== "GRADUATED" &&
+              (halaqoh?.meeting_link || halaqoh?.category?.link_meet) && (
+                <section className="bg-brand-gold rounded-3xl p-6 text-brand-brown shadow-xl shadow-brand-gold/20 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-4xl mb-4 backdrop-blur-sm">
+                    <HiOutlineVideoCamera />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Masuk Ruang Kelas</h3>
+                  <p className="text-sm opacity-80 mb-6 italic">
+                    &quot;Baarakallahu Fiikum, selamat belajar jamaah.&quot;
+                  </p>
+                  <a
+                    href={
+                      halaqoh?.meeting_link ||
+                      halaqoh?.category?.link_meet ||
+                      "#"
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 py-4 bg-brand-brown text-white font-bold rounded-2xl hover:bg-opacity-90 transition-all text-center shadow-lg"
+                  >
+                    <HiOutlineVideoCamera className="text-lg" />
+                    Gabung Google Meet
+                  </a>
+                </section>
+              )}
 
             {/* Mentor Info */}
             <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">

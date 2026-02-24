@@ -8,11 +8,15 @@ export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const categoryId = sp.get("category_id");
   const mentorId = sp.get("mentor_id");
+  const materialLevelId = sp.get("material_level_id");
 
   const halaqohs = await prisma.halaqohs.findMany({
     where: {
       ...(categoryId ? { category_id: Number(categoryId) } : {}),
       ...(mentorId ? { mentor_id: Number(mentorId) } : {}),
+      ...(materialLevelId
+        ? { material_level_id: Number(materialLevelId) }
+        : {}),
     },
     include: {
       category: true,
@@ -20,6 +24,9 @@ export async function GET(req: NextRequest) {
         include: {
           user: { select: { name: true } },
         },
+      },
+      material_level: {
+        select: { id: true, title: true, level_order: true },
       },
     },
     orderBy: { created_at: "desc" },
@@ -37,6 +44,7 @@ export const POST = wrap(async (req: NextRequest) => {
       title: parsed.title,
       category_id: parsed.category_id,
       mentor_id: parsed.mentor_id,
+      material_level_id: parsed.material_level_id || null,
       schedule_info: parsed.schedule_info,
       location_type: parsed.location_type,
       meeting_link: parsed.meeting_link,
