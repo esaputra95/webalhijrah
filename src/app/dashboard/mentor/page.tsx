@@ -52,7 +52,7 @@ export default function MentorDashboard() {
   if (
     session?.user?.role !== "MENTOR" &&
     session?.user?.role !== "ADMIN" &&
-    session?.user?.role !== "SUPER_ADMIN"
+    session?.user?.role !== "ADMIN_KESANTRIAN"
   ) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -227,7 +227,7 @@ function ClassDetailView({
           </div>
         </div>
 
-        <div className="bg-white p-1 rounded-xl shadow-sm border border-slate-100 flex inline-flex">
+        <div className="bg-white p-1 rounded-xl shadow-sm border border-slate-100 inline-flex">
           <button
             onClick={() => setActiveTab("ATTENDANCE")}
             className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${activeTab === "ATTENDANCE" ? "bg-brand-gold text-white shadow-md" : "text-slate-400 hover:text-slate-600"}`}

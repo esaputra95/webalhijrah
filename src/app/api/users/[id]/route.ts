@@ -2,17 +2,9 @@
 import { AppError, wrap } from "@/lib/errorApi";
 import { setResponse } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
+import bcrypt from "bcryptjs";
+import { UpdateSchema } from "../type";
 import { NextRequest } from "next/server";
-
-const UpdateSchema = z
-  .object({
-    name: z.string().min(1).max(150).optional(),
-    email: z.string().email().max(150).optional(),
-    role: z.string().max(50).nullable().optional(),
-    password: z.string().min(6).max(255).optional(),
-  })
-  .strict();
 
 // GET /api/users/[id]
 export const GET = wrap(
@@ -50,16 +42,6 @@ export const PUT = wrap(
 
     const parsed = UpdateSchema.parse(body);
 
-    // hanya ambil field yang dikirim
-    const data: Record<string, unknown> = {};
-    if (parsed.name !== undefined) data.name = parsed.name;
-    if (parsed.email !== undefined) data.email = parsed.email;
-    if (parsed.role !== undefined) data.role = parsed.role;
-    if (parsed.password !== undefined) {
-      // ⚠️ sebaiknya hash password di sini
-      data.password = parsed.password;
-    }
-
     const exists = await prisma.users.findUnique({
       where: { id: Number(id) },
     });
@@ -68,6 +50,29 @@ export const PUT = wrap(
         code: "NOT_FOUND",
         status: 404,
       });
+    }
+
+    // Check unique email if email is changed
+    if (parsed.email && parsed.email !== exists.email) {
+      const emailExists = await prisma.users.findUnique({
+        where: { email: parsed.email },
+      });
+      if (emailExists) {
+        throw new AppError("Email sudah terdaftar", {
+          code: "EMAIL_TAK_UNIK",
+          field: "email",
+          status: 409,
+        });
+      }
+    }
+
+    // hanya ambil field yang dikirim
+    const data: Record<string, unknown> = {};
+    if (parsed.name !== undefined) data.name = parsed.name;
+    if (parsed.email !== undefined) data.email = parsed.email;
+    if (parsed.role !== undefined) data.role = parsed.role;
+    if (parsed.password !== undefined && parsed.password !== "") {
+      data.password = await bcrypt.hash(parsed.password, 10);
     }
 
     const updated = await prisma.users.update({

@@ -225,7 +225,9 @@ export default function PublicNavbar({
 
                       {(String(session.user?.role).toUpperCase() === "ADMIN" ||
                         String(session.user?.role).toUpperCase() ===
-                          "SUPER_ADMIN") && (
+                          "ADMIN_TAKMIR" ||
+                        String(session.user?.role).toUpperCase() ===
+                          "ADMIN_KESANTRIAN") && (
                         <Link
                           href="/admins"
                           className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-brand-gold/10 hover:text-brand-gold transition-colors"

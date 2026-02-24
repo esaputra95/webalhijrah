@@ -119,7 +119,8 @@ export const authConfig: NextAuthConfig = {
 
       // Protect /admins routes
       if (pathname.startsWith("/admins")) {
-        return auth?.user?.role === "ADMIN";
+        const allowedAdminRoles = ["ADMIN", "ADMIN_TAKMIR", "ADMIN_KESANTRIAN"];
+        return allowedAdminRoles.includes(auth?.user?.role || "");
       }
 
       return true;

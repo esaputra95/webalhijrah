@@ -29,7 +29,7 @@ type Props = {
   onChangeStatus?: (
     id?: string,
     status?: RequestStatusType,
-    details?: RequestDetailTable[]
+    details?: RequestDetailTable[],
   ) => void;
   onDeleteImage?: (id: string) => void;
 };
@@ -108,11 +108,12 @@ const RequestTable: FC<Props> = ({
           <ActionButton
             onUpdate={() => onUpdate?.(row.id)}
             onDelete={() => onDelete?.(row?.id)}
-            allowedEditRoles={["SUPER_ADMIN", "ADMIN", "STAFF"]}
-            allowedDeleteRoles={["SUPER_ADMIN", "ADMIN", "STAFF"]}
+            allowedEditRoles={["ADMIN", "ADMIN_TAKMIR"]}
+            allowedDeleteRoles={["ADMIN", "ADMIN_TAKMIR"]}
           >
             {(session?.user.role === "APPROVER" ||
-              session?.user.role === "SUPER_ADMIN") && (
+              session?.user.role === "ADMIN" ||
+              session?.user.role === "ADMIN_TAKMIR") && (
               <button
                 onClick={() =>
                   onChangeStatus?.(row?.id, row?.status, row?.services)
@@ -123,9 +124,8 @@ const RequestTable: FC<Props> = ({
               </button>
             )}
             {(session?.user.role === "APPROVER" ||
-              session?.user.role === "SUPER_ADMIN" ||
-              session?.user.role === "STAFF" ||
-              session?.user.role === "ADMIN") && (
+              session?.user.role === "ADMIN" ||
+              session?.user.role === "ADMIN_TAKMIR") && (
               <Link
                 className="w-full text-indigo-700 text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
                 href={row?.purpose ?? ""}
@@ -139,7 +139,7 @@ const RequestTable: FC<Props> = ({
         ),
       },
     ],
-    []
+    [],
   );
   return (
     <>

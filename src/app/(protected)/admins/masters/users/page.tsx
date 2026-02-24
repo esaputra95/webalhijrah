@@ -6,7 +6,7 @@ import UserTable from "@/features/users/UserTable";
 import { useDeleteUser, useUsers } from "@/hooks/masters/useUsers";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { UserPublicType as PublicType } from "@/types/userSchema";
+import { UserType as PublicType } from "@/types/userSchema";
 import { handleErrorResponse } from "@/utils/handleErrorResponse";
 import Swal from "sweetalert2";
 import TitleContent from "@/components/layouts/TitleContent";
@@ -28,17 +28,7 @@ const Users = () => {
     setDataSelect(data);
   };
 
-  const onView = (data?: PublicType) => {
-    setIsModalOpen(true);
-    setDataSelect({
-      name: data?.name,
-      email: data?.email,
-      role: data?.role,
-    });
-  };
-
-  const onDelete = (id?: string) => {
-    if (!id) return;
+  const onDelete = (id: number) => {
     Swal.fire({
       title: "Yakin?",
       text: "Data ini akan dihapus permanen!",
@@ -55,11 +45,11 @@ const Users = () => {
           // bungkus mutate ke Promise biar SweetAlert tunggu sampai selesai
           await new Promise<void>((resolve, reject) => {
             deleteUser.mutate(
-              { id },
+              { id: String(id) },
               {
                 onSuccess: () => resolve(),
                 onError: (error) => reject(error),
-              }
+              },
             );
           });
         } catch (err) {
@@ -104,7 +94,6 @@ const Users = () => {
           totalPages={data?.metaData?.totalPage}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          onView={onView}
         />
       </div>
     </div>
