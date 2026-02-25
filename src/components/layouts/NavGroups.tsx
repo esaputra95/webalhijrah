@@ -97,12 +97,12 @@ export const navGroups: NavGroup[] = [
         path: "/admins/reports/article-reports",
         role: ["ADMIN"],
       },
-      {
-        icon: FiFileText,
-        label: "Analytics Halaman",
-        path: "/admins/reports/page-analytics",
-        role: ["ADMIN", "ADMIN_TAKMIR"],
-      },
+      // {
+      //   icon: FiFileText,
+      //   label: "Analytics Halaman",
+      //   path: "/admins/reports/page-analytics",
+      //   role: ["ADMIN", "ADMIN_TAKMIR"],
+      // },
     ],
   },
   {
