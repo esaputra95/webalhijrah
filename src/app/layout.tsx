@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Suspense } from "react";
 import FacebookPixel from "@/components/FacebookPixel";
+import PageAnalyticsTracker from "@/components/PageAnalyticsTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,6 +60,7 @@ export default function RootLayout({
           </Providers>
         </Suspense>
         <FacebookPixel />
+        <PageAnalyticsTracker />
       </body>
     </html>
   );
