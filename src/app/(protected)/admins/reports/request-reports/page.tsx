@@ -6,8 +6,14 @@ import { useDonations } from "@/hooks/masters/useDonations";
 import { toast } from "react-toastify";
 import TextInput from "@/components/ui/inputs/TextInput";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
+import Button from "@/components/ui/buttons/Button";
 import dayjs from "dayjs";
+import {
+  HiFunnel,
+  HiArrowPath,
+  HiOutlineBanknotes,
+  HiOutlineUsers,
+} from "react-icons/hi2";
 
 const DonationReportPage = () => {
   const router = useRouter();
@@ -206,42 +212,50 @@ const DonationReportPage = () => {
             </select>
           </div>
           <div className="flex gap-2 lg:col-span-2">
-            <button
-              onClick={handleFilter}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow transition h-10 font-medium"
-            >
+            <Button onClick={handleFilter}>
+              <HiFunnel className="w-5 h-5" />
               Filter
-            </button>
-            <button
-              onClick={handleReset}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow transition h-10 font-medium"
-            >
+            </Button>
+            <Button variant="outlined" color="primary" onClick={handleReset}>
+              <HiArrowPath className="w-5 h-5" />
               Reset
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-            Total Donasi
-          </h2>
-          <p className="text-2xl font-bold text-gray-900 mt-1">
-            {new Intl.NumberFormat("id-ID", {
-              style: "currency",
-              currency: "IDR",
-              minimumFractionDigits: 0,
-            }).format(data?.metaData?.total_amount || 0)}
-          </p>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4 transition-all hover:shadow-md">
+          <div className="p-3 rounded-lg bg-blue-50 text-blue-600">
+            <HiOutlineBanknotes className="w-8 h-8" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
+              Total Donasi
+            </p>
+            <p className="text-2xl font-bold text-slate-800">
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              }).format(data?.metaData?.total_amount || 0)}
+            </p>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-600">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-            Total Orang Berdonasi
-          </h2>
-          <p className="text-2xl font-bold text-gray-900 mt-1">
-            {new Intl.NumberFormat("id-ID").format(data?.metaData?.total || 0)}
-          </p>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4 transition-all hover:shadow-md">
+          <div className="p-3 rounded-lg bg-green-50 text-green-600">
+            <HiOutlineUsers className="w-8 h-8" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
+              Total Orang Berdonasi
+            </p>
+            <p className="text-2xl font-bold text-slate-800">
+              {new Intl.NumberFormat("id-ID").format(
+                data?.metaData?.total || 0,
+              )}
+            </p>
+          </div>
         </div>
       </div>
 

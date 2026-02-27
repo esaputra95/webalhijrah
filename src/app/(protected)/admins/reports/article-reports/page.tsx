@@ -5,8 +5,10 @@ import { ArticleReportTable } from "@/features/reports";
 import { usePosts } from "@/hooks/masters/usePosts";
 import { toast } from "react-toastify";
 import TextInput from "@/components/ui/inputs/TextInput";
+import Button from "@/components/ui/buttons/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
+import { HiFunnel, HiArrowPath } from "react-icons/hi2";
 
 const ArticleReportPage = () => {
   const router = useRouter();
@@ -14,10 +16,11 @@ const ArticleReportPage = () => {
   const searchParams = useSearchParams();
 
   const [startDate, setStartDate] = useState(
-    searchParams.get("startAt") || dayjs().startOf("month").format("YYYY-MM-DD")
+    searchParams.get("startAt") ||
+      dayjs().startOf("month").format("YYYY-MM-DD"),
   );
   const [endDate, setEndDate] = useState(
-    searchParams.get("endAt") || dayjs().endOf("month").format("YYYY-MM-DD")
+    searchParams.get("endAt") || dayjs().endOf("month").format("YYYY-MM-DD"),
   );
   const [q, setQ] = useState(searchParams.get("q") || "");
   const [status, setStatus] = useState(searchParams.get("post_status") || "");
@@ -112,18 +115,14 @@ const ArticleReportPage = () => {
             </select>
           </div>
           <div className="flex gap-2 lg:col-span-2">
-            <button
-              onClick={handleFilter}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow transition h-10 font-medium"
-            >
+            <Button onClick={handleFilter}>
+              <HiFunnel className="w-5 h-5" />
               Filter
-            </button>
-            <button
-              onClick={handleReset}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded shadow transition h-10 font-medium"
-            >
+            </Button>
+            <Button variant="outlined" color="primary" onClick={handleReset}>
+              <HiArrowPath className="w-5 h-5" />
               Reset
-            </button>
+            </Button>
           </div>
         </div>
       </div>

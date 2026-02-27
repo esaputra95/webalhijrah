@@ -1,19 +1,39 @@
 "use client";
 
+import DailyVisitorsChart from "@/components/charts/DailyVisitorsChart";
 import TitleContent from "@/components/layouts/TitleContent";
 import TextInput from "@/components/ui/inputs/TextInput";
+import Button from "@/components/ui/buttons/Button";
 import { usePageAnalytics } from "@/hooks/reports/usePageAnalytics";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
+import {
+  HiOutlineEye,
+  HiOutlineUsers,
+  HiOutlineGlobeAlt,
+  HiOutlineDocumentText,
+  HiFunnel,
+  HiArrowPath,
+  HiChartBar,
+  HiArrowTrendingUp,
+  HiChevronLeft,
+  HiChevronRight,
+} from "react-icons/hi2";
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("id-ID").format(value || 0);
+
+// Fixed 30-day range for the chart (independent of filters)
+const CHART_START = dayjs().subtract(29, "day").format("YYYY-MM-DD");
+const CHART_END = dayjs().format("YYYY-MM-DD");
 
 export default function PageAnalyticsReportPage() {
   const [startDate, setStartDate] = useState(
     dayjs().startOf("month").format("YYYY-MM-DD"),
   );
-  const [endDate, setEndDate] = useState(dayjs().endOf("month").format("YYYY-MM-DD"));
+  const [endDate, setEndDate] = useState(
+    dayjs().endOf("month").format("YYYY-MM-DD"),
+  );
   const [qInput, setQInput] = useState("");
 
   const [filters, setFilters] = useState({
@@ -27,6 +47,14 @@ export default function PageAnalyticsReportPage() {
   });
 
   const { data, isLoading } = usePageAnalytics(filters);
+
+  // Separate fetch for the 30-day chart
+  const { data: chartData, isLoading: chartLoading } = usePageAnalytics({
+    startAt: CHART_START,
+    endAt: CHART_END,
+    limit: 1,
+  });
+
   const rows = data?.data?.rows || [];
   const summary = data?.data?.summary;
   const trends = data?.data?.trends || [];
@@ -76,40 +104,65 @@ export default function PageAnalyticsReportPage() {
         subTitle="Pantau jumlah view dan pengunjung unik per halaman"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-xs uppercase text-slate-500 font-semibold tracking-wider">
-            Total Views
-          </p>
-          <p className="text-2xl font-bold text-slate-800 mt-2">
-            {isLoading ? "..." : formatNumber(summary?.totalViews || 0)}
-          </p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-xs uppercase text-slate-500 font-semibold tracking-wider">
-            Unique Visitors
-          </p>
-          <p className="text-2xl font-bold text-slate-800 mt-2">
-            {isLoading ? "..." : formatNumber(summary?.uniqueVisitors || 0)}
-          </p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-xs uppercase text-slate-500 font-semibold tracking-wider">
-            Unique IP
-          </p>
-          <p className="text-2xl font-bold text-slate-800 mt-2">
-            {isLoading ? "..." : formatNumber(summary?.uniqueIps || 0)}
-          </p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-xs uppercase text-slate-500 font-semibold tracking-wider">
-            Halaman Terdata
-          </p>
-          <p className="text-2xl font-bold text-slate-800 mt-2">
-            {isLoading ? "..." : formatNumber(summary?.totalPages || 0)}
-          </p>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          {
+            label: "Total Views",
+            value: summary?.totalViews,
+            icon: HiOutlineEye,
+            color: "text-blue-600",
+            bg: "bg-blue-50",
+          },
+          {
+            label: "Unique Visitors",
+            value: summary?.uniqueVisitors,
+            icon: HiOutlineUsers,
+            color: "text-purple-600",
+            bg: "bg-purple-50",
+          },
+          {
+            label: "Unique IP",
+            value: summary?.uniqueIps,
+            icon: HiOutlineGlobeAlt,
+            color: "text-emerald-600",
+            bg: "bg-emerald-50",
+          },
+          {
+            label: "Halaman Terdata",
+            value: summary?.totalPages,
+            icon: HiOutlineDocumentText,
+            color: "text-orange-600",
+            bg: "bg-orange-50",
+          },
+        ].map((item, idx) => (
+          <div
+            key={idx}
+            className="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-4 transition-all hover:shadow-md"
+          >
+            <div className={`p-3 rounded-lg ${item.bg} ${item.color}`}>
+              <item.icon className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase text-slate-500 tracking-wider">
+                {item.label}
+              </p>
+              <p className="text-2xl font-bold text-slate-800">
+                {isLoading ? (
+                  <span className="inline-block w-12 h-6 bg-slate-100 animate-pulse rounded" />
+                ) : (
+                  formatNumber(item.value || 0)
+                )}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* ── 30-Day Visitors Chart ── */}
+      <DailyVisitorsChart
+        data={chartData?.data?.trends || []}
+        isLoading={chartLoading}
+      />
 
       <div className="bg-white p-4 rounded-lg border border-slate-200">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
@@ -132,25 +185,27 @@ export default function PageAnalyticsReportPage() {
             onChange={(e) => setQInput(e.target.value)}
           />
           <div className="flex gap-2">
-            <button
-              onClick={handleFilter}
-              className="h-10 px-5 rounded bg-blue-600 text-white hover:bg-blue-700"
-            >
+            <Button onClick={handleFilter} className="w-full md:w-auto">
+              <HiFunnel className="w-5 h-5" />
               Filter
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
               onClick={handleReset}
-              className="h-10 px-5 rounded bg-slate-200 text-slate-700 hover:bg-slate-300"
+              className="w-full md:w-auto"
             >
+              <HiArrowPath className="w-5 h-5" />
               Reset
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-lg border border-slate-200 bg-white overflow-hidden">
-          <div className="px-4 py-3 border-b border-slate-100">
+        <div className="lg:col-span-2 rounded-lg border border-slate-200 bg-white overflow-hidden shadow-sm">
+          <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+            <HiChartBar className="w-5 h-5 text-blue-600" />
             <h3 className="font-semibold text-slate-800">Top Halaman</h3>
           </div>
           <div className="overflow-x-auto">
@@ -180,10 +235,19 @@ export default function PageAnalyticsReportPage() {
                   </tr>
                 ) : (
                   rows.map((row) => (
-                    <tr key={`${row.route_key}-${row.path}`} className="border-t border-slate-100">
-                      <td className="px-4 py-3 font-medium text-slate-700">{row.path}</td>
-                      <td className="px-4 py-3 text-slate-500">{row.route_key}</td>
-                      <td className="px-4 py-3 text-right">{formatNumber(row.totalViews)}</td>
+                    <tr
+                      key={`${row.route_key}-${row.path}`}
+                      className="border-t border-slate-100"
+                    >
+                      <td className="px-4 py-3 font-medium text-slate-700">
+                        {row.path}
+                      </td>
+                      <td className="px-4 py-3 text-slate-500">
+                        {row.route_key}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {formatNumber(row.totalViews)}
+                      </td>
                       <td className="px-4 py-3 text-right">
                         {formatNumber(row.uniqueVisitors)}
                       </td>
@@ -206,24 +270,31 @@ export default function PageAnalyticsReportPage() {
               Page {meta?.page || 1} / {meta?.totalPage || 1}
             </p>
             <div className="flex gap-2">
-              <button
-                className="px-3 py-1.5 rounded border text-xs"
+              <Button
+                size="small"
+                variant="outlined"
                 onClick={() => onPageChange((meta?.page || 1) - 1)}
+                disabled={meta?.page === 1}
               >
+                <HiChevronLeft className="w-4 h-4" />
                 Prev
-              </button>
-              <button
-                className="px-3 py-1.5 rounded border text-xs"
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
                 onClick={() => onPageChange((meta?.page || 1) + 1)}
+                disabled={meta?.page === meta?.totalPage}
               >
                 Next
-              </button>
+                <HiChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-slate-200 bg-white">
-          <div className="px-4 py-3 border-b border-slate-100">
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+          <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+            <HiArrowTrendingUp className="w-5 h-5 text-emerald-600" />
             <h3 className="font-semibold text-slate-800">Trend Harian</h3>
           </div>
           <div className="p-4 space-y-3">
@@ -235,13 +306,17 @@ export default function PageAnalyticsReportPage() {
               trends.map((trend) => (
                 <div key={trend.day || "no-day"}>
                   <div className="flex justify-between text-xs text-slate-600 mb-1">
-                    <span>{trend.day ? dayjs(trend.day).format("DD MMM") : "-"}</span>
+                    <span>
+                      {trend.day ? dayjs(trend.day).format("DD MMM") : "-"}
+                    </span>
                     <span>{formatNumber(trend.totalViews)} views</span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded">
                     <div
                       className="h-2 bg-blue-600 rounded"
-                      style={{ width: `${Math.max(4, (trend.totalViews / maxTrend) * 100)}%` }}
+                      style={{
+                        width: `${Math.max(4, (trend.totalViews / maxTrend) * 100)}%`,
+                      }}
                     />
                   </div>
                 </div>
