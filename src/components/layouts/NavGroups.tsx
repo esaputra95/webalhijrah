@@ -58,6 +58,12 @@ export const navGroups: NavGroup[] = [
         path: "/admins/masters/settings",
         role: ["ADMIN", "ADMIN_TAKMIR"],
       },
+      {
+        icon: FiFile,
+        label: "Itikaf",
+        path: "/admins/itikaf",
+        role: ["ADMIN", "ADMIN_TAKMIR"],
+      },
     ],
   },
   {
@@ -78,6 +84,12 @@ export const navGroups: NavGroup[] = [
         icon: FiFileText,
         label: "Daftar Donasi",
         path: "/admins/donations",
+        role: ["ADMIN", "ADMIN_TAKMIR"],
+      },
+      {
+        icon: FiFileText,
+        label: "Pendaftaran Itikaf",
+        path: "/admins/itikaf",
         role: ["ADMIN", "ADMIN_TAKMIR"],
       },
     ],
