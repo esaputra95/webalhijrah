@@ -36,6 +36,8 @@ const apiUrl = {
   halaqohMentorStudents: "/api/halaqoh/mentor/students",
   halaqohMentorStudentNotes: "/api/halaqoh/mentor/students/notes",
   pageAnalytics: "/api/analytics/pages",
+  itikafReport: "/api/itikaf/report",
+  itikafFollowUp: "/api/itikaf/follow-up",
 };
 
 export default apiUrl;

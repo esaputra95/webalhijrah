@@ -58,10 +58,33 @@ export const navGroups: NavGroup[] = [
         path: "/admins/masters/settings",
         role: ["ADMIN", "ADMIN_TAKMIR"],
       },
+      // {
+      //   icon: FiFile,
+      //   label: "Itikaf",
+      //   path: "/admins/itikaf",
+      //   role: ["ADMIN", "ADMIN_TAKMIR"],
+      // },
+    ],
+  },
+  {
+    label: "Itikaf",
+    items: [
       {
-        icon: FiFile,
-        label: "Itikaf",
+        icon: FiFileText,
+        label: "Pendaftaran Itikaf",
         path: "/admins/itikaf",
+        role: ["ADMIN", "ADMIN_TAKMIR"],
+      },
+      {
+        icon: FiFileText,
+        label: "Laporan Pendaftar",
+        path: "/admins/itikaf/reports",
+        role: ["ADMIN", "ADMIN_TAKMIR"],
+      },
+      {
+        icon: FiFileText,
+        label: "Follow up Itikaf",
+        path: "/admins/itikaf/follow-up",
         role: ["ADMIN", "ADMIN_TAKMIR"],
       },
     ],
