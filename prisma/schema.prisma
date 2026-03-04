@@ -402,6 +402,7 @@ model Itikaf {
   umur       Int
   gender     String  @db.VarChar(10)
   surat_izin String?  @db.Text
+  createdAt  DateTime @default(now()) @db.Timestamp(0)
 
   @@map("itikaf")
 }

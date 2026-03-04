@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
 import PublicNavbar from "@/components/layouts/PublicNavbar";
@@ -16,19 +16,35 @@ const fadeInUp = {
 };
 
 export default function ArticlesPage() {
-  const { data, isLoading } = useQuery<BaseApiResponse<Post[]>>({
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<
+    BaseApiResponse<Post[]>,
+    Error,
+    InfiniteData<BaseApiResponse<Post[]>, number>,
+    string[],
+    number
+  >({
     queryKey: ["PublicPosts"],
-    queryFn: async () =>
-      getData<{ _: ""; post_type?: string }, BaseApiResponse<Post[]>>(
-        apiUrl.posts,
-        {
-          _: "",
-          post_type: "post",
-        }
-      ),
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }) =>
+      getData<
+        { _: ""; post_type?: string; page?: number; limit?: number },
+        BaseApiResponse<Post[]>
+      >(apiUrl.posts, {
+        _: "",
+        post_type: "post",
+        page: pageParam,
+        limit: 24,
+      }),
+    getNextPageParam: (lastPage) => lastPage?.metaData?.nextPage ?? null,
   });
 
-  const posts = data?.data || [];
+  const posts = data?.pages.flatMap((page) => page.data || []) || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -72,7 +88,7 @@ export default function ArticlesPage() {
         <div className="container mx-auto px-4">
           {isLoading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+              {Array.from({ length: 24 }).map((_, i) => (
                 <div
                   key={i}
                   className="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse"
@@ -171,6 +187,19 @@ export default function ArticlesPage() {
                   </Link>
                 </motion.div>
               ))}
+            </div>
+          )}
+
+          {!isLoading && posts.length > 0 && hasNextPage && (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="px-6 py-3 rounded-xl bg-brand-brown text-white font-semibold hover:bg-brand-brown/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isFetchingNextPage ? "Memuat..." : "Load More"}
+              </button>
             </div>
           )}
         </div>
