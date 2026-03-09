@@ -118,7 +118,12 @@ export default function PrayerTimes() {
   ];
 
   const getHijriDate = () => {
+    const offset = parseInt(process.env.NEXT_PUBLIC_HIJRI_OFFSET || "0") || 0;
     const date = new Date();
+    if (offset !== 0) {
+      date.setDate(date.getDate() + offset);
+    }
+
     try {
       // Try to get Hijri date using Intl
       const hijriMonths = [
