@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
+import { usePageAnalytics } from "@/hooks/reports/usePageAnalytics";
+import DailyVisitorsChart from "@/components/charts/DailyVisitorsChart";
 import {
   FiFileText,
   FiPackage,
@@ -10,6 +12,12 @@ import {
   FiTrendingUp,
   FiClock,
 } from "react-icons/fi";
+import {
+  HiOutlineEye,
+  HiOutlineUsers,
+  HiOutlineGlobeAlt,
+  HiOutlineDocumentText,
+} from "react-icons/hi2";
 import dayjs from "dayjs";
 import { cn } from "@/utils/cn";
 import { toast } from "react-toastify";
@@ -19,17 +27,19 @@ const StatCard = ({
   value,
   icon: Icon,
   colorClass,
+  iconColorClass = "text-white",
   loading,
 }: {
   title: string;
   value: string | number;
   icon: React.ComponentType<{ className?: string }>;
   colorClass: string;
+  iconColorClass?: string;
   loading?: boolean;
 }) => (
   <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 transition-all hover:shadow-md">
     <div className={cn("p-3 rounded-lg flex-shrink-0", colorClass)}>
-      <Icon className="w-5 h-5 text-white" />
+      <Icon className={cn("w-5 h-5", iconColorClass)} />
     </div>
     <div className="min-w-0 flex-1">
       <p className="text-xs text-gray-500 font-medium uppercase tracking-wider truncate">
@@ -49,6 +59,21 @@ const StatCard = ({
 const AdminDashboard = () => {
   const { data, isLoading, isError } = useDashboard();
 
+  // Page Analytics Data
+  const { data: analyticsData, isLoading: analyticsLoading } = usePageAnalytics(
+    {
+      startAt: dayjs().startOf("month").format("YYYY-MM-DD"),
+      endAt: dayjs().endOf("month").format("YYYY-MM-DD"),
+    },
+  );
+
+  // 30-Day Trend Data for Chart
+  const { data: chartData, isLoading: chartLoading } = usePageAnalytics({
+    startAt: dayjs().subtract(29, "day").format("YYYY-MM-DD"),
+    endAt: dayjs().format("YYYY-MM-DD"),
+    limit: 1,
+  });
+
   React.useEffect(() => {
     if (isError) {
       toast.error("Gagal memuat data dashboard");
@@ -63,49 +88,112 @@ const AdminDashboard = () => {
     }).format(amount);
   };
 
+  const formatNumber = (value: number) =>
+    new Intl.NumberFormat("id-ID").format(value || 0);
+
   const dashboardData = data?.data;
+  const summary = analyticsData?.data?.summary;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-          Admin Dashboard
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Selamat datang kembali. Berikut adalah ringkasan data terbaru hari
-          ini.
-        </p>
+    <div className="p-6 max-w-7xl mx-auto space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+            Admin Dashboard
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Selamat datang kembali. Berikut adalah ringkasan data terbaru hari
+            ini.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+            {dayjs().format("dddd, DD MMMM YYYY")}
+          </p>
+        </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Artikel"
-          value={dashboardData?.stats.totalArticles ?? 0}
-          icon={FiFileText}
-          colorClass="bg-blue-500"
-          loading={isLoading}
-        />
-        <StatCard
-          title="Total Program"
-          value={dashboardData?.stats.totalPrograms ?? 0}
-          icon={FiPackage}
-          colorClass="bg-purple-500"
-          loading={isLoading}
-        />
-        <StatCard
-          title="Donasi Masuk"
-          value={dashboardData?.stats.totalDonations ?? 0}
-          icon={FiHeart}
-          colorClass="bg-rose-500"
-          loading={isLoading}
-        />
-        <StatCard
-          title="Total Dana"
-          value={formatCurrency(dashboardData?.stats.totalRevenue ?? 0)}
-          icon={FiDollarSign}
-          colorClass="bg-emerald-500"
-          loading={isLoading}
+      <div className="space-y-6">
+        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+          <span className="w-8 h-[2px] bg-gray-200"></span>
+          Ringkasan Umum
+        </h2>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Artikel"
+            value={dashboardData?.stats.totalArticles ?? 0}
+            icon={FiFileText}
+            colorClass="bg-blue-500"
+            loading={isLoading}
+          />
+          <StatCard
+            title="Total Program"
+            value={dashboardData?.stats.totalPrograms ?? 0}
+            icon={FiPackage}
+            colorClass="bg-purple-500"
+            loading={isLoading}
+          />
+          <StatCard
+            title="Donasi Masuk"
+            value={dashboardData?.stats.totalDonations ?? 0}
+            icon={FiHeart}
+            colorClass="bg-rose-500"
+            loading={isLoading}
+          />
+          <StatCard
+            title="Total Dana"
+            value={formatCurrency(dashboardData?.stats.totalRevenue ?? 0)}
+            icon={FiDollarSign}
+            colorClass="bg-emerald-500"
+            loading={isLoading}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+          <span className="w-8 h-[2px] bg-gray-200"></span>
+          Analytics Halaman (Bulan Ini)
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Views"
+            value={formatNumber(summary?.totalViews || 0)}
+            icon={HiOutlineEye}
+            colorClass="bg-blue-50"
+            iconColorClass="text-blue-600"
+            loading={analyticsLoading}
+          />
+          <StatCard
+            title="Unique Visitors"
+            value={formatNumber(summary?.uniqueVisitors || 0)}
+            icon={HiOutlineUsers}
+            colorClass="bg-purple-50"
+            iconColorClass="text-purple-600"
+            loading={analyticsLoading}
+          />
+          <StatCard
+            title="Unique IP"
+            value={formatNumber(summary?.uniqueIps || 0)}
+            icon={HiOutlineGlobeAlt}
+            colorClass="bg-emerald-50"
+            iconColorClass="text-emerald-600"
+            loading={analyticsLoading}
+          />
+          <StatCard
+            title="Halaman Terdata"
+            value={formatNumber(summary?.totalPages || 0)}
+            icon={HiOutlineDocumentText}
+            colorClass="bg-orange-50"
+            iconColorClass="text-orange-600"
+            loading={analyticsLoading}
+          />
+        </div>
+
+        <DailyVisitorsChart
+          data={chartData?.data?.trends || []}
+          isLoading={chartLoading}
         />
       </div>
 
