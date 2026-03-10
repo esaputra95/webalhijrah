@@ -135,14 +135,14 @@ const AdminDashboard = () => {
             loading={isLoading}
           />
           <StatCard
-            title="Donasi Masuk"
+            title="Total Orang Berdonasi"
             value={dashboardData?.stats.totalDonations ?? 0}
             icon={FiHeart}
             colorClass="bg-rose-500"
             loading={isLoading}
           />
           <StatCard
-            title="Total Dana"
+            title="Total Donasi Masuk"
             value={formatCurrency(dashboardData?.stats.totalRevenue ?? 0)}
             icon={FiDollarSign}
             colorClass="bg-emerald-500"

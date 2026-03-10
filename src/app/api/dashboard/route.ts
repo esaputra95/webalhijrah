@@ -14,16 +14,23 @@ export async function GET() {
       prisma.neo_posts.count({
         where: { post_type: "post" },
       }),
-      prisma.neo_programs.count(),
+      prisma.neo_posts.count({
+        where: { post_type: "donation" },
+      }),
       prisma.neo_donation_public.count({
-        where: { deleted_at: null },
+        where: {
+          status: "settled",
+          created_at: { gte: new Date("2026-01-01T00:00:00.000Z") },
+          deleted_at: null,
+        },
       }),
       prisma.neo_donation_public.aggregate({
         _sum: {
           amount: true,
         },
         where: {
-          // status: "settled",
+          status: "settled",
+          created_at: { gte: new Date("2026-01-01T00:00:00.000Z") },
           deleted_at: null,
         },
       }),
